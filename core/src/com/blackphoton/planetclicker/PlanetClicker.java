@@ -1,33 +1,35 @@
 package com.blackphoton.planetclicker;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class PlanetClicker extends ApplicationAdapter implements InputProcessor {
 	SpriteBatch batch;
-	Planet earth;
+	Planet planet;
 	Skin skin;
 	Stage stage;
 	Picture era;
 	final float clickMultiplier = 0.95f;
+	//Height and Width of window. Used to check for resize event.
+	float previousWidth;
+	float previousHeight;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		Texture tex_earth = new Texture("earth.png");
-		earth = new Planet(tex_earth, 128, 128);
 		Gdx.input.setInputProcessor(this);
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		era = new Picture(new Texture("cavemen.png"),0,0);
+		planet = Data.getCurrent();
+		previousHeight = Gdx.graphics.getHeight();
+		previousWidth = Gdx.graphics.getWidth();
+		planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
 	}
 
 	@Override
@@ -36,14 +38,20 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage = new Stage();
 		stage.addActor(era);
-		stage.addActor(earth);
+		stage.addActor(planet);
+
+		if(Gdx.graphics.getHeight()!=previousHeight || Gdx.graphics.getWidth()!=previousWidth) {
+			planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
+			previousWidth = Gdx.graphics.getWidth();
+			previousHeight = Gdx.graphics.getHeight();
+		}
 
 		batch.begin();
-		earth.setX(Gdx.graphics.getWidth()/2-earth.getWidth()/2);
-		earth.setY(Gdx.graphics.getHeight()/2-earth.getHeight()/2);
+		planet.setX(Gdx.graphics.getWidth()/2- planet.getWidth()/2);
+		planet.setY(Gdx.graphics.getHeight()/2- planet.getHeight()/2);
 
 		era.setX(Gdx.graphics.getWidth()/2-era.getWidth()/2);
-		era.setY(Gdx.graphics.getHeight()/8); //Arbitrary number, just seems to work
+		era.setY(Gdx.graphics.getHeight()/9); //Arbitrary number, just seems to work
 		stage.draw();
 		batch.end();
 	}
@@ -51,7 +59,7 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 	@Override
 	public void dispose () {
 		batch.dispose();
-		earth.dispose();
+		planet.dispose();
 		stage.dispose();
 	}
 
@@ -74,14 +82,19 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(earth.pointInsidePlanet(screenX,screenY))
-		earth.setMultiplier(clickMultiplier*earth.getMultiplier());
+		if(planet.pointInsidePlanet(screenX,screenY)) {
+			planet.setMultiplier(clickMultiplier * planet.getMultiplier());
+			planet.setClicked(true);
+		}
 		return true;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		earth.setMultiplier(earth.getMultiplier()/clickMultiplier);
+		if(planet.isClicked()) {
+			planet.setMultiplier(planet.getMultiplier() / clickMultiplier);
+			planet.setClicked(false);
+		}
 		return true;
 	}
 

@@ -10,15 +10,22 @@ public class Planet extends Actor {
 	private int initial_height;
 	private float x;
 	private float y;
+	private boolean clicked = false;
+	/**
+	 * Id for planet, to distinguish between them
+	 * 01e: Earth
+	 */
+	private String id;
 	/**
 	 * Planet size multiplier - planets will be enlarged by this multiple from 128x128px
 	 */
-	private float multiplier = 2;
+	private float multiplier = 1;
 
-	public Planet(Texture texture, int initial_width, int initial_height){
+	public Planet(Texture texture, int initial_width, int initial_height, String id){
 		this.texture = texture;
 		this.initial_height = initial_height;
 		this.initial_width = initial_width;
+		this.id = id;
 	}
 	public Texture getTexture() {
 		return texture;
@@ -32,6 +39,19 @@ public class Planet extends Actor {
 	public float getHeight(){
 		return initial_height* multiplier;
 	}
+
+	public int getInitial_width() {
+		return initial_width;
+	}
+
+	public int getInitial_height() {
+		return initial_height;
+	}
+
+	public String getId() {
+		return id;
+	}
+
 	public void setMultiplier(float multiplier){
 		this.multiplier=multiplier;
 	}
@@ -58,6 +78,14 @@ public class Planet extends Actor {
 
 	public void setY(float y) {
 		this.y = y;
+	}
+
+	public boolean isClicked() {
+		return clicked;
+	}
+
+	public void setClicked(boolean clicked) {
+		this.clicked = clicked;
 	}
 
 	/**
