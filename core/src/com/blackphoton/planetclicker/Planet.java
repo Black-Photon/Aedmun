@@ -1,8 +1,10 @@
 package com.blackphoton.planetclicker;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Planet {
+public class Planet extends Actor {
 	private Texture texture;
 	private int initial_width;
 	private int initial_height;
@@ -33,6 +35,11 @@ public class Planet {
 	public void setMultiplier(float multiplier){
 		this.multiplier=multiplier;
 	}
+
+	public float getMultiplier() {
+		return multiplier;
+	}
+
 	public void dispose(){
 		texture.dispose();
 	}
@@ -68,5 +75,10 @@ public class Planet {
 		float distanceFromCentre = (float) Math.sqrt((double) relativeX*relativeX + relativeY*relativeY);
 		if(distanceFromCentre>radius) return false;
 		return true;
+	}
+
+	@Override
+	public void draw(Batch batch, float alpha){
+		batch.draw(getTexture(), getX(), getY(), getWidth(), getHeight());
 	}
 }
