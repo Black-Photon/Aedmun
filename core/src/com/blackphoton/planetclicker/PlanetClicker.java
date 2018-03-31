@@ -50,6 +50,8 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 	
 	@Override
 	public void create () {
+		Data.setData();
+
 		batch = new SpriteBatch();
 		stage = new Stage();
 		random = new Random();
@@ -107,10 +109,13 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		int randomInt = random.nextInt(100);
-		if(randomInt==42){
-			if(buildingCount*peoplePerBuilding>populationCount && foodCount>populationCount) populationCount++;
-		}
+		if (buildingCount * peoplePerBuilding > populationCount && foodCount > populationCount)
+			for(int i=1;i<populationCount;i++) {
+				int randomInt = random.nextInt(1000);
+				if (randomInt == 42) {
+					populationCount++;
+				}
+			}
 
 		switch (resourceType) {
 			case BUILDINGS:
