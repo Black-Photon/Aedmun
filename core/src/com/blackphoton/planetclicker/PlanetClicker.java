@@ -30,12 +30,10 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 	Picture buildings;
 	Picture food;
 	Picture resources;
+	Picture stats;
 	Group resourceGroup;
 	InputMultiplexer multiplexer;
 	final float clickMultiplier = 0.95f;
-	//Height and Width of window. Used to check for resize event.
-	float previousWidth;
-	float previousHeight;
 	int buildingCount = 0;
 	int foodCount = 0;
 	int resourcesCount = 0;
@@ -46,10 +44,27 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 	final int resourcesPerBuilding = 1;
 	int numberOfIRThreads = 0;
 	float heightScale;
+	Texture buildings_tex;
+	Texture food_tex;
+	Texture resources_tex;
+	Texture buildings_clicked;
+	Texture food_clicked;
+	Texture resources_clicked;
+	Era thisEra;
+	final int margin = 3;
 	
 	@Override
 	public void create () {
 		Data.setData();
+
+		thisEra = Data.getEraList().get(0);
+
+		buildings_tex = new Texture("building.png");
+		food_tex = new Texture("food.png");
+		resources_tex = new Texture("resources.png");
+		buildings_clicked = new Texture("building_clicked.png");
+		food_clicked = new Texture("food_clicked.png");
+		resources_clicked = new Texture("resources_clicked.png");
 
 		batch = new SpriteBatch();
 		stage = new Stage();
@@ -58,9 +73,9 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		era = new Picture(new Texture("cavemen.png"),0,0);
 
-		buildings = new Picture(new Texture("building.png"), 0, 0);
-		food = new Picture(new Texture("food.png"), 0, 0);
-		resources = new Picture(new Texture("resources.png"), 0, 0);
+		buildings = new Picture(buildings_tex, 0, 0);
+		food = new Picture(food_tex, 0, 0);
+		resources = new Picture(resources_tex, 0, 0);
 		buildings.setPosition(0,food.getHeight()+resources.getHeight());
 		food.setPosition(0, resources.getHeight());
 		resourceGroup = new Group();
@@ -70,12 +85,11 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 		buildings.setBounds(buildings.getX(),buildings.getY(), buildings.getWidth(), buildings.getHeight());
 
 		planet = Data.getCurrent();
-		previousHeight = Gdx.graphics.getHeight();
-		previousWidth = Gdx.graphics.getWidth();
 		planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
 		countLabel = new Label("", skin);
 		populationLabel = new Label("", skin);
 		insufficientResources = new Label("You don't have enough resources to build this", skin);
+		stats = new Picture(new Texture("stats.png"), 0,0);
 		glyphLayout = new GlyphLayout();
 		bitmapFont = new BitmapFont();
 
@@ -83,6 +97,7 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				resourceType = ResourceType.BUILDINGS;
+				updateResources();
 				return true;
 			}
 		});
@@ -90,17 +105,30 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				resourceType = ResourceType.FOOD;
+				updateResources();
 				return true;
 			}
 		});
-		resources.addListener(new ClickListener(){
+		resources.addListener(new InputListener(){
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				resourceType = ResourceType.RESOURCES;
+				updateResources();
 				return true;
 			}
 		});
+		stats.addListener(new ClickListener(){
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				//TODO Switch view
+				System.out.println("Will go to new page with stats about Buildings, Food, Resources and great structures");
+				return true;
+			}
+		});
+
 		insufficientResources.setColor(0.8f,0.8f,0.8f,0);
+
+		updateResources();
 	}
 
 	@Override
@@ -108,12 +136,18 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		heightScale = ((float) Gdx.graphics.getHeight())/480f; //480 = default height
-		heightScale = (float) Math.pow(1.4, heightScale-1); //Magic. Oooooohh
-		resourceGroup.setScale(heightScale);
-		countLabel.setFontScale(heightScale);
-		populationLabel.setFontScale(heightScale);
-		insufficientResources.setFontScale(heightScale);
+		boolean found = false;
+		for(Era era: Data.getEraList()){
+			if(found){
+				if(populationCount>=era.getPop_req().toInt()){
+					thisEra = era;
+					updateEra();
+				}
+			}
+			if(era.equals(thisEra)){
+				found = true;
+			}
+		}
 
 		if (buildingCount * peoplePerBuilding > populationCount && foodCount > populationCount)
 			for(int i=1;i<populationCount;i++) {
@@ -123,58 +157,10 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 				}
 			}
 
-		switch (resourceType) {
-			case BUILDINGS:
-				countLabel.setText("Buildings: " + buildingCount);
-				break;
-			case FOOD:
-				countLabel.setText("Food: "+foodCount);
-				break;
-			case RESOURCES:
-				countLabel.setText("Resources: " + resourcesCount);
-				break;
-		}
 		populationLabel.setText("Population: "+populationCount);
 
-		stage = new Stage();
-		stage.addActor(era);
-		stage.addActor(planet);
-		stage.addActor(countLabel);
-		stage.addActor(populationLabel);
-		stage.addActor(resourceGroup);
-		stage.addActor(insufficientResources);
-
-		multiplexer = new InputMultiplexer(stage, this);
-		Gdx.input.setInputProcessor(multiplexer);
-
-		if(Gdx.graphics.getHeight()!=previousHeight || Gdx.graphics.getWidth()!=previousWidth) {
-			planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
-			previousWidth = Gdx.graphics.getWidth();
-			previousHeight = Gdx.graphics.getHeight();
-		}
-
 		batch.begin();
-		planet.setX(Gdx.graphics.getWidth()/2- planet.getWidth()/2);
-		planet.setY(Gdx.graphics.getHeight()/2- planet.getHeight()/2);
 
-		era.setX(Gdx.graphics.getWidth()/2-era.getWidth()/2);
-		era.setY(Gdx.graphics.getHeight()/9); //Arbitrary number, just seems to work
-
-		glyphLayout.setText(bitmapFont, countLabel.getText());
-		countLabel.setX(Gdx.graphics.getWidth()/2-heightScale*glyphLayout.width/2);
-		countLabel.setY(8*Gdx.graphics.getHeight()/9); //Also arbitrary
-
-		resourceGroup.setX(0);
-		resourceGroup.setY(Gdx.graphics.getHeight()/2-heightScale*(buildings.getHeight()+food.getHeight()+resources.getHeight())/2);
-
-		final int margin = 3;
-		glyphLayout.setText(bitmapFont, populationLabel.getText());
-		populationLabel.setX(margin);
-		populationLabel.setY(Gdx.graphics.getHeight()-heightScale*glyphLayout.height-margin);
-
-		glyphLayout.setText(bitmapFont, insufficientResources.getText());
-		insufficientResources.setX(Gdx.graphics.getWidth()/2-heightScale*glyphLayout.width/2);
-		insufficientResources.setY(Gdx.graphics.getHeight()/2-heightScale*glyphLayout.height/2);
 
 		stage.draw();
 		batch.end();
@@ -185,6 +171,33 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 		batch.dispose();
 		planet.dispose();
 		stage.dispose();
+	}
+
+	private void updateResources(){
+		switch (resourceType) {
+			case BUILDINGS:
+				buildings.setTexture(buildings_clicked);
+				food.setTexture(food_tex);
+				resources.setTexture(resources_tex);
+				countLabel.setText("Buildings: " + buildingCount);
+				break;
+			case FOOD:
+				buildings.setTexture(buildings_tex);
+				food.setTexture(food_clicked);
+				resources.setTexture(resources_tex);
+				countLabel.setText("Food: "+foodCount);
+				break;
+			case RESOURCES:
+				buildings.setTexture(buildings_tex);
+				food.setTexture(food_tex);
+				resources.setTexture(resources_clicked);
+				countLabel.setText("Resources: " + resourcesCount);
+				break;
+		}
+	}
+
+	private void updateEra(){
+		era.setTexture(new Texture(thisEra.getImagePath()));
 	}
 
 	//---KEY-TESTS---
@@ -209,6 +222,7 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 		if(planet.pointInsidePlanet(screenX,screenY)) {
 			planet.setMultiplier(clickMultiplier * planet.getMultiplier());
 			planet.setClicked(true);
+			updateResources();
 			switch (resourceType) {
 				case BUILDINGS:
 					if(resourcesCount>=resourcesPerBuilding) {
@@ -261,6 +275,7 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 		if(planet.isClicked()) {
 			planet.setMultiplier(planet.getMultiplier() / clickMultiplier);
 			planet.setClicked(false);
+			updateResources();
 			return true;
 		}
 		return false;
@@ -279,5 +294,53 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 	@Override
 	public boolean scrolled(int amount) {
 		return false;
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
+		heightScale = ((float) Gdx.graphics.getHeight())/480f; //480 = default height
+		heightScale = (float) Math.pow(1.4, heightScale-1); //Magic. Oooooohh
+		resourceGroup.setScale(heightScale);
+		countLabel.setFontScale(heightScale);
+		populationLabel.setFontScale(heightScale);
+		insufficientResources.setFontScale(heightScale);
+
+		stage.dispose();
+		stage = new Stage();
+		stage.addActor(era);
+		stage.addActor(planet);
+		stage.addActor(countLabel);
+		stage.addActor(populationLabel);
+		stage.addActor(resourceGroup);
+		stage.addActor(insufficientResources);
+		stage.addActor(stats);
+
+		multiplexer = new InputMultiplexer(stage, this);
+		Gdx.input.setInputProcessor(multiplexer);
+
+		planet.setX(Gdx.graphics.getWidth()/2- planet.getWidth()/2);
+		planet.setY(Gdx.graphics.getHeight()/2- planet.getHeight()/2);
+
+		era.setX(Gdx.graphics.getWidth()/2-era.getWidth()/2);
+		era.setY(Gdx.graphics.getHeight()/9); //Arbitrary number, just seems to work
+
+		glyphLayout.setText(bitmapFont, countLabel.getText());
+		countLabel.setX(Gdx.graphics.getWidth()/2-heightScale*glyphLayout.width/2);
+		countLabel.setY(8*Gdx.graphics.getHeight()/9); //Also arbitrary
+
+		resourceGroup.setX(0);
+		resourceGroup.setY(Gdx.graphics.getHeight()/2-heightScale*(buildings.getHeight()+food.getHeight()+resources.getHeight())/2);
+
+		glyphLayout.setText(bitmapFont, populationLabel.getText());
+		populationLabel.setX(margin);
+		populationLabel.setY(Gdx.graphics.getHeight()-heightScale*glyphLayout.height-margin);
+
+		glyphLayout.setText(bitmapFont, insufficientResources.getText());
+		insufficientResources.setX(Gdx.graphics.getWidth()/2-heightScale*glyphLayout.width/2);
+		insufficientResources.setY(Gdx.graphics.getHeight()/2-heightScale*glyphLayout.height/2);
+
+		stats.setX(Gdx.graphics.getWidth()-stats.getWidth());
+		stats.setY(Gdx.graphics.getHeight()-stats.getHeight());
 	}
 }

@@ -17,4 +17,12 @@ public class Picture extends Actor {
 	public void draw(Batch batch, float alpha){
 		batch.draw(texture,getX(), getY());
 	}
+
+	public Texture getTexture() {
+		return texture;
+	}
+
+	public void setTexture(Texture texture) {
+		this.texture = texture;
+	}
 }

@@ -21,7 +21,7 @@ public class Data {
 	public static void setData(){
 		eraList = new ArrayList<Era>();
 		Era cavemen = new Era("Cavemen", Exponent.toExponent(2), "caveman.png");
-		Era iron = new Era("Iron", Exponent.toExponent(400), "iron.png");
+		Era iron = new Era("Iron", Exponent.toExponent(40), "iron.png");
 		Era bronze = new Era("Bronze", Exponent.toExponent(1000), "bronze.png");
 		Era ancient = new Era("Ancient", Exponent.toExponent(12000), "ancient.png");
 		Era medievil = new Era("Medievil", Exponent.toExponent(200000), "medievil.png");
@@ -68,5 +68,13 @@ public class Data {
 
 	public static void setCurrent(Planet current) {
 		Data.current = current;
+	}
+
+	public static ArrayList<Era> getEraList() {
+		return eraList;
+	}
+
+	public static void setEraList(ArrayList<Era> eraList) {
+		Data.eraList = eraList;
 	}
 }
