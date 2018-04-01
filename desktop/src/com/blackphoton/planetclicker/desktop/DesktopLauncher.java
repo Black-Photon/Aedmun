@@ -7,6 +7,8 @@ import com.blackphoton.planetclicker.PlanetClicker;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.title = "Planet Clicker";
+		config.useGL30 = false;
 		new LwjglApplication(new PlanetClicker(), config);
 	}
 }

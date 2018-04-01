@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import javafx.concurrent.Task;
 
 import java.util.Random;
 
@@ -47,6 +45,7 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 	final int peoplePerBuilding = 4;
 	final int resourcesPerBuilding = 1;
 	int numberOfIRThreads = 0;
+	float heightScale;
 	
 	@Override
 	public void create () {
@@ -109,6 +108,13 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		heightScale = ((float) Gdx.graphics.getHeight())/480f; //480 = default height
+		heightScale = (float) Math.pow(1.4, heightScale-1); //Magic. Oooooohh
+		resourceGroup.setScale(heightScale);
+		countLabel.setFontScale(heightScale);
+		populationLabel.setFontScale(heightScale);
+		insufficientResources.setFontScale(heightScale);
+
 		if (buildingCount * peoplePerBuilding > populationCount && foodCount > populationCount)
 			for(int i=1;i<populationCount;i++) {
 				int randomInt = random.nextInt(1000);
@@ -155,20 +161,20 @@ public class PlanetClicker extends ApplicationAdapter implements InputProcessor 
 		era.setY(Gdx.graphics.getHeight()/9); //Arbitrary number, just seems to work
 
 		glyphLayout.setText(bitmapFont, countLabel.getText());
-		countLabel.setX(Gdx.graphics.getWidth()/2-glyphLayout.width/2);
+		countLabel.setX(Gdx.graphics.getWidth()/2-heightScale*glyphLayout.width/2);
 		countLabel.setY(8*Gdx.graphics.getHeight()/9); //Also arbitrary
 
 		resourceGroup.setX(0);
-		resourceGroup.setY(Gdx.graphics.getHeight()/2-buildings.getHeight()/2-food.getHeight()/2-resources.getHeight()/2);
+		resourceGroup.setY(Gdx.graphics.getHeight()/2-heightScale*(buildings.getHeight()+food.getHeight()+resources.getHeight())/2);
 
 		final int margin = 3;
 		glyphLayout.setText(bitmapFont, populationLabel.getText());
 		populationLabel.setX(margin);
-		populationLabel.setY(Gdx.graphics.getHeight()-glyphLayout.height-margin);
+		populationLabel.setY(Gdx.graphics.getHeight()-heightScale*glyphLayout.height-margin);
 
 		glyphLayout.setText(bitmapFont, insufficientResources.getText());
-		insufficientResources.setX(Gdx.graphics.getWidth()/2-glyphLayout.width/2);
-		insufficientResources.setY(Gdx.graphics.getHeight()/2-glyphLayout.height/2);
+		insufficientResources.setX(Gdx.graphics.getWidth()/2-heightScale*glyphLayout.width/2);
+		insufficientResources.setY(Gdx.graphics.getHeight()/2-heightScale*glyphLayout.height/2);
 
 		stage.draw();
 		batch.end();
