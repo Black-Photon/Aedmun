@@ -8,6 +8,8 @@ import java.util.ArrayList;
  * Holds data on various info about progress in the game
  */
 public class Data {
+	private static PlanetClicker planetClicker;
+
 	private static Texture tex_earth = new Texture("earth.png");
 	private static Planet earth = new Planet(tex_earth, 128, 128, "01e");
 	private final static Planet[] planets = {earth};
@@ -15,10 +17,14 @@ public class Data {
 
 	private static ArrayList<Era> eraList;
 
+	private static UI ui;
+	private static Mechanics mechanics;
+	private static ResourceType resourceType = ResourceType.BUILDINGS;
+
 	/**
 	 * Sets all data to values to be used. Call once at start.
 	 */
-	public static void setData(){
+	public static void setData(PlanetClicker planetClicker){
 		eraList = new ArrayList<Era>();
 		Era cavemen = new Era("Cavemen", Exponent.toExponent(2), "caveman.png");
 		Era iron = new Era("Iron", Exponent.toExponent(40), "iron.png");
@@ -38,6 +44,10 @@ public class Data {
 		eraList.add(industrial);
 		eraList.add(modern);
 		eraList.add(future);
+
+		ui = new UI();
+		mechanics = new Mechanics();
+		Data.planetClicker = planetClicker;
 	}
 
 	//---Getters and Setters---
@@ -76,5 +86,25 @@ public class Data {
 
 	public static void setEraList(ArrayList<Era> eraList) {
 		Data.eraList = eraList;
+	}
+
+	public static UI getUi() {
+		return ui;
+	}
+
+	public static Mechanics getMechanics() {
+		return mechanics;
+	}
+
+	public static ResourceType getResourceType() {
+		return resourceType;
+	}
+
+	public static void setResourceType(ResourceType resourceType) {
+		Data.resourceType = resourceType;
+	}
+
+	public static PlanetClicker getPlanetClicker() {
+		return planetClicker;
 	}
 }
