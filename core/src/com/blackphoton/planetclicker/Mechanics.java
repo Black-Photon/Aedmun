@@ -138,6 +138,15 @@ public class Mechanics {
 		}
 	}
 
+	public static class specialListener extends ClickListener {
+		@Override
+		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			Data.setResourceType(ResourceType.SPECIAL);
+			Data.ui.updateResources();
+			return true;
+		}
+	}
+
 	public void dispose(){
 
 	}

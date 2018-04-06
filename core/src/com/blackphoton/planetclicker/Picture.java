@@ -2,6 +2,7 @@ package com.blackphoton.planetclicker;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Picture extends Actor {
@@ -12,10 +13,11 @@ public class Picture extends Actor {
 		setY(y);
 		setWidth(texture.getWidth());
 		setHeight(texture.getHeight());
+		setBounds(super.getX(), super.getY(), getWidth(), getHeight());
 	}
 	@Override
 	public void draw(Batch batch, float alpha){
-		batch.draw(texture,getX(), getY());
+		batch.draw(texture,getX(), getY(),getWidth(),getHeight());
 	}
 
 	public Texture getTexture() {
@@ -24,5 +26,43 @@ public class Picture extends Actor {
 
 	public void setTexture(Texture texture) {
 		this.texture = texture;
+	}
+
+	@Override
+	public void setScaleX(float scaleX) {
+		super.setScaleX(scaleX);
+		setWidth(getWidth()*scaleX);
+	}
+
+	@Override
+	public void setScaleY(float scaleY) {
+		super.setScaleY(scaleY);
+		setHeight(getHeight()*scaleY);
+	}
+
+	@Override
+	public void setScale(float scaleXY) {
+		super.setScale(scaleXY);
+		setWidth(getWidth()*scaleXY);
+		setHeight(getHeight()*scaleXY);
+	}
+
+	@Override
+	public void setScale(float scaleX, float scaleY) {
+		super.setScale(scaleX, scaleY);
+		setWidth(getWidth()*scaleX);
+		setHeight(getHeight()*scaleY);
+	}
+
+	@Override
+	public void setWidth(float width) {
+		super.setWidth(width);
+		setBounds(super.getX(), super.getY(), getWidth(), getHeight());
+	}
+
+	@Override
+	public void setHeight(float height) {
+		super.setHeight(height);
+		setBounds(super.getX(), super.getY(), getWidth(), getHeight());
 	}
 }

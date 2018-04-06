@@ -44,8 +44,9 @@ public class PlanetClicker extends ApplicationAdapter{
 		Data.ui.updateUI();
 
 		batch.begin();
-		stage.draw();
+		Data.ui.drawBackground(batch);
 		batch.end();
+		stage.draw();
 	}
 
 	@Override
