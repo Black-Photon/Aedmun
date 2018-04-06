@@ -47,7 +47,7 @@ public class Data {
 
 		ui = new UI();
 		mechanics = new Mechanics();
-		Data.main = planetClicker;
+		main = planetClicker;
 	}
 
 	//---Getters and Setters---

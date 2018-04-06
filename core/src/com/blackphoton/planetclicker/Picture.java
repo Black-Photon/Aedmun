@@ -31,27 +31,27 @@ public class Picture extends Actor {
 	@Override
 	public void setScaleX(float scaleX) {
 		super.setScaleX(scaleX);
-		setWidth(getWidth()*scaleX);
+		setWidth(texture.getWidth()*scaleX);
 	}
 
 	@Override
 	public void setScaleY(float scaleY) {
 		super.setScaleY(scaleY);
-		setHeight(getHeight()*scaleY);
+		setHeight(texture.getHeight()*scaleY);
 	}
 
 	@Override
 	public void setScale(float scaleXY) {
 		super.setScale(scaleXY);
-		setWidth(getWidth()*scaleXY);
-		setHeight(getHeight()*scaleXY);
+		setWidth(texture.getWidth()*scaleXY);
+		setHeight(texture.getHeight()*scaleXY);
 	}
 
 	@Override
 	public void setScale(float scaleX, float scaleY) {
 		super.setScale(scaleX, scaleY);
-		setWidth(getWidth()*scaleX);
-		setHeight(getHeight()*scaleY);
+		setWidth(texture.getWidth()*scaleX);
+		setHeight(texture.getHeight()*scaleY);
 	}
 
 	@Override
