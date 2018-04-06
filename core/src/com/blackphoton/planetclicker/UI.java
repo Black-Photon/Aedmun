@@ -63,7 +63,7 @@ public class UI {
 		glyphLayout = new GlyphLayout();
 		bitmapFont = new BitmapFont();
 
-		Data.getPlanetClicker().setPlanet(planet);
+		Data.main.setPlanet(planet);
 
 		buildings.addListener(new Mechanics.buildingListener());
 		food.addListener(new Mechanics.foodListener());
@@ -71,14 +71,14 @@ public class UI {
 
 		insufficientResources.setColor(0.8f,0.8f,0.8f,0);
 
-		multiplexer = new InputMultiplexer(Data.getPlanetClicker().getStage(), new InputDetector());
+		multiplexer = new InputMultiplexer(Data.main.getStage(), new InputDetector());
 		Gdx.input.setInputProcessor(multiplexer);
 	}
 	public void updateUI(){
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		populationLabel.setText("Population: "+Data.getPlanetClicker().getPopulationCount());
+		populationLabel.setText("Population: "+Data.main.getPopulationCount());
 	}
 
 	public void updateResources(){
@@ -87,19 +87,19 @@ public class UI {
 				buildings.setTexture(buildings_clicked);
 				food.setTexture(food_tex);
 				resources.setTexture(resources_tex);
-				countLabel.setText("Buildings: " + Data.getPlanetClicker().getBuildingCount());
+				countLabel.setText("Buildings: " + Data.main.getBuildingCount());
 				break;
 			case FOOD:
 				buildings.setTexture(buildings_tex);
 				food.setTexture(food_clicked);
 				resources.setTexture(resources_tex);
-				countLabel.setText("Food: " + Data.getPlanetClicker().getFoodCount());
+				countLabel.setText("Food: " + Data.main.getFoodCount());
 				break;
 			case RESOURCES:
 				buildings.setTexture(buildings_tex);
 				food.setTexture(food_tex);
 				resources.setTexture(resources_clicked);
-				countLabel.setText("Resources: " + Data.getPlanetClicker().getResourcesCount());
+				countLabel.setText("Resources: " + Data.main.getResourcesCount());
 				break;
 		}
 	}
@@ -109,7 +109,7 @@ public class UI {
 	}
 
 	public void resize(int width, int height) {
-		Planet planet = Data.getPlanetClicker().getPlanet();
+		Planet planet = Data.main.getPlanet();
 
 		planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
 		heightScale = ((float) Gdx.graphics.getHeight())/480f; //480 = default height
@@ -119,39 +119,16 @@ public class UI {
 		populationLabel.setFontScale(heightScale);
 		insufficientResources.setFontScale(heightScale);
 
-		Data.getPlanetClicker().getStage().dispose();
+		Data.main.getStage().dispose();
 		Stage stage = new Stage();
-		stage.addActor(era);
 		stage.addActor(planet);
-		stage.addActor(countLabel);
-		stage.addActor(populationLabel);
-		stage.addActor(resourceGroup);
-		stage.addActor(insufficientResources);
-		Data.getPlanetClicker().setStage(stage);
+		Data.main.setStage(stage);
 
 		multiplexer = new InputMultiplexer(stage, new InputDetector());
 		Gdx.input.setInputProcessor(multiplexer);
 
 		planet.setX(Gdx.graphics.getWidth()/2- planet.getWidth()/2);
 		planet.setY(Gdx.graphics.getHeight()/2- planet.getHeight()/2);
-
-		era.setX(Gdx.graphics.getWidth()/2-era.getWidth()/2);
-		era.setY(Gdx.graphics.getHeight()/9); //Arbitrary number, just seems to work
-
-		glyphLayout.setText(bitmapFont, countLabel.getText());
-		countLabel.setX(Gdx.graphics.getWidth()/2-heightScale*glyphLayout.width/2);
-		countLabel.setY(8*Gdx.graphics.getHeight()/9); //Also arbitrary
-
-		resourceGroup.setX(0);
-		resourceGroup.setY(Gdx.graphics.getHeight()/2-heightScale*(buildings.getHeight()+food.getHeight()+resources.getHeight())/2);
-
-		glyphLayout.setText(bitmapFont, populationLabel.getText());
-		populationLabel.setX(margin);
-		populationLabel.setY(Gdx.graphics.getHeight()-heightScale*glyphLayout.height-margin);
-
-		glyphLayout.setText(bitmapFont, insufficientResources.getText());
-		insufficientResources.setX(Gdx.graphics.getWidth()/2-heightScale*glyphLayout.width/2);
-		insufficientResources.setY(Gdx.graphics.getHeight()/2-heightScale*glyphLayout.height/2);
 	}
 
 	public void dispose(){

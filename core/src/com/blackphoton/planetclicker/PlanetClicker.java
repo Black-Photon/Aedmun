@@ -25,9 +25,6 @@ public class PlanetClicker extends ApplicationAdapter{
 	private int populationCount = 2;
 	private Planet planet;
 
-	private UI ui;
-	private Mechanics mechanics;
-
 	@Override
 	public void create() {
 		Data.setData(this);
@@ -35,19 +32,16 @@ public class PlanetClicker extends ApplicationAdapter{
 		batch = new SpriteBatch();
 		stage = new Stage();
 
-		ui = Data.getUi();
-		mechanics = Data.getMechanics();
+		Data.mechanics.create();
+		Data.ui.createUI();
 
-		mechanics.create();
-		ui.createUI();
-
-		ui.updateResources();
+		Data.ui.updateResources();
 	}
 
 	@Override
 	public void render() {
-		mechanics.update();
-		ui.updateUI();
+		Data.mechanics.update();
+		Data.ui.updateUI();
 
 		batch.begin();
 		stage.draw();
@@ -59,13 +53,13 @@ public class PlanetClicker extends ApplicationAdapter{
 		batch.dispose();
 		stage.dispose();
 		planet.dispose();
-		ui.dispose();
-		mechanics.dispose();
+		Data.ui.dispose();
+		Data.mechanics.dispose();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		Data.getUi().resize(width, height);
+		Data.ui.resize(width, height);
 	}
 
 	//Getters and Setters

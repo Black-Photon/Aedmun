@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Holds data on various info about progress in the game
  */
 public class Data {
-	private static PlanetClicker planetClicker;
+	public static PlanetClicker main;
 
 	private static Texture tex_earth = new Texture("earth.png");
 	private static Planet earth = new Planet(tex_earth, 128, 128, "01e");
@@ -17,8 +17,8 @@ public class Data {
 
 	private static ArrayList<Era> eraList;
 
-	private static UI ui;
-	private static Mechanics mechanics;
+	public static UI ui;
+	public static Mechanics mechanics;
 	private static ResourceType resourceType = ResourceType.BUILDINGS;
 
 	/**
@@ -47,7 +47,7 @@ public class Data {
 
 		ui = new UI();
 		mechanics = new Mechanics();
-		Data.planetClicker = planetClicker;
+		Data.main = planetClicker;
 	}
 
 	//---Getters and Setters---
@@ -88,23 +88,11 @@ public class Data {
 		Data.eraList = eraList;
 	}
 
-	public static UI getUi() {
-		return ui;
-	}
-
-	public static Mechanics getMechanics() {
-		return mechanics;
-	}
-
 	public static ResourceType getResourceType() {
 		return resourceType;
 	}
 
 	public static void setResourceType(ResourceType resourceType) {
 		Data.resourceType = resourceType;
-	}
-
-	public static PlanetClicker getPlanetClicker() {
-		return planetClicker;
 	}
 }

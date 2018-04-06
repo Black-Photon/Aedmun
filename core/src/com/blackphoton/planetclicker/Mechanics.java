@@ -1,5 +1,6 @@
 package com.blackphoton.planetclicker;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -20,17 +21,17 @@ public class Mechanics {
 		random = new Random();
 	}
 	public void update(){
-		int populationCount = Data.getPlanetClicker().getPopulationCount();
-		int buildingCount = Data.getPlanetClicker().getBuildingCount();
-		int foodCount = Data.getPlanetClicker().getFoodCount();
-		int resourcesCount = Data.getPlanetClicker().getResourcesCount();
+		int populationCount = Data.main.getPopulationCount();
+		int buildingCount = Data.main.getBuildingCount();
+		int foodCount = Data.main.getFoodCount();
+		int resourcesCount = Data.main.getResourcesCount();
 
 		boolean found = false;
 		for(Era era: Data.getEraList()){
 			if(found){
 				if(populationCount>=era.getPop_req().toInt()){
 					thisEra = era;
-					Data.getUi().updateEra(thisEra);
+					Data.ui.updateEra(thisEra);
 				}
 			}
 			if(era.equals(thisEra)){
@@ -42,24 +43,26 @@ public class Mechanics {
 			for(int i=1;i<populationCount;i++) {
 				int randomInt = random.nextInt(1000);
 				if (randomInt == 42) {
-					Data.getPlanetClicker().setPopulationCount(populationCount+1);
+					Data.main.setPopulationCount(populationCount+1);
 				}
 			}
 	}
 
 	public boolean planetClicked(){
-		Planet planet = Data.getPlanetClicker().getPlanet();
-		int resourcesCount = Data.getPlanetClicker().getResourcesCount();
-		final Label insufficientResources = Data.getUi().getInsufficientResources();
+		Planet planet = Data.main.getPlanet();
+		int resourcesCount = Data.main.getResourcesCount();
+		final Label insufficientResources = Data.ui.getInsufficientResources();
 
 		planet.setMultiplier(clickMultiplier * planet.getMultiplier());
+		planet.setX(Gdx.graphics.getWidth()/2- planet.getWidth()/2);
+		planet.setY(Gdx.graphics.getHeight()/2- planet.getHeight()/2);
 		planet.setClicked(true);
-		Data.getUi().updateResources();
+		Data.ui.updateResources();
 		switch (Data.getResourceType()) {
 			case BUILDINGS:
 				if(resourcesCount>=resourcesPerBuilding) {
-					Data.getPlanetClicker().setResourcesCount(resourcesCount-resourcesPerBuilding);
-					Data.getPlanetClicker().setBuildingCount(Data.getPlanetClicker().getBuildingCount()+1);
+					Data.main.setResourcesCount(resourcesCount-resourcesPerBuilding);
+					Data.main.setBuildingCount(Data.main.getBuildingCount()+1);
 				}else{
 					insufficientResources.setColor(0.8f,0.8f,0.8f,1);
 					new Thread(){
@@ -91,19 +94,22 @@ public class Mechanics {
 				}
 				break;
 			case FOOD:
-				Data.getPlanetClicker().setFoodCount(Data.getPlanetClicker().getFoodCount()+1);
+				Data.main.setFoodCount(Data.main.getFoodCount()+1);
 				break;
 			case RESOURCES:
-				Data.getPlanetClicker().setResourcesCount(resourcesCount+1);
+				Data.main.setResourcesCount(resourcesCount+1);
 				break;
 		}
 		return true;
 	}
 	public boolean planetUnclicked(){
-		Planet planet = Data.getPlanetClicker().getPlanet();
+		Planet planet = Data.main.getPlanet();
 		planet.setMultiplier(planet.getMultiplier() / clickMultiplier);
 		planet.setClicked(false);
-		Data.getUi().updateResources();
+		Data.ui.updateResources();
+
+		planet.setX(Gdx.graphics.getWidth()/2- planet.getWidth()/2);
+		planet.setY(Gdx.graphics.getHeight()/2- planet.getHeight()/2);
 		return true;
 	}
 
@@ -111,7 +117,7 @@ public class Mechanics {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			Data.setResourceType(ResourceType.BUILDINGS);
-			Data.getUi().updateResources();
+			Data.ui.updateResources();
 			return true;
 		}
 	}
@@ -119,7 +125,7 @@ public class Mechanics {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			Data.setResourceType(ResourceType.FOOD);
-			Data.getUi().updateResources();
+			Data.ui.updateResources();
 			return true;
 		}
 	}
@@ -127,7 +133,7 @@ public class Mechanics {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			Data.setResourceType(ResourceType.RESOURCES);
-			Data.getUi().updateResources();
+			Data.ui.updateResources();
 			return true;
 		}
 	}
