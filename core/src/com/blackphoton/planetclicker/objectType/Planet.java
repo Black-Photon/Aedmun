@@ -1,8 +1,9 @@
-package com.blackphoton.planetclicker;
+package com.blackphoton.planetclicker.objectType;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.blackphoton.planetclicker.resources.NotSymmetricalException;
 
 public class Planet extends Actor {
 	private Texture texture;

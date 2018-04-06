@@ -1,4 +1,4 @@
-package com.blackphoton.planetclicker;
+package com.blackphoton.planetclicker.objectType;
 
 /**
  * Stores ridiculously large numbers by splitting into decimal and a power of 10

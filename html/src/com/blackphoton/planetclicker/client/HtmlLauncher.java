@@ -3,7 +3,7 @@ package com.blackphoton.planetclicker.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.blackphoton.planetclicker.PlanetClicker;
+import com.blackphoton.planetclicker.core.PlanetClicker;
 
 public class HtmlLauncher extends GwtApplication {
 

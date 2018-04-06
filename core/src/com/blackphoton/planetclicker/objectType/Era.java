@@ -1,4 +1,4 @@
-package com.blackphoton.planetclicker;
+package com.blackphoton.planetclicker.objectType;
 
 public class Era {
 	private String name;

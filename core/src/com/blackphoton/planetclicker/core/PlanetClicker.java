@@ -1,20 +1,9 @@
-package com.blackphoton.planetclicker;
+package com.blackphoton.planetclicker.core;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
-import java.util.Random;
+import com.blackphoton.planetclicker.objectType.Planet;
 
 public class PlanetClicker extends ApplicationAdapter{
 	private SpriteBatch batch;
@@ -24,10 +13,12 @@ public class PlanetClicker extends ApplicationAdapter{
 	private int resourcesCount = 0;
 	private int populationCount = 2;
 	private Planet planet;
+	private boolean buildingTableVisible = false;
 
 	@Override
 	public void create() {
 		Data.setData(this);
+		Data.mechanics.createTables();
 
 		batch = new SpriteBatch();
 		stage = new Stage();
@@ -111,5 +102,13 @@ public class PlanetClicker extends ApplicationAdapter{
 
 	public void setStage(Stage stage) {
 		this.stage = stage;
+	}
+
+	public boolean isBuildingTableVisible() {
+		return buildingTableVisible;
+	}
+
+	public void setBuildingTableVisible(boolean buildingTableVisible) {
+		this.buildingTableVisible = buildingTableVisible;
 	}
 }

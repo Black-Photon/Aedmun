@@ -1,4 +1,4 @@
-package com.blackphoton.planetclicker;
+package com.blackphoton.planetclicker.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -12,9 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.blackphoton.planetclicker.objectType.Era;
+import com.blackphoton.planetclicker.objectType.Picture;
+import com.blackphoton.planetclicker.objectType.Planet;
+import com.blackphoton.planetclicker.objectType.table.TableInfo;
 
 public class UI {
 
+	//Bottom Bar
 	private Texture buildings_tex;
 	private Texture food_tex;
 	private Texture resources_tex;
@@ -32,6 +39,20 @@ public class UI {
 	private Picture special;
 	private Group resourceGroup;
 
+	//Population
+	private Label populationLabel;
+	private Group populationGroup;
+	private Picture pop_bar_left;
+	private Picture pop_bar;
+	private Picture pop_bar_right;
+
+	//Options
+	private Table buildingTable;
+	private Table foodTable;
+	private Table resourcesTable;
+	private Table specialTable;
+
+	//Other
 	private Texture create_tex;
 	private Texture create_locked;
 	private Texture upgrade_tex;
@@ -48,12 +69,7 @@ public class UI {
 	private float heightScale;
 	private InputMultiplexer multiplexer;
 	private final int margin = 3;
-
-	private Label populationLabel;
-	private Group populationGroup;
-	private Picture pop_bar_left;
-	private Picture pop_bar;
-	private Picture pop_bar_right;
+	public float planetY;
 
 	public void createUI(){
 		//General Declarations
@@ -74,7 +90,7 @@ public class UI {
 		special = new Picture(special_tex , 0, 0);
 		line = new Picture(new Texture("horizontal_line.png"), 0, 0);
 
-		buildings_background = new Picture(clicked, 0, 0);
+		buildings_background = new Picture(unclicked, 0, 0);
 		food_background = new Picture(unclicked, 0, 0);
 		resources_background = new Picture(unclicked, 0, 0);
 		special_background = new Picture(unclicked, 0, 0);
@@ -102,7 +118,7 @@ public class UI {
 		special.setTouchable(Touchable.disabled);
 
 		//Population
-		populationLabel = new Label("Population: "+Data.main.getPopulationCount(), skin);
+		populationLabel = new Label("Population: "+ Data.main.getPopulationCount(), skin);
 		pop_bar_left = new Picture(new Texture("pop_bar_left.png"),0,0);
 		pop_bar = new Picture(new Texture("pop_bar.png"),0,0);
 		pop_bar_right = new Picture(new Texture("pop_bar_right.png"),0,0);
@@ -178,6 +194,8 @@ public class UI {
 	}
 
 	public void resize(int width, int height) {
+		refreshBuildingTable();
+
 		//Bottom Bar
 		line.setWidth(Gdx.graphics.getWidth());
 		buildings_background.setWidth(Gdx.graphics.getWidth()/4);
@@ -215,13 +233,11 @@ public class UI {
 		stage.addActor(settings);
 		stage.addActor(populationGroup);
 		stage.addActor(era);
+		stage.addActor(buildingTable);
 		Data.main.setStage(stage);
 
 		multiplexer = new InputMultiplexer(stage, new InputDetector());
 		Gdx.input.setInputProcessor(multiplexer);
-
-		planet.setX(Gdx.graphics.getWidth()/2-planet.getWidth()/2);
-		planet.setY(Gdx.graphics.getHeight()/2-planet.getHeight()/2);
 
 		sun.setX(0);
 		sun.setY(Gdx.graphics.getHeight()-sun.getHeight());
@@ -241,10 +257,139 @@ public class UI {
 
 		era.setX(Gdx.graphics.getWidth()/2-era.getWidth()/2);
 		era.setY(Gdx.graphics.getHeight()-pop_bar.getHeight()*heightScale-era.getHeight()-10);
+
+		planet.setX(Gdx.graphics.getWidth()/2-planet.getWidth()/2);
+		if(Data.main.isBuildingTableVisible()){
+			planetY = (era.getY()+buildings_background.getHeight()+buildingTable.getHeight())/2-planet.getHeight()/2;
+		}else{
+			planetY = (Gdx.graphics.getHeight()/2-planet.getHeight()/2);
+		}
+		planet.setY(planetY);
+
+		buildingTable.setX(0);
+		buildingTable.setY(buildings_background.getHeight());
 	}
 
 	private float scroll = 0;
 	private float scrollSpeed = 0.2f;
+
+	public void refreshTable(){
+		switch (Data.getResourceType()){
+			case BUILDINGS:
+				refreshBuildingTable();
+				break;
+			case FOOD:
+				refreshFoodTable();
+				break;
+			case RESOURCES:
+				refreshResourcesTable();
+				break;
+			case SPECIAL:
+				refreshSpecialTable();
+				break;
+		}
+	}
+
+	public void refreshBuildingTable(){
+		TableInfo buildingInfo = Data.getBuildingTable();
+		buildingTable = new Table();
+
+		if(Data.main.isBuildingTableVisible()){
+			System.out.println("Showing");
+			buildingTable.setVisible(true);
+		} else {
+			System.out.println("Hiding");
+			buildingTable.setVisible(false);
+		}
+
+		float smallUnit = Gdx.graphics.getWidth() * 1/7;
+		float largeUnit = Gdx.graphics.getWidth() * 1.25f/7;
+		final int rows = 4;
+		final int padding = 5;
+		final float rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
+
+		buildingTable.setSkin(skin);
+		buildingTable.add().width(smallUnit).center();    buildingTable.add("Name").width(largeUnit).center().fill();                                          buildingTable.add("Holds").width(largeUnit).center().fill();                                                         buildingTable.add("No.").width(smallUnit).center().fill();                                                               buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
+		buildingTable.add().width(smallUnit).center();    buildingTable.add(buildingInfo.getEntries().get(0).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
+		buildingTable.add().width(smallUnit).center();    buildingTable.add(buildingInfo.getEntries().get(1).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
+		buildingTable.add().width(smallUnit).center();    buildingTable.add(buildingInfo.getEntries().get(2).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); //buildingTable.row();
+
+		buildingTable.pad(padding);
+		buildingTable.bottom().left();
+		buildingTable.setBackground(new Drawable() {
+			@Override
+			public void draw(Batch batch, float x, float y, float width, float height) {
+				batch.draw(new Texture("table.png"), 0, buildings_background.getHeight(), Gdx.graphics.getWidth(), rowHeight*rows+padding*2);
+			}
+
+			@Override
+			public float getLeftWidth() {
+				return 0;
+			}
+
+			@Override
+			public void setLeftWidth(float leftWidth) {
+
+			}
+
+			@Override
+			public float getRightWidth() {
+				return 0;
+			}
+
+			@Override
+			public void setRightWidth(float rightWidth) {
+
+			}
+
+			@Override
+			public float getTopHeight() {
+				return 0;
+			}
+
+			@Override
+			public void setTopHeight(float topHeight) {
+
+			}
+
+			@Override
+			public float getBottomHeight() {
+				return 0;
+			}
+
+			@Override
+			public void setBottomHeight(float bottomHeight) {
+
+			}
+
+			@Override
+			public float getMinWidth() {
+				return 0;
+			}
+
+			@Override
+			public void setMinWidth(float minWidth) {
+
+			}
+
+			@Override
+			public float getMinHeight() {
+				return 0;
+			}
+
+			@Override
+			public void setMinHeight(float minHeight) {
+
+			}
+		});
+		buildingTable.setHeight(rowHeight*4);
+	}
+
+	public void refreshFoodTable(){ }
+
+	public void refreshResourcesTable(){ }
+
+	public void refreshSpecialTable(){ }
 
 	public void drawBackground(Batch batch){
 		batch.draw(space, (int)-scroll, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),0,0,4,4);

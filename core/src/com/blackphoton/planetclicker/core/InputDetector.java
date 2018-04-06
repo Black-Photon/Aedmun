@@ -1,12 +1,6 @@
-package com.blackphoton.planetclicker;
+package com.blackphoton.planetclicker.core;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.scenes.scene2d.*;
-
-import java.util.Random;
 
 public class InputDetector implements InputProcessor {
 

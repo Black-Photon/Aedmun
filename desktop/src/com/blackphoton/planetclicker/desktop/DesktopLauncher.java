@@ -2,7 +2,7 @@ package com.blackphoton.planetclicker.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.blackphoton.planetclicker.PlanetClicker;
+import com.blackphoton.planetclicker.core.PlanetClicker;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
