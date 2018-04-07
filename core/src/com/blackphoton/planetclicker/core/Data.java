@@ -2,6 +2,7 @@ package com.blackphoton.planetclicker.core;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
+import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
 import com.blackphoton.planetclicker.resources.ResourceType;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.Exponent;
@@ -16,11 +17,12 @@ public class Data {
 	public static com.blackphoton.planetclicker.core.PlanetClicker main;
 
 	private static Texture tex_earth = new Texture("earth.png");
-	private static com.blackphoton.planetclicker.objectType.Planet earth = new com.blackphoton.planetclicker.objectType.Planet(tex_earth, 128, 128, "01e");
-	private final static com.blackphoton.planetclicker.objectType.Planet[] planets = {earth};
-	private static com.blackphoton.planetclicker.objectType.Planet current = planets[0];
+	private static Planet earth = new Planet(tex_earth, 128, 128, "01e");
+	private final static Planet[] planets = {earth};
+	private static Planet currentPlanet = planets[0];
 
-	private static ArrayList<com.blackphoton.planetclicker.objectType.Era> eraList;
+	private static ArrayList<Era> eraList;
+	private static Era currentEra;
 
 	public static com.blackphoton.planetclicker.core.UI ui;
 	public static com.blackphoton.planetclicker.core.Mechanics mechanics;
@@ -31,23 +33,25 @@ public class Data {
 	private static TableInfo resourcesTable;
 	private static TableInfo specialTable;
 
+	private static TableEntry selectedEntry;
+
 	/**
 	 * Sets all data to values to be used. Call once at start.
 	 */
 	public static void setData(PlanetClicker planetClicker){
-		eraList = new ArrayList<com.blackphoton.planetclicker.objectType.Era>();
-		com.blackphoton.planetclicker.objectType.Era cavemen = new com.blackphoton.planetclicker.objectType.Era("Cavemen", com.blackphoton.planetclicker.objectType.Exponent.toExponent(2), "caveman.png");
-		com.blackphoton.planetclicker.objectType.Era iron = new com.blackphoton.planetclicker.objectType.Era("Iron", com.blackphoton.planetclicker.objectType.Exponent.toExponent(40), "iron.png");
-		com.blackphoton.planetclicker.objectType.Era bronze = new com.blackphoton.planetclicker.objectType.Era("Bronze", com.blackphoton.planetclicker.objectType.Exponent.toExponent(1000), "bronze.png");
-		com.blackphoton.planetclicker.objectType.Era ancient = new com.blackphoton.planetclicker.objectType.Era("Ancient", com.blackphoton.planetclicker.objectType.Exponent.toExponent(12000), "ancient.png");
-		com.blackphoton.planetclicker.objectType.Era medievil = new com.blackphoton.planetclicker.objectType.Era("Medievil", com.blackphoton.planetclicker.objectType.Exponent.toExponent(200000), "medievil.png");
-		com.blackphoton.planetclicker.objectType.Era classical = new com.blackphoton.planetclicker.objectType.Era("Classical", com.blackphoton.planetclicker.objectType.Exponent.toExponent(5000000), "classical.png");
-		com.blackphoton.planetclicker.objectType.Era industrial = new com.blackphoton.planetclicker.objectType.Era("Industrial", com.blackphoton.planetclicker.objectType.Exponent.toExponent(100000000), "industrial.png");
-		com.blackphoton.planetclicker.objectType.Era modern = new com.blackphoton.planetclicker.objectType.Era("Modern", new com.blackphoton.planetclicker.objectType.Exponent(7,9), "modern.png");
-		com.blackphoton.planetclicker.objectType.Era future = new com.blackphoton.planetclicker.objectType.Era("Future", new Exponent(1,10), "future.png");
+		eraList = new ArrayList<Era>();
+		Era cavemen = new Era("Cavemen", Exponent.toExponent(2), "caveman.png");
+		Era bronze = new Era("Bronze", Exponent.toExponent(400), "bronze.png");
+		Era iron = new Era("Iron", Exponent.toExponent(2000), "iron.png");
+		Era ancient = new Era("Ancient", Exponent.toExponent(12000), "ancient.png");
+		Era medievil = new Era("Medievil", Exponent.toExponent(200000), "medievil.png");
+		Era classical = new Era("Classical", Exponent.toExponent(5000000), "classical.png");
+		Era industrial = new Era("Industrial", Exponent.toExponent(100000000), "industrial.png");
+		Era modern = new Era("Modern", new Exponent(7,9), "modern.png");
+		Era future = new Era("Future", new Exponent(1,10), "future.png");
 		eraList.add(cavemen);
-		eraList.add(iron);
 		eraList.add(bronze);
+		eraList.add(iron);
 		eraList.add(ancient);
 		eraList.add(medievil);
 		eraList.add(classical);
@@ -70,27 +74,27 @@ public class Data {
 		Data.tex_earth = tex_earth;
 	}
 
-	public static com.blackphoton.planetclicker.objectType.Planet getEarth() {
+	public static Planet getEarth() {
 		return earth;
 	}
 
-	public static void setEarth(com.blackphoton.planetclicker.objectType.Planet earth) {
+	public static void setEarth(Planet earth) {
 		Data.earth = earth;
 	}
 
-	public static com.blackphoton.planetclicker.objectType.Planet[] getPlanets() {
+	public static Planet[] getPlanets() {
 		return planets;
 	}
 
-	public static com.blackphoton.planetclicker.objectType.Planet getCurrent() {
-		return current;
+	public static Planet getCurrentPlanet() {
+		return currentPlanet;
 	}
 
-	public static void setCurrent(Planet current) {
-		Data.current = current;
+	public static void setCurrentPlanet(Planet currentPlanet) {
+		Data.currentPlanet = currentPlanet;
 	}
 
-	public static ArrayList<com.blackphoton.planetclicker.objectType.Era> getEraList() {
+	public static ArrayList<Era> getEraList() {
 		return eraList;
 	}
 
@@ -127,5 +131,21 @@ public class Data {
 
 	public static TableInfo getSpecialTable() {
 		return specialTable;
+	}
+
+	public static Era getCurrentEra() {
+		return currentEra;
+	}
+
+	public static void setCurrentEra(Era currentEra) {
+		Data.currentEra = currentEra;
+	}
+
+	public static TableEntry getSelectedEntry() {
+		return selectedEntry;
+	}
+
+	public static void setSelectedEntry(TableEntry selectedEntry) {
+		Data.selectedEntry = selectedEntry;
 	}
 }

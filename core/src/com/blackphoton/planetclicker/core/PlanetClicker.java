@@ -11,9 +11,12 @@ public class PlanetClicker extends ApplicationAdapter{
 	private int buildingCount = 0;
 	private int foodCount = 0;
 	private int resourcesCount = 0;
-	private int populationCount = 2;
+	private int populationCount = 500;
 	private Planet planet;
 	private boolean buildingTableVisible = false;
+	private boolean foodTableVisible = false;
+	private boolean resourcesTableVisible = false;
+	private boolean specialTableVisible = false;
 
 	@Override
 	public void create() {

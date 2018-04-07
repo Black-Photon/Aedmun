@@ -89,9 +89,6 @@ public class UI {
 	private final int margin = 3;
 	public float planetY;
 
-	long initialJavaHeap = Gdx.app.getJavaHeap();
-	long initialNativeHeap = Gdx.app.getNativeHeap();
-
 	public void createUI(){
 		//General Declarations
 		glyphLayout = new GlyphLayout();
@@ -177,7 +174,7 @@ public class UI {
 
 		era = new Picture(new Texture("cavemen.png"),0,0);
 
-		Planet planet = Data.getCurrent();
+		Planet planet = Data.getCurrentPlanet();
 		planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
 		planet.addListener(new Mechanics.planetListener());
 		planet.setTouchable(Touchable.enabled);
@@ -394,7 +391,9 @@ public class UI {
 	public void refreshBuildingTable(){
 		TableInfo buildingInfo = Data.getBuildingTable();
 
+		if(buildingTable!=null) buildingTable.remove();
 		buildingTable = new Table();
+
 
 		if(Data.main.isBuildingTableVisible()){
 			buildingTable.setVisible(true);
@@ -410,16 +409,24 @@ public class UI {
 		village.setScaling(Scaling.fit);
 		town.setScaling(Scaling.fit);
 
+		buildingInfo.updateButtons();
+
 		buildingTable.setSkin(skin);
-		buildingTable.add().width(smallUnit).center();          buildingTable.add("Name").width(largeUnit).center().fill();                                          buildingTable.add("Holds").width(largeUnit).center().fill();                                                         buildingTable.add("No.").width(smallUnit).center().fill();                                                               buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
-		buildingTable.add(house).width(smallUnit).center();     buildingTable.add(buildingInfo.getEntries().get(0).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
-		buildingTable.add(village).width(smallUnit).center();   buildingTable.add(buildingInfo.getEntries().get(1).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
-		buildingTable.add(town).width(smallUnit).center();      buildingTable.add(buildingInfo.getEntries().get(2).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); //buildingTable.row();
+		buildingTable.add().width(smallUnit).center();          buildingTable.add("Name").width(largeUnit).center().fill();                                          buildingTable.add("Holds").width(largeUnit).center().fill();                                                         buildingTable.add("No.").width(smallUnit).center().fill();                                                               buildingTable.add().width(largeUnit).center();                                               buildingTable.add().width(largeUnit).center();                                              buildingTable.row().height(rowHeight);
+		buildingTable.add(house).width(smallUnit).center();     buildingTable.add(buildingInfo.getEntries().get(2).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add(buildingInfo.getEntries().get(2).getCreate()).width(largeUnit).center();   buildingTable.add(buildingInfo.getEntries().get(2).getUpgrade()).width(largeUnit).center(); buildingTable.row().height(rowHeight);
+		buildingTable.add(village).width(smallUnit).center();   buildingTable.add(buildingInfo.getEntries().get(1).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add(buildingInfo.getEntries().get(1).getCreate()).width(largeUnit).center();   buildingTable.add(buildingInfo.getEntries().get(1).getUpgrade()).width(largeUnit).center(); buildingTable.row().height(rowHeight);
+		buildingTable.add(town).width(smallUnit).center();      buildingTable.add(buildingInfo.getEntries().get(0).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add(buildingInfo.getEntries().get(0).getCreate()).width(largeUnit).center();   buildingTable.add(buildingInfo.getEntries().get(0).getUpgrade()).width(largeUnit).center(); //buildingTable.row();
 
 		buildingTable.pad(padding);
 		buildingTable.bottom().left();
 		buildingTable.setBackground(tableBackground);
 		buildingTable.setHeight(rowHeight*4);
+
+		Stage stage = Data.main.getStage();
+		stage.addActor(buildingTable);
+
+		buildingTable.setX(0);
+		buildingTable.setY(buildings_background.getHeight());
 	}
 
 	public void refreshFoodTable(){ }

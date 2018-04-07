@@ -1,5 +1,6 @@
 package com.blackphoton.planetclicker.objectType.table;
 
+import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.table.entries.*;
 import com.blackphoton.planetclicker.resources.ResourceType;
 
@@ -23,24 +24,25 @@ public class TableInfo {
 		entries.add(entry);
 	}
 
-	public void addEntry(String name, int value, ResourceBundle resources) {
+	public TableEntry addEntry(String name, int value, Era requiredEra, TableEntry upgradeTo, ResourceBundle resources) {
 		TableEntry entry = null;
 		switch (type) {
 			case BUILDINGS:
-				entry = new BuildingEntry(type, name, value, resources);
+				entry = new BuildingEntry(type, name, value, requiredEra, upgradeTo, resources);
 				break;
 			case FOOD:
-				entry = new FoodEntry(type, name, value, resources);
+				entry = new FoodEntry(type, name, value, requiredEra, upgradeTo, resources);
 				break;
 			case RESOURCES:
-				entry = new ResourcesEntry(type, name, value, resources);
+				entry = new ResourcesEntry(type, name, value, requiredEra, upgradeTo, resources);
 				break;
 			case SPECIAL:
-				entry = new SpecialEntry(type, name, value, resources);
+				entry = new SpecialEntry(type, name, value, requiredEra, upgradeTo, resources);
 				break;
-			default: return;
+			default: return null;
 		}
 		this.addEntry(entry);
+		return entry;
 	}
 
 	public ResourceType getType() {
@@ -49,5 +51,18 @@ public class TableInfo {
 
 	public void setType(ResourceType type) {
 		this.type = type;
+	}
+
+	public void updateButtons(){
+		for(TableEntry entry: entries){
+			entry.updateButtons();
+		}
+	}
+
+	public void unclickAll(){
+		for(TableEntry entry: entries){
+			entry.unclick();
+			entry.updateButtons();
+		}
 	}
 }
