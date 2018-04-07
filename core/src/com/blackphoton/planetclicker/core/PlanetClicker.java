@@ -10,8 +10,10 @@ public class PlanetClicker extends ApplicationAdapter{
 	private Stage stage;
 	private int buildingCount = 0;
 	private int foodCount = 0;
-	private int resourcesCount = 0;
-	private int populationCount = 500;
+	private int woodCount = 0;
+	private int bronzeCount = 0;
+	private int ironCount = 0;
+	private int populationCount = 500; //TODO change back to 2
 	private Planet planet;
 	private boolean buildingTableVisible = false;
 	private boolean foodTableVisible = false;
@@ -75,12 +77,28 @@ public class PlanetClicker extends ApplicationAdapter{
 		this.foodCount = foodCount;
 	}
 
-	public int getResourcesCount() {
-		return resourcesCount;
+	public int getWoodCount() {
+		return woodCount;
 	}
 
-	public void setResourcesCount(int resourcesCount) {
-		this.resourcesCount = resourcesCount;
+	public void setWoodCount(int woodCount) {
+		this.woodCount = woodCount;
+	}
+
+	public int getBronzeCount() {
+		return bronzeCount;
+	}
+
+	public void setBronzeCount(int bronzeCount) {
+		this.bronzeCount = bronzeCount;
+	}
+
+	public int getIronCount() {
+		return ironCount;
+	}
+
+	public void setIronCount(int ironCount) {
+		this.ironCount = ironCount;
 	}
 
 	public int getPopulationCount() {
@@ -113,5 +131,29 @@ public class PlanetClicker extends ApplicationAdapter{
 
 	public void setBuildingTableVisible(boolean buildingTableVisible) {
 		this.buildingTableVisible = buildingTableVisible;
+	}
+
+	public boolean isFoodTableVisible() {
+		return foodTableVisible;
+	}
+
+	public void setFoodTableVisible(boolean foodTableVisible) {
+		this.foodTableVisible = foodTableVisible;
+	}
+
+	public boolean isResourcesTableVisible() {
+		return resourcesTableVisible;
+	}
+
+	public void setResourcesTableVisible(boolean resourcesTableVisible) {
+		this.resourcesTableVisible = resourcesTableVisible;
+	}
+
+	public boolean isSpecialTableVisible() {
+		return specialTableVisible;
+	}
+
+	public void setSpecialTableVisible(boolean specialTableVisible) {
+		this.specialTableVisible = specialTableVisible;
 	}
 }

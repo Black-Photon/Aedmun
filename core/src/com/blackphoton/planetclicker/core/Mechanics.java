@@ -36,7 +36,6 @@ public class Mechanics {
 		int populationCount = Data.main.getPopulationCount();
 		int buildingCount = Data.main.getBuildingCount();
 		int foodCount = Data.main.getFoodCount();
-		int resourcesCount = Data.main.getResourcesCount();
 
 		boolean found = false;
 		for(Era era: Data.getEraList()){
@@ -112,7 +111,7 @@ public class Mechanics {
 		foodInfo.addEntry("Hunt Food", 10, Data.getEraList().get(0), smallfarm, new ResourceBundle() {
 			@Override
 			protected Object handleGetObject(String key) {
-				if(key.equals("time")) return 3;
+				if(key.equals("time")) return 3000;
 				return null;
 			}
 
@@ -135,7 +134,7 @@ public class Mechanics {
 				};
 				return e;
 			}
-		});
+		}).setUpgradable(false);
 		return foodInfo;
 	}
 	private TableInfo createResourcesTable(){
@@ -258,6 +257,8 @@ public class Mechanics {
 	 * For the actions done when the planet is clicked
 	 */
 	public void planetClickedAction(){
+		updateNumberOf();
+
 		TableEntry entry = Data.getSelectedEntry();
 		if(entry==null) return; //Do nothing if none selected
 
@@ -327,9 +328,27 @@ public class Mechanics {
 		return true;
 	}
 
+	public void updateNumberOf(){
+		ArrayList<TableEntry> buildingEntries = Data.getBuildingTable().getEntries();
+		Data.main.setBuildingCount(
+				buildingEntries.get(0).getValue()*buildingEntries.get(0).getNumberOf() +
+						buildingEntries.get(1).getValue()*buildingEntries.get(1).getNumberOf() +
+						buildingEntries.get(2).getValue()*buildingEntries.get(2).getNumberOf()
+		);
+		ArrayList<TableEntry> foodEntries = Data.getFoodTable().getEntries();
+		Data.main.setBuildingCount(
+				foodEntries.get(0).getValue()*foodEntries.get(0).getNumberOf() +
+						foodEntries.get(1).getValue()*foodEntries.get(1).getNumberOf() +
+						foodEntries.get(2).getValue()*foodEntries.get(2).getNumberOf()
+		);
+	}
+
 	public static class buildingListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			if(Data.getCurrentTable()!=null) Data.getCurrentTable().unclickAll();
+			Data.ui.setAllTablesInvisible();
+			Data.ui.refreshTable();
 			if(Data.getResourceType()==ResourceType.BUILDINGS){
 				Data.setResourceType(ResourceType.NONE);
 				Data.main.setBuildingTableVisible(false);
@@ -346,12 +365,17 @@ public class Mechanics {
 	public static class foodListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			if(Data.getResourceType()==ResourceType.BUILDINGS){
+			if(Data.getCurrentTable()!=null) Data.getCurrentTable().unclickAll();
+			Data.ui.setAllTablesInvisible();
+			Data.ui.refreshTable();
+			if(Data.getResourceType()==ResourceType.FOOD){
 				Data.setResourceType(ResourceType.NONE);
-				Data.main.setBuildingTableVisible(false);
-				Data.ui.refreshBuildingTable();
+				Data.main.setFoodTableVisible(false);
+				Data.ui.refreshFoodTable();
+			} else {
+				Data.setResourceType(ResourceType.FOOD);
+				Data.main.setFoodTableVisible(true);
 			}
-			Data.setResourceType(ResourceType.FOOD);
 			Data.ui.updateResources();
 			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			return true;

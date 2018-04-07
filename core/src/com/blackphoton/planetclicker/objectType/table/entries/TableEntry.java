@@ -34,6 +34,7 @@ public abstract class TableEntry {
 	protected TableEntry upgradeTo;
 	protected boolean createClicked = false;
 	protected boolean upgradeClicked = false;
+	protected boolean upgradable = true;
 
 	public TableEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ResourceBundle resources){
 		this.type = type;
@@ -83,7 +84,7 @@ public abstract class TableEntry {
 		if(upgradeClicked){
 			upgrade.setDrawable(new SpriteDrawable(new Sprite(upgradeClicked_tex)));
 		}else
-		if(upgradeTo==null){
+		if(upgradeTo==null || !upgradable){
 			upgrade.setDrawable(new SpriteDrawable(new Sprite(upgradeLocked_tex)));
 			canUpgrade = false;
 		}else
@@ -111,7 +112,7 @@ public abstract class TableEntry {
 				Data.setSelectedEntry(null);
 				return true;
 			}
-			Data.getBuildingTable().unclickAll();
+			Data.getCurrentTable().unclickAll();
 			createClicked = true;
 			updateButtons();
 			Data.setSelectedEntry(TableEntry.this);
@@ -129,7 +130,7 @@ public abstract class TableEntry {
 				Data.setSelectedEntry(null);
 				return true;
 			}
-			Data.getBuildingTable().unclickAll();
+			Data.getCurrentTable().unclickAll();
 			upgradeClicked = true;
 			updateButtons();
 			Data.setSelectedEntry(TableEntry.this);
@@ -219,5 +220,13 @@ public abstract class TableEntry {
 
 	public void setUpgradeClicked(boolean upgradeClicked) {
 		this.upgradeClicked = upgradeClicked;
+	}
+
+	public boolean isUpgradable() {
+		return upgradable;
+	}
+
+	public void setUpgradable(boolean upgradable) {
+		this.upgradable = upgradable;
 	}
 }

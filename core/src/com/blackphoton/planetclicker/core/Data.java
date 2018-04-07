@@ -32,6 +32,7 @@ public class Data {
 	private static TableInfo foodTable;
 	private static TableInfo resourcesTable;
 	private static TableInfo specialTable;
+	private static TableInfo currentTable;
 
 	private static TableEntry selectedEntry;
 
@@ -108,6 +109,23 @@ public class Data {
 
 	public static void setResourceType(ResourceType resourceType) {
 		Data.resourceType = resourceType;
+		switch (resourceType){
+			case BUILDINGS:
+				currentTable = buildingTable;
+				break;
+			case FOOD:
+				currentTable = foodTable;
+				break;
+			case RESOURCES:
+				currentTable = resourcesTable;
+				break;
+			case SPECIAL:
+				currentTable = specialTable;
+				break;
+			case NONE:
+				currentTable = null;
+				break;
+		}
 	}
 
 	public static void setTableInfo(TableInfo building, TableInfo food, TableInfo resources, TableInfo special){
@@ -147,5 +165,13 @@ public class Data {
 
 	public static void setSelectedEntry(TableEntry selectedEntry) {
 		Data.selectedEntry = selectedEntry;
+	}
+
+	public static TableInfo getCurrentTable() {
+		return currentTable;
+	}
+
+	public static void setCurrentTable(TableInfo currentTable) {
+		Data.currentTable = currentTable;
 	}
 }

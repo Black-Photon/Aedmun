@@ -20,6 +20,9 @@ import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.Picture;
 import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
+import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
+
+import static com.badlogic.gdx.scenes.scene2d.ui.Table.Debug.table;
 
 public class UI {
 
@@ -48,6 +51,8 @@ public class UI {
 	private Picture pop_bar;
 	private Picture pop_bar_right;
 
+	//Side Bar
+
 	//Options
 	// - General
 	private Texture tableBackground_tex = new Texture("table.png");
@@ -67,6 +72,12 @@ public class UI {
 
 	// - Food
 	private Table foodTable;
+	private Texture hunt_tex;
+	private Image hunt;
+	private Texture small_farm_tex;
+	private Image small_farm;
+	private Texture farm_tex;
+	private Image farm;
 
 	// - Resources
 	private Table resourcesTable;
@@ -161,6 +172,13 @@ public class UI {
 		town_tex = new Texture("town.png");
 		town = new Image(town_tex);
 
+		hunt_tex = new Texture("hunt.png");
+		hunt = new Image(hunt_tex);
+		small_farm_tex = new Texture("small_farm.png");
+		small_farm = new Image(small_farm_tex);
+		farm_tex = new Texture("farm.png");
+		farm = new Image(farm_tex);
+
 		//Other
 		space = new Texture("space.png");
 		space.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -221,6 +239,9 @@ public class UI {
 
 	public void resize(int width, int height) {
 		refreshBuildingTable();
+		refreshFoodTable();
+		refreshResourcesTable();
+		refreshSpecialTable();
 
 		//Bottom Bar
 		line.setWidth(Gdx.graphics.getWidth());
@@ -260,6 +281,7 @@ public class UI {
 		stage.addActor(era);
 		stage.addActor(planet);
 		stage.addActor(buildingTable);
+		stage.addActor(foodTable);
 		Data.main.setStage(stage);
 
 		multiplexer = new InputMultiplexer(stage, new InputDetector());
@@ -285,7 +307,7 @@ public class UI {
 		era.setY(Gdx.graphics.getHeight()-pop_bar.getHeight()*heightScale-era.getHeight()-10);
 
 		planet.setX(Gdx.graphics.getWidth()/2-planet.getWidth()/2);
-		if(Data.main.isBuildingTableVisible()){
+		if(Data.main.isBuildingTableVisible()||Data.main.isFoodTableVisible()||Data.main.isResourcesTableVisible()||Data.main.isSpecialTableVisible()){
 			planetY = (era.getY()+buildings_background.getHeight()+buildingTable.getHeight())/2-planet.getHeight()/2;
 		}else{
 			planetY = (Gdx.graphics.getHeight()/2-planet.getHeight()/2);
@@ -295,6 +317,9 @@ public class UI {
 
 		buildingTable.setX(0);
 		buildingTable.setY(buildings_background.getHeight());
+
+		foodTable.setX(0);
+		foodTable.setY(buildings_background.getHeight());
 	}
 
 	private float scroll = 0;
@@ -412,10 +437,10 @@ public class UI {
 		buildingInfo.updateButtons();
 
 		buildingTable.setSkin(skin);
-		buildingTable.add().width(smallUnit).center();          buildingTable.add("Name").width(largeUnit).center().fill();                                          buildingTable.add("Holds").width(largeUnit).center().fill();                                                         buildingTable.add("No.").width(smallUnit).center().fill();                                                               buildingTable.add().width(largeUnit).center();                                               buildingTable.add().width(largeUnit).center();                                              buildingTable.row().height(rowHeight);
-		buildingTable.add(house).width(smallUnit).center();     buildingTable.add(buildingInfo.getEntries().get(2).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add(buildingInfo.getEntries().get(2).getCreate()).width(largeUnit).center();   buildingTable.add(buildingInfo.getEntries().get(2).getUpgrade()).width(largeUnit).center(); buildingTable.row().height(rowHeight);
-		buildingTable.add(village).width(smallUnit).center();   buildingTable.add(buildingInfo.getEntries().get(1).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add(buildingInfo.getEntries().get(1).getCreate()).width(largeUnit).center();   buildingTable.add(buildingInfo.getEntries().get(1).getUpgrade()).width(largeUnit).center(); buildingTable.row().height(rowHeight);
-		buildingTable.add(town).width(smallUnit).center();      buildingTable.add(buildingInfo.getEntries().get(0).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add(buildingInfo.getEntries().get(0).getCreate()).width(largeUnit).center();   buildingTable.add(buildingInfo.getEntries().get(0).getUpgrade()).width(largeUnit).center(); //buildingTable.row();
+		addTitleRow(buildingTable, "Holds", smallUnit, largeUnit);
+		addRow(buildingTable, false, smallUnit, largeUnit, buildingInfo, 2, house);
+		addRow(buildingTable, false, smallUnit, largeUnit, buildingInfo, 1, village);
+		addRow(buildingTable, true, smallUnit, largeUnit, buildingInfo, 0, town);
 
 		buildingTable.pad(padding);
 		buildingTable.bottom().left();
@@ -429,11 +454,81 @@ public class UI {
 		buildingTable.setY(buildings_background.getHeight());
 	}
 
-	public void refreshFoodTable(){ }
+	public void refreshFoodTable(){
+		TableInfo foodInfo = Data.getFoodTable();
+
+		if(foodTable!=null) foodTable.remove();
+		foodTable = new Table();
+
+
+		if(Data.main.isFoodTableVisible()){
+			foodTable.setVisible(true);
+		} else {
+			foodTable.setVisible(false);
+		}
+
+		float smallUnit = Gdx.graphics.getWidth() * 1/7;
+		float largeUnit = Gdx.graphics.getWidth() * 1.25f/7;
+		rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
+
+		house.setScaling(Scaling.fit);
+		village.setScaling(Scaling.fit);
+		town.setScaling(Scaling.fit);
+
+		hunt.setScaling(Scaling.fit);
+		small_farm.setScaling(Scaling.fit);
+		farm.setScaling(Scaling.fit);
+
+		foodInfo.updateButtons();
+
+		foodTable.setSkin(skin);
+		addTitleRow(foodTable, "Feeds", smallUnit, largeUnit);
+		addRow(foodTable, false, smallUnit, largeUnit, foodInfo, 2, hunt);
+		addRow(foodTable, false, smallUnit, largeUnit, foodInfo, 1, small_farm);
+		addRow(foodTable, true, smallUnit, largeUnit, foodInfo, 0, farm);
+
+		foodTable.pad(padding);
+		foodTable.bottom().left();
+		foodTable.setBackground(tableBackground);
+		foodTable.setHeight(rowHeight*4);
+
+		Stage stage = Data.main.getStage();
+		stage.addActor(foodTable);
+
+		foodTable.setX(0);
+		foodTable.setY(food_background.getHeight());
+	}
 
 	public void refreshResourcesTable(){ }
 
 	public void refreshSpecialTable(){ }
+
+	public void setAllTablesInvisible(){
+		Data.main.setBuildingTableVisible(false);
+		Data.main.setFoodTableVisible(false);
+		Data.main.setResourcesTableVisible(false);
+		Data.main.setSpecialTableVisible(false);
+	}
+
+	private void addTitleRow(Table table, String valueName, float smallUnit, float largeUnit){
+		table.add().width(smallUnit).center();
+		table.add("Name").width(largeUnit).center().fill();
+		table.add("Holds").width(largeUnit).center().fill();
+		table.add("No.").width(smallUnit).center().fill();
+		table.add().width(largeUnit).center();
+		table.add().width(largeUnit).center();
+		table.row().height(rowHeight);
+	}
+
+	private void addRow(Table table, boolean lastRow, float smallUnit, float largeUnit, TableInfo info, int entry, Image picture){
+		table.add(picture).width(smallUnit).center();
+		table.add(info.getEntries().get(entry).getName()).width(largeUnit).center().fill();
+		table.add(Integer.toString(info.getEntries().get(entry).getValue())).width(largeUnit).center().fill();
+		table.add(Integer.toString(info.getEntries().get(entry).getNumberOf())).width(smallUnit).center().fill();
+		table.add(info.getEntries().get(entry).getCreate()).width(largeUnit).center();
+		table.add(info.getEntries().get(entry).getUpgrade()).width(largeUnit).center();
+		if(!lastRow) table.row().height(rowHeight);
+	}
 
 	public void refreshStage(){
 
