@@ -21,17 +21,11 @@ public class InputDetector implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(Data.main.getPlanet().pointInsidePlanet(screenX,screenY)) {
-			return Data.mechanics.planetClicked();
-		}
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if(Data.main.getPlanet().isClicked()) {
-			return Data.mechanics.planetUnclicked();
-		}
 		return false;
 	}
 

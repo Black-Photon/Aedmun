@@ -320,25 +320,56 @@ public class Mechanics {
 	public static class foodListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			if(Data.getResourceType()==ResourceType.BUILDINGS){
+				Data.setResourceType(ResourceType.NONE);
+				Data.main.setBuildingTableVisible(false);
+				Data.ui.refreshBuildingTable();
+			}
 			Data.setResourceType(ResourceType.FOOD);
 			Data.ui.updateResources();
+			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			return true;
 		}
 	}
 	public static class resourcesListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			if(Data.getResourceType()==ResourceType.BUILDINGS) {
+				Data.setResourceType(ResourceType.NONE);
+				Data.main.setBuildingTableVisible(false);
+				Data.ui.refreshBuildingTable();
+			}
 			Data.setResourceType(ResourceType.RESOURCES);
 			Data.ui.updateResources();
+			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			return true;
 		}
 	}
 	public static class specialListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			if(Data.getResourceType()==ResourceType.BUILDINGS){
+				Data.setResourceType(ResourceType.NONE);
+				Data.main.setBuildingTableVisible(false);
+				Data.ui.refreshBuildingTable();
+			}
 			Data.setResourceType(ResourceType.SPECIAL);
 			Data.ui.updateResources();
+			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			return true;
+		}
+	}
+	public static class planetListener extends ClickListener {
+		@Override
+		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			if(Data.main.getPlanet().pointInsidePlanet(x+Data.main.getPlanet().getX(),y+Data.main.getPlanet().getY()))
+			return Data.mechanics.planetClicked();
+			return false;
+		}
+
+		@Override
+		public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+			Data.mechanics.planetUnclicked();
 		}
 	}
 

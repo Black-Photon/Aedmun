@@ -10,10 +10,12 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.Picture;
 import com.blackphoton.planetclicker.objectType.Planet;
@@ -47,16 +49,32 @@ public class UI {
 	private Picture pop_bar_right;
 
 	//Options
-	private Table buildingTable;
-	private Table foodTable;
-	private Table resourcesTable;
-	private Table specialTable;
-
-	//Other
+	// - General
+	private Texture tableBackground_tex = new Texture("table.png");
 	private Texture create_tex;
 	private Texture create_locked;
 	private Texture upgrade_tex;
 	private Texture upgrade_locked;
+
+	// - Building
+	private Table buildingTable;
+	private Texture house_tex;
+	private Image house;
+	private Texture village_tex;
+	private Image village;
+	private Texture town_tex;
+	private Image town;
+
+	// - Food
+	private Table foodTable;
+
+	// - Resources
+	private Table resourcesTable;
+
+	// - Special
+	private Table specialTable;
+
+	//Other
 	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 	private Picture era;
 	private Picture settings;
@@ -70,6 +88,9 @@ public class UI {
 	private InputMultiplexer multiplexer;
 	private final int margin = 3;
 	public float planetY;
+
+	long initialJavaHeap = Gdx.app.getJavaHeap();
+	long initialNativeHeap = Gdx.app.getNativeHeap();
 
 	public void createUI(){
 		//General Declarations
@@ -136,6 +157,12 @@ public class UI {
 		populationLabel.setPosition(pop_bar_left.getWidth()+pop_bar.getWidth()/2-glyphLayout.width/2,pop_bar.getHeight()/2-glyphLayout.height/2);
 
 		//Options
+		house_tex = new Texture("house.png");
+		house = new Image(house_tex);
+		village_tex = new Texture("village.png");
+		village = new Image(village_tex);
+		town_tex = new Texture("town.png");
+		town = new Image(town_tex);
 
 		//Other
 		space = new Texture("space.png");
@@ -152,6 +179,8 @@ public class UI {
 
 		Planet planet = Data.getCurrent();
 		planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
+		planet.addListener(new Mechanics.planetListener());
+		planet.setTouchable(Touchable.enabled);
 		countLabel = new Label("", skin);
 
 		Data.main.setPlanet(planet);
@@ -227,12 +256,12 @@ public class UI {
 
 		Data.main.getStage().dispose();
 		Stage stage = new Stage();
-		stage.addActor(planet);
 		stage.addActor(resourceGroup);
 		stage.addActor(sun);
 		stage.addActor(settings);
 		stage.addActor(populationGroup);
 		stage.addActor(era);
+		stage.addActor(planet);
 		stage.addActor(buildingTable);
 		Data.main.setStage(stage);
 
@@ -265,6 +294,7 @@ public class UI {
 			planetY = (Gdx.graphics.getHeight()/2-planet.getHeight()/2);
 		}
 		planet.setY(planetY);
+		planet.setBounds(planet.getX(), planet.getY(), planet.getWidth(), planet.getHeight());
 
 		buildingTable.setX(0);
 		buildingTable.setY(buildings_background.getHeight());
@@ -272,6 +302,77 @@ public class UI {
 
 	private float scroll = 0;
 	private float scrollSpeed = 0.2f;
+
+	final int rows = 4;
+	final int padding = 5;
+	float rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
+
+	Drawable tableBackground = new Drawable() {
+		@Override
+		public void draw(Batch batch, float x, float y, float width, float height) {
+			batch.draw(tableBackground_tex, 0, buildings_background.getHeight(), Gdx.graphics.getWidth(), rowHeight*rows+padding*2);
+		}
+
+		@Override
+		public float getLeftWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setLeftWidth(float leftWidth) {
+
+		}
+
+		@Override
+		public float getRightWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setRightWidth(float rightWidth) {
+
+		}
+
+		@Override
+		public float getTopHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setTopHeight(float topHeight) {
+
+		}
+
+		@Override
+		public float getBottomHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setBottomHeight(float bottomHeight) {
+
+		}
+
+		@Override
+		public float getMinWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setMinWidth(float minWidth) {
+
+		}
+
+		@Override
+		public float getMinHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setMinHeight(float minHeight) {
+
+		}
+	};
 
 	public void refreshTable(){
 		switch (Data.getResourceType()){
@@ -292,96 +393,32 @@ public class UI {
 
 	public void refreshBuildingTable(){
 		TableInfo buildingInfo = Data.getBuildingTable();
+
 		buildingTable = new Table();
 
 		if(Data.main.isBuildingTableVisible()){
-			System.out.println("Showing");
 			buildingTable.setVisible(true);
 		} else {
-			System.out.println("Hiding");
 			buildingTable.setVisible(false);
 		}
 
 		float smallUnit = Gdx.graphics.getWidth() * 1/7;
 		float largeUnit = Gdx.graphics.getWidth() * 1.25f/7;
-		final int rows = 4;
-		final int padding = 5;
-		final float rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
+		rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
+
+		house.setScaling(Scaling.fit);
+		village.setScaling(Scaling.fit);
+		town.setScaling(Scaling.fit);
 
 		buildingTable.setSkin(skin);
-		buildingTable.add().width(smallUnit).center();    buildingTable.add("Name").width(largeUnit).center().fill();                                          buildingTable.add("Holds").width(largeUnit).center().fill();                                                         buildingTable.add("No.").width(smallUnit).center().fill();                                                               buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
-		buildingTable.add().width(smallUnit).center();    buildingTable.add(buildingInfo.getEntries().get(0).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
-		buildingTable.add().width(smallUnit).center();    buildingTable.add(buildingInfo.getEntries().get(1).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
-		buildingTable.add().width(smallUnit).center();    buildingTable.add(buildingInfo.getEntries().get(2).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); //buildingTable.row();
+		buildingTable.add().width(smallUnit).center();          buildingTable.add("Name").width(largeUnit).center().fill();                                          buildingTable.add("Holds").width(largeUnit).center().fill();                                                         buildingTable.add("No.").width(smallUnit).center().fill();                                                               buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
+		buildingTable.add(house).width(smallUnit).center();     buildingTable.add(buildingInfo.getEntries().get(0).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(0).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
+		buildingTable.add(village).width(smallUnit).center();   buildingTable.add(buildingInfo.getEntries().get(1).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(1).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); buildingTable.row().height(rowHeight);
+		buildingTable.add(town).width(smallUnit).center();      buildingTable.add(buildingInfo.getEntries().get(2).getName()).width(largeUnit).center().fill();      buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getValue())).width(largeUnit).center().fill();   buildingTable.add(Integer.toString(buildingInfo.getEntries().get(2).getNumberOf())).width(smallUnit).center().fill();    buildingTable.add().width(largeUnit).center(); buildingTable.add().width(largeUnit).center(); //buildingTable.row();
 
 		buildingTable.pad(padding);
 		buildingTable.bottom().left();
-		buildingTable.setBackground(new Drawable() {
-			@Override
-			public void draw(Batch batch, float x, float y, float width, float height) {
-				batch.draw(new Texture("table.png"), 0, buildings_background.getHeight(), Gdx.graphics.getWidth(), rowHeight*rows+padding*2);
-			}
-
-			@Override
-			public float getLeftWidth() {
-				return 0;
-			}
-
-			@Override
-			public void setLeftWidth(float leftWidth) {
-
-			}
-
-			@Override
-			public float getRightWidth() {
-				return 0;
-			}
-
-			@Override
-			public void setRightWidth(float rightWidth) {
-
-			}
-
-			@Override
-			public float getTopHeight() {
-				return 0;
-			}
-
-			@Override
-			public void setTopHeight(float topHeight) {
-
-			}
-
-			@Override
-			public float getBottomHeight() {
-				return 0;
-			}
-
-			@Override
-			public void setBottomHeight(float bottomHeight) {
-
-			}
-
-			@Override
-			public float getMinWidth() {
-				return 0;
-			}
-
-			@Override
-			public void setMinWidth(float minWidth) {
-
-			}
-
-			@Override
-			public float getMinHeight() {
-				return 0;
-			}
-
-			@Override
-			public void setMinHeight(float minHeight) {
-
-			}
-		});
+		buildingTable.setBackground(tableBackground);
 		buildingTable.setHeight(rowHeight*4);
 	}
 
@@ -390,6 +427,10 @@ public class UI {
 	public void refreshResourcesTable(){ }
 
 	public void refreshSpecialTable(){ }
+
+	public void refreshStage(){
+
+	}
 
 	public void drawBackground(Batch batch){
 		batch.draw(space, (int)-scroll, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),0,0,4,4);
