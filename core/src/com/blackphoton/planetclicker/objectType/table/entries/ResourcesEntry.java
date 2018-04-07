@@ -10,7 +10,7 @@ public class ResourcesEntry extends TableEntry {
 	private ResourceMaterial material;
 
 	public ResourcesEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ResourceBundle resources) {
-		super(type, name, value, requiredEra, upgradeTo, resources);
+		super(type, name, value, requiredEra, upgradeTo, null, resources);
 		material = (ResourceMaterial) resources.getObject(resources.getKeys().nextElement());
 	}
 }

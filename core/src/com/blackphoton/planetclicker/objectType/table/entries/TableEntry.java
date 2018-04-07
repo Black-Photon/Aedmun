@@ -10,8 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.core.Data;
 import com.blackphoton.planetclicker.objectType.Era;
+import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.resources.ResourceType;
 
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public abstract class TableEntry {
@@ -35,8 +37,9 @@ public abstract class TableEntry {
 	protected boolean createClicked = false;
 	protected boolean upgradeClicked = false;
 	protected boolean upgradable = true;
+	protected ArrayList<RequiredResource> resourcesNeeded;
 
-	public TableEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ResourceBundle resources){
+	public TableEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ResourceBundle resources){
 		this.type = type;
 		numberOf = 0;
 		this.resources = resources;
@@ -44,6 +47,7 @@ public abstract class TableEntry {
 		this.requiredEra = requiredEra;
 		this.name = name;
 		this.value = value;
+		this.resourcesNeeded = resourcesNeeded;
 
 		create = new Image(create_tex);
 		create.setScaling(Scaling.fit);
@@ -110,12 +114,14 @@ public abstract class TableEntry {
 				unclick();
 				updateButtons();
 				Data.setSelectedEntry(null);
+				Data.ui.loadSideBar(null);
 				return true;
 			}
 			Data.getCurrentTable().unclickAll();
 			createClicked = true;
 			updateButtons();
 			Data.setSelectedEntry(TableEntry.this);
+			Data.ui.loadSideBar(TableEntry.this);
 			return true;
 		}
 	}
@@ -128,12 +134,14 @@ public abstract class TableEntry {
 				unclick();
 				updateButtons();
 				Data.setSelectedEntry(null);
+				Data.ui.loadSideBar(null);
 				return true;
 			}
 			Data.getCurrentTable().unclickAll();
 			upgradeClicked = true;
 			updateButtons();
 			Data.setSelectedEntry(TableEntry.this);
+			Data.ui.loadSideBar(TableEntry.this);
 			return true;
 		}
 	}
@@ -228,5 +236,13 @@ public abstract class TableEntry {
 
 	public void setUpgradable(boolean upgradable) {
 		this.upgradable = upgradable;
+	}
+
+	public ArrayList<RequiredResource> getResourcesNeeded() {
+		return resourcesNeeded;
+	}
+
+	public void setResourcesNeeded(ArrayList<RequiredResource> resourcesNeeded) {
+		this.resourcesNeeded = resourcesNeeded;
 	}
 }

@@ -19,8 +19,11 @@ import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.Picture;
 import com.blackphoton.planetclicker.objectType.Planet;
+import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
 import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
+
+import java.util.ArrayList;
 
 import static com.badlogic.gdx.scenes.scene2d.ui.Table.Debug.table;
 
@@ -52,6 +55,10 @@ public class UI {
 	private Picture pop_bar_right;
 
 	//Side Bar
+	private Group reqResGroup;
+	private Image reqRes_top;
+	private Image reqRes;
+	private Image reqRes_bottom;
 
 	//Options
 	// - General
@@ -145,6 +152,15 @@ public class UI {
 		food.setTouchable(Touchable.disabled);
 		resources.setTouchable(Touchable.disabled);
 		special.setTouchable(Touchable.disabled);
+
+		//Side Bar
+		reqRes_bottom = new Image(new Texture("side_bar_bottom.png"));
+		reqRes_bottom.setPosition(0,0);
+		reqRes = new Image(new Texture("side_bar.png"));
+		reqRes.setPosition(0,reqRes_bottom.getHeight());
+		reqRes.setScaling(Scaling.stretchY);
+		reqRes_top = new Image(new Texture("side_bar_top.png"));
+		reqRes_top.setPosition(0,reqRes_bottom.getHeight()+reqRes.getHeight());
 
 		//Population
 		populationLabel = new Label("Population: "+ Data.main.getPopulationCount(), skin);
@@ -320,6 +336,44 @@ public class UI {
 
 		foodTable.setX(0);
 		foodTable.setY(buildings_background.getHeight());
+	}
+
+	public void loadSideBar(TableEntry entry){
+		if(entry==null || entry.getResourcesNeeded()==null){
+			reqResGroup.remove();
+			return;
+		}
+		if(reqResGroup!=null) reqResGroup.remove();
+		reqResGroup = new Group();
+		reqResGroup.addActor(reqRes_top);
+		reqResGroup.addActor(reqRes);
+		reqResGroup.addActor(reqRes_bottom);
+		int numberOfResources = 0;
+		float totalHeight = 0;
+		ArrayList<RequiredResource> resources = entry.getResourcesNeeded();
+		for(RequiredResource resource: resources){
+			Image image = resource.getResource();
+			int numberRequired = resource.getNumberRequired();
+			Label numberNeeded = new Label(Integer.toString(numberRequired), skin);
+			glyphLayout = new GlyphLayout(bitmapFont, Integer.toString(numberRequired));
+
+			image.setPosition(reqRes.getWidth()/2-image.getWidth()/2, totalHeight+reqRes_bottom.getHeight()*3/4);
+			numberNeeded.setPosition(reqRes.getWidth()/2-glyphLayout.width/2, totalHeight+reqRes_bottom.getHeight()*3/4-glyphLayout.height);
+
+			totalHeight+=image.getHeight();
+			totalHeight+=glyphLayout.height;
+
+			reqResGroup.addActor(image);
+			reqResGroup.addActor(numberNeeded);
+			numberOfResources++;
+		}
+		reqRes.setHeight(totalHeight-reqRes_bottom.getHeight());
+		reqRes_top.setPosition(0,reqRes_bottom.getHeight()+reqRes.getHeight());
+		Data.main.getStage().addActor(reqResGroup);
+
+
+		reqResGroup.setX(Gdx.graphics.getWidth() - reqRes.getWidth());
+		reqResGroup.setY(Gdx.graphics.getHeight() / 2 - (reqRes_bottom.getHeight()+reqRes.getHeight()+reqRes_top.getHeight())/2);
 	}
 
 	private float scroll = 0;
