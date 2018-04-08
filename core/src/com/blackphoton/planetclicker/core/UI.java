@@ -469,7 +469,7 @@ public class UI {
 		public void draw(Batch batch, float x, float y, float width, float height) {
 			padding = Gdx.graphics.getHeight()/100;
 			rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
-			batch.draw(tableBottomBackground_tex, 0, buildings_background.getHeight(), Gdx.graphics.getWidth(), rowHeight*(rows)+padding);
+			batch.draw(tableBottomBackground_tex, 0, 0, Gdx.graphics.getWidth(), rowHeight*(rows)+padding);
 		}
 
 		@Override
@@ -630,7 +630,7 @@ public class UI {
 		list.add(new Row(1, village));
 		list.add(new Row(0, town));
 
-		refreshTableX(Data.getBuildingTable(), buildingTable, "Holds", Data.main.isBuildingTableVisible(), list);
+		refreshTableX(Data.getBuildingTable(), buildingTitleTable, buildingScroller, "Holds", Data.main.isBuildingTableVisible(), list);
 	}
 
 	public void refreshFoodTable(){
@@ -643,8 +643,16 @@ public class UI {
 		list.add(new Row(1, small_farm));
 		list.add(new Row(0, farm));
 
-		refreshTableX(Data.getFoodTable(), foodTable, "Feeds", Data.main.isFoodTableVisible(), list);
+		refreshTableX(Data.getFoodTable(), foodTitleTable, foodScroller, "Feeds", Data.main.isFoodTableVisible(), list);
 	}
+
+	private Table buildingTitleTable;
+	private Table foodTitleTable;
+	private Table resourceTitleTable;
+
+	private ScrollPane buildingScroller;
+	private ScrollPane foodScroller;
+	private ScrollPane resourceScroller;
 
 	public void refreshResourcesTable(){
 		wood.setScaling(Scaling.fit);
@@ -659,71 +667,68 @@ public class UI {
 		list.add(new Row(7, iron));
 		list.add(new Row(6, null));
 
-		refreshTableX(Data.getResourcesTable(), resourcesTable, "Create", Data.main.isResourcesTableVisible(), list);
+		refreshTableX(Data.getResourcesTable(), resourceTitleTable, resourceScroller, "Create", Data.main.isResourcesTableVisible(), list);
 	}
 
 	public void refreshSpecialTable(){ }
 
-	public void refreshTableX(TableInfo info, Table table, String secret, boolean isVisible, ArrayList<Row> rowList){
+	public void refreshTableX(TableInfo info, Table titleTable, ScrollPane scroller, String secret, boolean isVisible, ArrayList<Row> rowList){
 		rows = 4;
 		padding = Gdx.graphics.getHeight()/100;
 		rowHeight = (Gdx.graphics.getHeight())/rows/4; //4 because I want it to cover 1/4 of the screen
 
-		if(table!=null) table.remove();
-
-		Table scrollTable = new Table();
-		Table titleTable = new Table();
+		if(titleTable!=null) titleTable.remove();
+		if(scroller!=null) scroller.remove();
 
 		float smallUnit = Gdx.graphics.getWidth() * 1/7;
 		float largeUnit = Gdx.graphics.getWidth() * 1.25f/7;
 
+		Table scrollTable = new Table();
+
+		titleTable = new Table();
+		titleTable.setSkin(skin);
+		addTitleRow(titleTable, secret, smallUnit, largeUnit);
+		titleTable.pad(0, 0,0,0);
+
 		info.updateButtons();
 
 		scrollTable.setSkin(skin);
-		titleTable.setSkin(skin);
-		addTitleRow(titleTable, secret, smallUnit, largeUnit);
 		scrollTable.row().height(rowHeight);
-
 		for(Row row: rowList){
 			if(!row.equals(rowList.get(rowList.size()-1))) addRow(scrollTable, false, smallUnit, largeUnit, info, row.getLine(), row.getImage());
 			else addRow(scrollTable, true, smallUnit, largeUnit, info, row.getLine(), row.getImage());
 		}
 
 
-		titleTable.pad(0, 0,0,0);
 		scrollTable.pad(0, 0,0,0);
 
-		//scrollTable.setBackground(tableBottomBackground);
+		scrollTable.setBackground(tableBottomBackground);
 		titleTable.setBackground(tableTopBackground);
 
-		ScrollPane scroller = new ScrollPane(scrollTable);
+		scroller = new ScrollPane(scrollTable);
 		scroller.setScrollingDisabled(true,false);
 		scroller.setHeight(3*rowHeight);
+		scroller.setWidth(Gdx.graphics.getWidth());
 
-		table = new Table();
-		table.setHeight(4*rowHeight);
-		table.setWidth(Gdx.graphics.getWidth());
-		//table.setBackground(tableBackground);
-		table.add(titleTable);
-		table.row().height(rowHeight);
-		table.add(scroller).height(rowHeight*3);
+		titleTable.setHeight(rowHeight);
+		titleTable.setWidth(Gdx.graphics.getWidth());
 
-		table.setBackground(tableBottomBackground);
-
-		table.pad(padding, 0,0,0);
-
-		table.setX(0);
-		System.out.println("Y at "+line.getY()+1);
-		table.setY(line.getY()+1);
+		titleTable.setX(0);
+		titleTable.setY(line.getY()+1+scroller.getHeight());
+		scroller.setX(0);
+		scroller.setY(line.getY()+1);
 
 		if(isVisible){ //Believe me, I know it's weird, but somehow doesn't work without. Feel free to try, but don't blame me for breaking the project.
-			table.setVisible(true);
+			scroller.setVisible(true);
+			titleTable.setVisible(true);
 		} else {
-			table.setVisible(false);
+			scroller.setVisible(false);
+			titleTable.setVisible(false);
 		}
 
 		Stage stage = Data.main.getStage();
-		stage.addActor(table);
+		stage.addActor(titleTable);
+		stage.addActor(scroller);
 	}
 
 	public void setAllTablesInvisible(){
