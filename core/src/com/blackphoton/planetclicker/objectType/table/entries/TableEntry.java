@@ -38,8 +38,9 @@ public abstract class TableEntry {
 	protected boolean upgradeClicked = false;
 	protected boolean upgradable = true;
 	protected ArrayList<RequiredResource> resourcesNeeded;
+	protected ArrayList<RequiredResource> resourcesNeededToUpgrade;
 
-	public TableEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ResourceBundle resources){
+	public TableEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, ResourceBundle resources){
 		this.type = type;
 		numberOf = 0;
 		this.resources = resources;
@@ -48,6 +49,7 @@ public abstract class TableEntry {
 		this.name = name;
 		this.value = value;
 		this.resourcesNeeded = resourcesNeeded;
+		this.resourcesNeededToUpgrade = resourcesNeededToUpgrade;
 
 		create = new Image(create_tex);
 		create.setScaling(Scaling.fit);
@@ -114,14 +116,14 @@ public abstract class TableEntry {
 				unclick();
 				updateButtons();
 				Data.setSelectedEntry(null);
-				Data.ui.loadSideBar(null);
+				Data.ui.loadSideBar(null, true);
 				return true;
 			}
 			Data.getCurrentTable().unclickAll();
 			createClicked = true;
 			updateButtons();
 			Data.setSelectedEntry(TableEntry.this);
-			Data.ui.loadSideBar(TableEntry.this);
+			Data.ui.loadSideBar(TableEntry.this, true);
 			return true;
 		}
 	}
@@ -134,14 +136,14 @@ public abstract class TableEntry {
 				unclick();
 				updateButtons();
 				Data.setSelectedEntry(null);
-				Data.ui.loadSideBar(null);
+				Data.ui.loadSideBar(null, false);
 				return true;
 			}
 			Data.getCurrentTable().unclickAll();
 			upgradeClicked = true;
 			updateButtons();
 			Data.setSelectedEntry(TableEntry.this);
-			Data.ui.loadSideBar(TableEntry.this);
+			Data.ui.loadSideBar(TableEntry.this, false);
 			return true;
 		}
 	}
@@ -244,5 +246,13 @@ public abstract class TableEntry {
 
 	public void setResourcesNeeded(ArrayList<RequiredResource> resourcesNeeded) {
 		this.resourcesNeeded = resourcesNeeded;
+	}
+
+	public ArrayList<RequiredResource> getResourcesNeededToUpgrade() {
+		return resourcesNeededToUpgrade;
+	}
+
+	public void setResourcesNeededToUpgrade(ArrayList<RequiredResource> resourcesNeededToUpgrade) {
+		this.resourcesNeededToUpgrade = resourcesNeededToUpgrade;
 	}
 }

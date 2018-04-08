@@ -352,8 +352,8 @@ public class UI {
 		refreshResourcesTable();
 	}
 
-	public void loadSideBar(TableEntry entry){
-		if(entry==null || entry.getResourcesNeeded()==null){
+	public void loadSideBar(TableEntry entry, boolean create){
+		if(entry==null || (create && (entry.getResourcesNeeded()==null || entry.getResourcesNeeded().size()==0)) || (!create && (entry.getResourcesNeededToUpgrade()==null || entry.getResourcesNeededToUpgrade().size()==0))){
 			if(reqResGroup!=null) reqResGroup.remove();
 			return;
 		}
@@ -364,7 +364,11 @@ public class UI {
 		reqResGroup.addActor(reqRes_bottom);
 		int numberOfResources = 0;
 		float totalHeight = 0;
-		ArrayList<RequiredResource> resources = entry.getResourcesNeeded();
+		ArrayList<RequiredResource> resources;
+
+		if(create)  resources = entry.getResourcesNeeded();
+		else        resources = entry.getResourcesNeededToUpgrade();
+
 		for(RequiredResource resource: resources){
 			Image image = resource.getResource();
 			int numberRequired = resource.getNumberRequired();

@@ -25,14 +25,14 @@ public class TableInfo {
 		entries.add(entry);
 	}
 
-	public TableEntry addEntry(String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ResourceBundle resources) {
+	public TableEntry addEntry(String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, ResourceBundle resources) {
 		TableEntry entry = null;
 		switch (type) {
 			case BUILDINGS:
-				entry = new BuildingEntry(type, name, value, requiredEra, upgradeTo, resourcesNeeded, resources);
+				entry = new BuildingEntry(type, name, value, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
 				break;
 			case FOOD:
-				entry = new FoodEntry(type, name, value, requiredEra, upgradeTo, resourcesNeeded, resources);
+				entry = new FoodEntry(type, name, value, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
 				break;
 			case RESOURCES:
 				entry = new ResourcesEntry(type, name, value, requiredEra, upgradeTo, resources);

@@ -11,8 +11,8 @@ import java.util.ResourceBundle;
 public class FoodEntry extends TableEntry {
 	private int timeLimit;
 
-	public FoodEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ResourceBundle resources) {
-		super(type, name, value, requiredEra, upgradeTo, resourcesNeeded, resources);
+	public FoodEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, ResourceBundle resources) {
+		super(type, name, value, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
 		timeLimit = (Integer) resources.getObject(resources.getKeys().nextElement());
 		if(timeLimit>0)
 			new Thread(){
