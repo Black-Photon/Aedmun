@@ -467,7 +467,9 @@ public class UI {
 	Drawable tableBottomBackground = new Drawable() {
 		@Override
 		public void draw(Batch batch, float x, float y, float width, float height) {
-			batch.draw(tableBottomBackground_tex, 0, buildings_background.getHeight(), Gdx.graphics.getWidth(), rowHeight*rows+padding*2);
+			padding = Gdx.graphics.getHeight()/100;
+			rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
+			batch.draw(tableBottomBackground_tex, 0, buildings_background.getHeight(), Gdx.graphics.getWidth(), rowHeight*(rows)+padding);
 		}
 
 		@Override
@@ -534,7 +536,9 @@ public class UI {
 	Drawable tableTopBackground = new Drawable() {
 		@Override
 		public void draw(Batch batch, float x, float y, float width, float height) {
-			batch.draw(tableTopBackground_tex, 0, buildings_background.getHeight(), Gdx.graphics.getWidth(), rowHeight*rows+padding*2);
+			padding = Gdx.graphics.getHeight()/100;
+			rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
+			batch.draw(tableTopBackground_tex, 0, buildings_background.getHeight()+rowHeight*(rows-1), Gdx.graphics.getWidth(), rowHeight+padding);
 		}
 
 		@Override
@@ -663,7 +667,7 @@ public class UI {
 	public void refreshTableX(TableInfo info, Table table, String secret, boolean isVisible, ArrayList<Row> rowList){
 		rows = 4;
 		padding = Gdx.graphics.getHeight()/100;
-		rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
+		rowHeight = (Gdx.graphics.getHeight())/rows/4; //4 because I want it to cover 1/4 of the screen
 
 		if(table!=null) table.remove();
 
@@ -672,7 +676,6 @@ public class UI {
 
 		float smallUnit = Gdx.graphics.getWidth() * 1/7;
 		float largeUnit = Gdx.graphics.getWidth() * 1.25f/7;
-		rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
 
 		info.updateButtons();
 
@@ -686,9 +689,11 @@ public class UI {
 			else addRow(scrollTable, true, smallUnit, largeUnit, info, row.getLine(), row.getImage());
 		}
 
-		scrollTable.pad(padding);
 
-		scrollTable.setBackground(tableBottomBackground);
+		titleTable.pad(0, 0,0,0);
+		scrollTable.pad(0, 0,0,0);
+
+		//scrollTable.setBackground(tableBottomBackground);
 		titleTable.setBackground(tableTopBackground);
 
 		ScrollPane scroller = new ScrollPane(scrollTable);
@@ -703,9 +708,13 @@ public class UI {
 		table.row().height(rowHeight);
 		table.add(scroller).height(rowHeight*3);
 
+		table.setBackground(tableBottomBackground);
+
+		table.pad(padding, 0,0,0);
 
 		table.setX(0);
-		table.setY(resources_background.getHeight());
+		System.out.println("Y at "+line.getY()+1);
+		table.setY(line.getY()+1);
 
 		if(isVisible){ //Believe me, I know it's weird, but somehow doesn't work without. Feel free to try, but don't blame me for breaking the project.
 			table.setVisible(true);
