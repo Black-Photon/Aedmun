@@ -1,6 +1,7 @@
 package com.blackphoton.planetclicker.core;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g3d.model.data.ModelMaterial;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -405,6 +406,22 @@ public class Mechanics {
 						foodEntries.get(1).getValue()*foodEntries.get(1).getNumberOf() +
 						foodEntries.get(2).getValue()*foodEntries.get(2).getNumberOf()
 		);
+
+		ArrayList<TableEntry> resources = Data.getResourcesTable().getEntries();
+		Data.main.setWoodCount(0);
+		Data.main.setBronzeCount(0);
+		Data.main.setIronCount(0);
+		for(TableEntry entry: resources){
+			if(((ResourcesEntry)entry).getMaterial()==ResourceMaterial.WOOD && Data.main.getWoodCount()==0){
+				Data.main.setWoodCount(Data.main.getWoodCount()+entry.getNumberOf());
+			}
+			if(((ResourcesEntry)entry).getMaterial()==ResourceMaterial.BRONZE && Data.main.getBronzeCount()==0){
+				Data.main.setBronzeCount(Data.main.getBronzeCount()+entry.getNumberOf());
+			}
+			if(((ResourcesEntry)entry).getMaterial()==ResourceMaterial.IRON && Data.main.getIronCount()==0){
+				Data.main.setIronCount(Data.main.getIronCount()+entry.getNumberOf());
+			}
+		}
 	}
 
 	public static class buildingListener extends ClickListener {
@@ -448,12 +465,17 @@ public class Mechanics {
 	public static class resourcesListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			if(Data.getResourceType()==ResourceType.BUILDINGS) {
+			if(Data.getCurrentTable()!=null) Data.getCurrentTable().unclickAll();
+			Data.ui.setAllTablesInvisible();
+			Data.ui.refreshTable();
+			if(Data.getResourceType()==ResourceType.RESOURCES){
 				Data.setResourceType(ResourceType.NONE);
-				Data.main.setBuildingTableVisible(false);
-				Data.ui.refreshBuildingTable();
+				Data.main.setResourcesTableVisible(false);
+				Data.ui.refreshResourcesTable();
+			} else {
+				Data.setResourceType(ResourceType.RESOURCES);
+				Data.main.setResourcesTableVisible(true);
 			}
-			Data.setResourceType(ResourceType.RESOURCES);
 			Data.ui.updateResources();
 			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			return true;

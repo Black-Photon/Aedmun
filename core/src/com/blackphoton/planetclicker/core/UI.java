@@ -10,16 +10,14 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.Picture;
 import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
+import com.blackphoton.planetclicker.objectType.table.Row;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
 import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
 
@@ -63,12 +61,15 @@ public class UI {
 	//Options
 	// - General
 	private Texture tableBackground_tex = new Texture("table.png");
+	private Texture tableTopBackground_tex = new Texture("table_top.png");
+	private Texture tableBottomBackground_tex = new Texture("table_bottom.png");
 	private Texture create_tex;
 	private Texture create_locked;
 	private Texture upgrade_tex;
 	private Texture upgrade_locked;
 
 	// - Building
+	private ScrollPane buildingScroll;
 	private Table buildingTable;
 	private Texture house_tex;
 	private Image house;
@@ -78,6 +79,7 @@ public class UI {
 	private Image town;
 
 	// - Food
+	private ScrollPane foodScroll;
 	private Table foodTable;
 	private Texture hunt_tex;
 	private Image hunt;
@@ -87,7 +89,14 @@ public class UI {
 	private Image farm;
 
 	// - Resources
+	private ScrollPane resourceScroll;
 	private Table resourcesTable;
+	private Texture wood_tex;
+	private Image wood;
+	private Texture bronze_tex;
+	private Image bronze;
+	private Texture iron_tex;
+	private Image iron;
 
 	// - Special
 	private Table specialTable;
@@ -104,7 +113,6 @@ public class UI {
 	private BitmapFont bitmapFont;
 	private float heightScale;
 	private InputMultiplexer multiplexer;
-	private final int margin = 3;
 	public float planetY;
 
 	public void createUI(){
@@ -195,6 +203,14 @@ public class UI {
 		farm_tex = new Texture("farm.png");
 		farm = new Image(farm_tex);
 
+		wood_tex = new Texture("wood.png");
+		wood = new Image(wood_tex);
+		bronze_tex = new Texture("bronze_bar.png");
+		bronze = new Image(bronze_tex);
+		iron_tex = new Texture("iron_bar.png");
+		iron = new Image(iron_tex);
+		resourceScroll = new ScrollPane(null);
+
 		//Other
 		space = new Texture("space.png");
 		space.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -226,6 +242,8 @@ public class UI {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		populationLabel.setText("Population: "+Data.main.getPopulationCount());
+
+		Data.main.getStage().getBatch().setColor(1,1,1,1);
 	}
 
 	public void updateResources(){
@@ -296,8 +314,6 @@ public class UI {
 		stage.addActor(populationGroup);
 		stage.addActor(era);
 		stage.addActor(planet);
-		stage.addActor(buildingTable);
-		stage.addActor(foodTable);
 		Data.main.setStage(stage);
 
 		multiplexer = new InputMultiplexer(stage, new InputDetector());
@@ -324,23 +340,21 @@ public class UI {
 
 		planet.setX(Gdx.graphics.getWidth()/2-planet.getWidth()/2);
 		if(Data.main.isBuildingTableVisible()||Data.main.isFoodTableVisible()||Data.main.isResourcesTableVisible()||Data.main.isSpecialTableVisible()){
-			planetY = (era.getY()+buildings_background.getHeight()+buildingTable.getHeight())/2-planet.getHeight()/2;
+			planetY = (era.getY()+buildings_background.getHeight()+(Gdx.graphics.getHeight()-2*padding)/rows)/2-planet.getHeight()/2;
 		}else{
 			planetY = (Gdx.graphics.getHeight()/2-planet.getHeight()/2);
 		}
 		planet.setY(planetY);
 		planet.setBounds(planet.getX(), planet.getY(), planet.getWidth(), planet.getHeight());
 
-		buildingTable.setX(0);
-		buildingTable.setY(buildings_background.getHeight());
-
-		foodTable.setX(0);
-		foodTable.setY(buildings_background.getHeight());
+		refreshBuildingTable();
+		refreshFoodTable();
+		refreshResourcesTable();
 	}
 
 	public void loadSideBar(TableEntry entry){
 		if(entry==null || entry.getResourcesNeeded()==null){
-			reqResGroup.remove();
+			if(reqResGroup!=null) reqResGroup.remove();
 			return;
 		}
 		if(reqResGroup!=null) reqResGroup.remove();
@@ -379,8 +393,8 @@ public class UI {
 	private float scroll = 0;
 	private float scrollSpeed = 0.2f;
 
-	final int rows = 4;
-	final int padding = 5;
+	int rows = 4;
+	float padding = 3;
 	float rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
 
 	Drawable tableBackground = new Drawable() {
@@ -450,6 +464,141 @@ public class UI {
 		}
 	};
 
+	Drawable tableBottomBackground = new Drawable() {
+		@Override
+		public void draw(Batch batch, float x, float y, float width, float height) {
+			batch.draw(tableBottomBackground_tex, 0, buildings_background.getHeight(), Gdx.graphics.getWidth(), rowHeight*rows+padding*2);
+		}
+
+		@Override
+		public float getLeftWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setLeftWidth(float leftWidth) {
+
+		}
+
+		@Override
+		public float getRightWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setRightWidth(float rightWidth) {
+
+		}
+
+		@Override
+		public float getTopHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setTopHeight(float topHeight) {
+
+		}
+
+		@Override
+		public float getBottomHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setBottomHeight(float bottomHeight) {
+
+		}
+
+		@Override
+		public float getMinWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setMinWidth(float minWidth) {
+
+		}
+
+		@Override
+		public float getMinHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setMinHeight(float minHeight) {
+
+		}
+	};
+
+	Drawable tableTopBackground = new Drawable() {
+		@Override
+		public void draw(Batch batch, float x, float y, float width, float height) {
+			batch.draw(tableTopBackground_tex, 0, buildings_background.getHeight(), Gdx.graphics.getWidth(), rowHeight*rows+padding*2);
+		}
+
+		@Override
+		public float getLeftWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setLeftWidth(float leftWidth) {
+
+		}
+
+		@Override
+		public float getRightWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setRightWidth(float rightWidth) {
+
+		}
+
+		@Override
+		public float getTopHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setTopHeight(float topHeight) {
+
+		}
+
+		@Override
+		public float getBottomHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setBottomHeight(float bottomHeight) {
+
+		}
+
+		@Override
+		public float getMinWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setMinWidth(float minWidth) {
+
+		}
+
+		@Override
+		public float getMinHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setMinHeight(float minHeight) {
+
+		}
+	};
+
+
 	public void refreshTable(){
 		switch (Data.getResourceType()){
 			case BUILDINGS:
@@ -468,94 +617,105 @@ public class UI {
 	}
 
 	public void refreshBuildingTable(){
-		TableInfo buildingInfo = Data.getBuildingTable();
-
-		if(buildingTable!=null) buildingTable.remove();
-		buildingTable = new Table();
-
-
-		if(Data.main.isBuildingTableVisible()){
-			buildingTable.setVisible(true);
-		} else {
-			buildingTable.setVisible(false);
-		}
-
-		float smallUnit = Gdx.graphics.getWidth() * 1/7;
-		float largeUnit = Gdx.graphics.getWidth() * 1.25f/7;
-		rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
-
 		house.setScaling(Scaling.fit);
 		village.setScaling(Scaling.fit);
 		town.setScaling(Scaling.fit);
 
-		buildingInfo.updateButtons();
+		ArrayList<Row> list = new ArrayList<Row>();
+		list.add(new Row(2, house));
+		list.add(new Row(1, village));
+		list.add(new Row(0, town));
 
-		buildingTable.setSkin(skin);
-		addTitleRow(buildingTable, "Holds", smallUnit, largeUnit);
-		addRow(buildingTable, false, smallUnit, largeUnit, buildingInfo, 2, house);
-		addRow(buildingTable, false, smallUnit, largeUnit, buildingInfo, 1, village);
-		addRow(buildingTable, true, smallUnit, largeUnit, buildingInfo, 0, town);
-
-		buildingTable.pad(padding);
-		buildingTable.bottom().left();
-		buildingTable.setBackground(tableBackground);
-		buildingTable.setHeight(rowHeight*4);
-
-		Stage stage = Data.main.getStage();
-		stage.addActor(buildingTable);
-
-		buildingTable.setX(0);
-		buildingTable.setY(buildings_background.getHeight());
+		refreshTableX(Data.getBuildingTable(), buildingTable, "Holds", Data.main.isBuildingTableVisible(), list);
 	}
 
 	public void refreshFoodTable(){
-		TableInfo foodInfo = Data.getFoodTable();
-
-		if(foodTable!=null) foodTable.remove();
-		foodTable = new Table();
-
-
-		if(Data.main.isFoodTableVisible()){
-			foodTable.setVisible(true);
-		} else {
-			foodTable.setVisible(false);
-		}
-
-		float smallUnit = Gdx.graphics.getWidth() * 1/7;
-		float largeUnit = Gdx.graphics.getWidth() * 1.25f/7;
-		rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
-
-		house.setScaling(Scaling.fit);
-		village.setScaling(Scaling.fit);
-		town.setScaling(Scaling.fit);
-
 		hunt.setScaling(Scaling.fit);
 		small_farm.setScaling(Scaling.fit);
 		farm.setScaling(Scaling.fit);
 
-		foodInfo.updateButtons();
+		ArrayList<Row> list = new ArrayList<Row>();
+		list.add(new Row(2, hunt));
+		list.add(new Row(1, small_farm));
+		list.add(new Row(0, farm));
 
-		foodTable.setSkin(skin);
-		addTitleRow(foodTable, "Feeds", smallUnit, largeUnit);
-		addRow(foodTable, false, smallUnit, largeUnit, foodInfo, 2, hunt);
-		addRow(foodTable, false, smallUnit, largeUnit, foodInfo, 1, small_farm);
-		addRow(foodTable, true, smallUnit, largeUnit, foodInfo, 0, farm);
-
-		foodTable.pad(padding);
-		foodTable.bottom().left();
-		foodTable.setBackground(tableBackground);
-		foodTable.setHeight(rowHeight*4);
-
-		Stage stage = Data.main.getStage();
-		stage.addActor(foodTable);
-
-		foodTable.setX(0);
-		foodTable.setY(food_background.getHeight());
+		refreshTableX(Data.getFoodTable(), foodTable, "Feeds", Data.main.isFoodTableVisible(), list);
 	}
 
-	public void refreshResourcesTable(){ }
+	public void refreshResourcesTable(){
+		wood.setScaling(Scaling.fit);
+		bronze.setScaling(Scaling.fit);
+		iron.setScaling(Scaling.fit);
+
+		ArrayList<Row> list = new ArrayList<Row>();
+		list.add(new Row(1, wood));
+		list.add(new Row(0, null));
+		list.add(new Row(5, bronze));
+		list.add(new Row(4, null));
+		list.add(new Row(7, iron));
+		list.add(new Row(6, null));
+
+		refreshTableX(Data.getResourcesTable(), resourcesTable, "Create", Data.main.isResourcesTableVisible(), list);
+	}
 
 	public void refreshSpecialTable(){ }
+
+	public void refreshTableX(TableInfo info, Table table, String secret, boolean isVisible, ArrayList<Row> rowList){
+		rows = 4;
+		padding = Gdx.graphics.getHeight()/100;
+		rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
+
+		if(table!=null) table.remove();
+
+		Table scrollTable = new Table();
+		Table titleTable = new Table();
+
+		float smallUnit = Gdx.graphics.getWidth() * 1/7;
+		float largeUnit = Gdx.graphics.getWidth() * 1.25f/7;
+		rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
+
+		info.updateButtons();
+
+		scrollTable.setSkin(skin);
+		titleTable.setSkin(skin);
+		addTitleRow(titleTable, secret, smallUnit, largeUnit);
+		scrollTable.row().height(rowHeight);
+
+		for(Row row: rowList){
+			if(!row.equals(rowList.get(rowList.size()-1))) addRow(scrollTable, false, smallUnit, largeUnit, info, row.getLine(), row.getImage());
+			else addRow(scrollTable, true, smallUnit, largeUnit, info, row.getLine(), row.getImage());
+		}
+
+		scrollTable.pad(padding);
+
+		scrollTable.setBackground(tableBottomBackground);
+		titleTable.setBackground(tableTopBackground);
+
+		ScrollPane scroller = new ScrollPane(scrollTable);
+		scroller.setScrollingDisabled(true,false);
+		scroller.setHeight(3*rowHeight);
+
+		table = new Table();
+		table.setHeight(4*rowHeight);
+		table.setWidth(Gdx.graphics.getWidth());
+		//table.setBackground(tableBackground);
+		table.add(titleTable);
+		table.row().height(rowHeight);
+		table.add(scroller).height(rowHeight*3);
+
+
+		table.setX(0);
+		table.setY(resources_background.getHeight());
+
+		if(isVisible){ //Believe me, I know it's weird, but somehow doesn't work without. Feel free to try, but don't blame me for breaking the project.
+			table.setVisible(true);
+		} else {
+			table.setVisible(false);
+		}
+
+		Stage stage = Data.main.getStage();
+		stage.addActor(table);
+	}
 
 	public void setAllTablesInvisible(){
 		Data.main.setBuildingTableVisible(false);
@@ -567,7 +727,7 @@ public class UI {
 	private void addTitleRow(Table table, String valueName, float smallUnit, float largeUnit){
 		table.add().width(smallUnit).center();
 		table.add("Name").width(largeUnit).center().fill();
-		table.add("Holds").width(largeUnit).center().fill();
+		table.add(valueName).width(largeUnit).center().fill();
 		table.add("No.").width(smallUnit).center().fill();
 		table.add().width(largeUnit).center();
 		table.add().width(largeUnit).center();

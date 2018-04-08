@@ -13,4 +13,12 @@ public class ResourcesEntry extends TableEntry {
 		super(type, name, value, requiredEra, upgradeTo, null, resources);
 		material = (ResourceMaterial) resources.getObject(resources.getKeys().nextElement());
 	}
+
+	public ResourceMaterial getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(ResourceMaterial material) {
+		this.material = material;
+	}
 }

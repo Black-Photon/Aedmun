@@ -1,6 +1,7 @@
 package com.blackphoton.planetclicker.core;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.blackphoton.planetclicker.objectType.Planet;
@@ -42,6 +43,8 @@ public class PlanetClicker extends ApplicationAdapter{
 		batch.begin();
 		Data.ui.drawBackground(batch);
 		batch.end();
+
+		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		stage.draw();
 	}
 
