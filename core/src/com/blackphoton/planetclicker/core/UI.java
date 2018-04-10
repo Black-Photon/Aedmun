@@ -254,8 +254,11 @@ public class UI {
 			if(Data.getSelectedEntry().getResourcesNeededToUpgrade()!=null)
 				for (RequiredResource resource : Data.getSelectedEntry().getResourcesNeededToUpgrade())
 					resource.setResourceNumberText();
-			Data.getSelectedEntry().setNumberLabelText();
+
 		}
+		if(Data.getCurrentTable()!=null)
+			for(TableEntry entry: Data.getCurrentTable().getEntries())
+				entry.setNumberLabelText();
 
 		Data.main.getStage().getBatch().setColor(1,1,1,1);
 	}
@@ -268,15 +271,19 @@ public class UI {
 		switch (Data.getResourceType()) {
 			case BUILDINGS:
 				buildings_background.setTexture(clicked);
+				Data.setCurrentTable(Data.getBuildingTable());
 				break;
 			case FOOD:
 				food_background.setTexture(clicked);
+				Data.setCurrentTable(Data.getFoodTable());
 				break;
 			case RESOURCES:
 				resources_background.setTexture(clicked);
+				Data.setCurrentTable(Data.getResourcesTable());
 				break;
 			case SPECIAL:
 				special_background.setTexture(clicked);
+				Data.setCurrentTable(Data.getSpecialTable());
 				break;
 		}
 	}

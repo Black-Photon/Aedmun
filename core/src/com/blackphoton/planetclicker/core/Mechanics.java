@@ -36,7 +36,15 @@ public class Mechanics {
 	}
 	public void update(){
 		int populationCount = Data.main.getPopulationCount();
+		Data.main.setBuildingCount(0);
+		for(TableEntry entry:Data.getBuildingTable().getEntries()){
+			Data.main.setBuildingCount(Data.main.getBuildingCount()+entry.getNumberOf()*entry.getValue());
+		}
 		int buildingCount = Data.main.getBuildingCount();
+		Data.main.setFoodCount(0);
+		for(TableEntry entry:Data.getFoodTable().getEntries()){
+			Data.main.setFoodCount(Data.main.getFoodCount()+entry.getNumberOf()*entry.getValue());
+		}
 		int foodCount = Data.main.getFoodCount();
 
 		boolean found = false;
@@ -52,13 +60,23 @@ public class Mechanics {
 			}
 		}
 
-		if (buildingCount * peoplePerBuilding > populationCount && foodCount > populationCount)
+		if (buildingCount > populationCount && foodCount > populationCount)
 			for(int i=1;i<populationCount;i++) {
 				int randomInt = random.nextInt(1000);
 				if (randomInt == 42) {
 					Data.main.setPopulationCount(populationCount+1);
 				}
 			}
+		if (buildingCount < populationCount || foodCount < populationCount)
+			for(int i=1;i<populationCount;i++) {
+				int randomInt = random.nextInt(1000);
+				if (randomInt == 888) {
+					Data.main.setPopulationCount(populationCount-1);
+				}
+			}
+		if(populationCount<2) populationCount=2;
+
+		System.out.printf("Buildings: %s, Food: %s\n", buildingCount, foodCount);
 
 
 		for(TableEntry entry: Data.getResourcesTable().getEntries()){

@@ -15,7 +15,7 @@ public class PlanetClicker extends ApplicationAdapter{
 	private int stoneCount = 0;
 	private int bronzeCount = 0;
 	private int ironCount = 0;
-	private int populationCount = 500; //TODO change back to 2
+	private int populationCount = 2;
 	private Planet planet;
 	private boolean buildingTableVisible = false;
 	private boolean foodTableVisible = false;
