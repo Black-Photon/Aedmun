@@ -35,7 +35,7 @@ public class TableInfo {
 				entry = new FoodEntry(type, name, value, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
 				break;
 			case RESOURCES:
-				entry = new ResourcesEntry(type, name, value, requiredEra, upgradeTo, resources);
+				entry = new ResourcesEntry(type, name, value, requiredEra, resourcesNeeded, upgradeTo, resources);
 				break;
 			case SPECIAL:
 				entry = new SpecialEntry(type, name, value, requiredEra, upgradeTo, resourcesNeeded, resources);

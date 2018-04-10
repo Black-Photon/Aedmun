@@ -12,6 +12,7 @@ public class PlanetClicker extends ApplicationAdapter{
 	private int buildingCount = 0;
 	private int foodCount = 0;
 	private int woodCount = 0;
+	private int stoneCount = 0;
 	private int bronzeCount = 0;
 	private int ironCount = 0;
 	private int populationCount = 500; //TODO change back to 2
@@ -88,6 +89,14 @@ public class PlanetClicker extends ApplicationAdapter{
 		this.woodCount = woodCount;
 	}
 
+	public int getStoneCount() {
+		return stoneCount;
+	}
+
+	public void setStoneCount(int stoneCount) {
+		this.stoneCount = stoneCount;
+	}
+
 	public int getBronzeCount() {
 		return bronzeCount;
 	}
@@ -102,6 +111,31 @@ public class PlanetClicker extends ApplicationAdapter{
 
 	public void setIronCount(int ironCount) {
 		this.ironCount = ironCount;
+	}
+
+
+	public void addBuildingCount(int buildingCount) {
+		this.buildingCount += buildingCount;
+	}
+
+	public void addFoodCount(int foodCount) {
+		this.foodCount += foodCount;
+	}
+
+	public void addWoodCount(int woodCount) {
+		this.woodCount += woodCount;
+	}
+
+	public void addStoneCount(int stoneCount) {
+		this.stoneCount += stoneCount;
+	}
+
+	public void addBronzeCount(int bronzeCount) {
+		this.bronzeCount += bronzeCount;
+	}
+
+	public void addIronCount(int ironCount) {
+		this.ironCount += ironCount;
 	}
 
 	public int getPopulationCount() {
@@ -160,3 +194,22 @@ public class PlanetClicker extends ApplicationAdapter{
 		this.specialTableVisible = specialTableVisible;
 	}
 }
+
+
+/*  ----- Template - These take way to long manually -----
+			switch(material){
+				case WOOD:
+
+					break;
+				case STONE:
+
+					break;
+				case IRON:
+
+					break;
+				case BRONZE:
+
+					break;
+			}
+
+ */

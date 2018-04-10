@@ -5,12 +5,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.core.Data;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
+import com.blackphoton.planetclicker.resources.ResourceMaterial;
 import com.blackphoton.planetclicker.resources.ResourceType;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public abstract class TableEntry {
 	protected boolean upgradable = true;
 	protected ArrayList<RequiredResource> resourcesNeeded;
 	protected ArrayList<RequiredResource> resourcesNeededToUpgrade;
+	protected Label numberLabel;
 
 	public TableEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, ResourceBundle resources){
 		this.type = type;
@@ -57,6 +60,8 @@ public abstract class TableEntry {
 		upgrade = new Image(upgrade_tex);
 		upgrade.setScaling(Scaling.fit);
 		upgrade.addListener(new upgradeListener());
+
+		numberLabel = new Label(Integer.toString(numberOf), Data.ui.getSkin());
 
 		updateButtons();
 	}
@@ -254,5 +259,17 @@ public abstract class TableEntry {
 
 	public void setResourcesNeededToUpgrade(ArrayList<RequiredResource> resourcesNeededToUpgrade) {
 		this.resourcesNeededToUpgrade = resourcesNeededToUpgrade;
+	}
+
+	public Label getNumberLabel() {
+		return numberLabel;
+	}
+
+	public void setNumberLabelText() {
+		this.numberLabel.setText(Integer.toString(numberOf));
+	}
+
+	public void setNumberLabelText(String text) {
+		this.numberLabel.setText(text);
 	}
 }

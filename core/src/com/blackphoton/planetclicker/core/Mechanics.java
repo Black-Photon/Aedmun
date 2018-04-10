@@ -59,6 +59,11 @@ public class Mechanics {
 					Data.main.setPopulationCount(populationCount+1);
 				}
 			}
+
+
+		for(TableEntry entry: Data.getResourcesTable().getEntries()){
+			entry.setNumberLabelText();
+		}
 	}
 
 	private ArrayList keyList;
@@ -175,20 +180,24 @@ public class Mechanics {
 	private TableInfo createResourcesTable(){
 		keyList = new ArrayList();
 		keyList.add("resource");
+		keyList.add("absolute");
+		keyList.add("time");
 		TableInfo resourcesInfo = new TableInfo(ResourceType.RESOURCES);
 		ResourceBundle wood = new ResourceBundle() {
 			@Override
 			protected Object handleGetObject(String key) {
 				if(key.equals("resource")) return ResourceMaterial.WOOD;
+				if(key.equals("absolute")) return true;
+				if(key.equals("time")) return 0f;
 				return null;
 			}
+
+			int count = 0;
 
 			@Override
 			public Enumeration<String> getKeys() {
 				Enumeration<String> e = new Enumeration<String>() {
 					ArrayList<String> elements = keyList;
-					int count = 0;
-
 					@Override
 					public boolean hasMoreElements() {
 						return count<elements.size();
@@ -207,14 +216,17 @@ public class Mechanics {
 			@Override
 			protected Object handleGetObject(String key) {
 				if(key.equals("resource")) return ResourceMaterial.STONE;
+				if(key.equals("absolute")) return true;
+				if(key.equals("time")) return 0f;
 				return null;
 			}
+
+			int count = 0;
 
 			@Override
 			public Enumeration<String> getKeys() {
 				Enumeration<String> e = new Enumeration<String>() {
 					ArrayList<String> elements = keyList;
-					int count = 0;
 
 					@Override
 					public boolean hasMoreElements() {
@@ -234,14 +246,17 @@ public class Mechanics {
 			@Override
 			protected Object handleGetObject(String key) {
 				if(key.equals("resource")) return ResourceMaterial.BRONZE;
+				if(key.equals("absolute")) return true;
+				if(key.equals("time")) return 0f;
 				return null;
 			}
+
+			int count = 0;
 
 			@Override
 			public Enumeration<String> getKeys() {
 				Enumeration<String> e = new Enumeration<String>() {
 					ArrayList<String> elements = keyList;
-					int count = 0;
 
 					@Override
 					public boolean hasMoreElements() {
@@ -261,14 +276,17 @@ public class Mechanics {
 			@Override
 			protected Object handleGetObject(String key) {
 				if(key.equals("resource")) return ResourceMaterial.IRON;
+				if(key.equals("absolute")) return true;
+				if(key.equals("time")) return 0f;
 				return null;
 			}
+
+			int count = 0;
 
 			@Override
 			public Enumeration<String> getKeys() {
 				Enumeration<String> e = new Enumeration<String>() {
 					ArrayList<String> elements = keyList;
-					int count = 0;
 
 					@Override
 					public boolean hasMoreElements() {
@@ -284,14 +302,149 @@ public class Mechanics {
 				return e;
 			}
 		};
-		ResourcesEntry woodMill = (ResourcesEntry) resourcesInfo.addEntry("Woodmill", 100, Data.getEraList().get(1), null, null, null, wood);
-		resourcesInfo.addEntry("Gather Wood", 1, Data.getEraList().get(0), woodMill, null, null, wood);
-		ResourcesEntry quarryStone = (ResourcesEntry) resourcesInfo.addEntry("Quarry Stone", 50, Data.getEraList().get(1), null, null, null, stone);
-		resourcesInfo.addEntry("Mine Stone", 1, Data.getEraList().get(0), quarryStone, null, null, stone);
-		ResourcesEntry bronzeCast = (ResourcesEntry) resourcesInfo.addEntry("Cast Bronze", 150, Data.getEraList().get(2), null, null, null, bronze);
-		resourcesInfo.addEntry("Smelt Bronze", 5, Data.getEraList().get(1), bronzeCast, null, null, bronze);
-		ResourcesEntry ironForge = (ResourcesEntry) resourcesInfo.addEntry("Forge Iron", 200, Data.getEraList().get(3), null, null, null, iron);
-		resourcesInfo.addEntry("Mine Iron", 3, Data.getEraList().get(2), ironForge, null, null, iron);
+
+		//Not absolute - as in they increase resources over time
+		ResourceBundle woodMill_r = new ResourceBundle() {
+			@Override
+			protected Object handleGetObject(String key) {
+				if(key.equals("resource")) return ResourceMaterial.WOOD;
+				if(key.equals("absolute")) return false;
+				if(key.equals("time")) return 15f; //In seconds
+				return null;
+			}
+
+			int count = 0;
+
+			@Override
+			public Enumeration<String> getKeys() {
+				Enumeration<String> e = new Enumeration<String>() {
+					ArrayList<String> elements = keyList;
+
+					@Override
+					public boolean hasMoreElements() {
+						return count<elements.size();
+					}
+
+					@Override
+					public String nextElement() {
+						count++;
+						return elements.get(count-1);
+					}
+				};
+				return e;
+			}
+		};
+		ResourceBundle quarryStone_r = new ResourceBundle() {
+			@Override
+			protected Object handleGetObject(String key) {
+				if(key.equals("resource")) return ResourceMaterial.STONE;
+				if(key.equals("absolute")) return false;
+				if(key.equals("time")) return 10f; //In seconds
+				return null;
+			}
+
+			int count = 0;
+
+			@Override
+			public Enumeration<String> getKeys() {
+				Enumeration<String> e = new Enumeration<String>() {
+					ArrayList<String> elements = keyList;
+
+					@Override
+					public boolean hasMoreElements() {
+						return count<elements.size();
+					}
+
+					@Override
+					public String nextElement() {
+						count++;
+						return elements.get(count-1);
+					}
+				};
+				return e;
+			}
+		};
+		ResourceBundle bronzeCast_r = new ResourceBundle() {
+			@Override
+			protected Object handleGetObject(String key) {
+				if(key.equals("resource")) return ResourceMaterial.BRONZE;
+				if(key.equals("absolute")) return false;
+				if(key.equals("time")) return 40f; //In seconds
+				return null;
+			}
+
+			int count = 0;
+
+			@Override
+			public Enumeration<String> getKeys() {
+				Enumeration<String> e = new Enumeration<String>() {
+					ArrayList<String> elements = keyList;
+
+					@Override
+					public boolean hasMoreElements() {
+						return count<elements.size();
+					}
+
+					@Override
+					public String nextElement() {
+						count++;
+						return elements.get(count-1);
+					}
+				};
+				return e;
+			}
+		};
+		ResourceBundle ironForge_r = new ResourceBundle() {
+			@Override
+			protected Object handleGetObject(String key) {
+				if(key.equals("resource")) return ResourceMaterial.IRON;
+				if(key.equals("absolute")) return false;
+				if(key.equals("time")) return 50f; //In seconds
+				return null;
+			}
+
+			int count = 0;
+
+			@Override
+			public Enumeration<String> getKeys() {
+				Enumeration<String> e = new Enumeration<String>() {
+					ArrayList<String> elements = keyList;
+
+					@Override
+					public boolean hasMoreElements() {
+						return count<elements.size();
+					}
+
+					@Override
+					public String nextElement() {
+						count++;
+						return elements.get(count-1);
+					}
+				};
+				return e;
+			}
+		};
+
+		ArrayList woodMill_l = new ArrayList();
+		woodMill_l.add(new RequiredResource(ResourceMaterial.WOOD, 100));
+		woodMill_l.add(new RequiredResource(ResourceMaterial.STONE, 10));
+
+
+		resourcesInfo.addEntry("Woodmill", 1, Data.getEraList().get(1), null, woodMill_l, null, woodMill_r);
+
+		resourcesInfo.addEntry("Gather Wood", 1, Data.getEraList().get(0), null, null, null, wood);
+
+		resourcesInfo.addEntry("Quarry Stone", 1, Data.getEraList().get(1), null, null, null, quarryStone_r);
+
+		resourcesInfo.addEntry("Mine Stone", 1, Data.getEraList().get(0), null, null, null, stone);
+
+		resourcesInfo.addEntry("Cast Bronze", 1, Data.getEraList().get(2), null, null, null, bronzeCast_r);
+
+		resourcesInfo.addEntry("Smelt Bronze", 5, Data.getEraList().get(1), null, null, null, bronze);
+
+		resourcesInfo.addEntry("Forge Iron", 1, Data.getEraList().get(3), null, null, null, ironForge_r);
+
+		resourcesInfo.addEntry("Mine Iron", 3, Data.getEraList().get(2), null, null, null, iron);
 		return resourcesInfo;
 	}
 	private TableInfo createSpecialTable(){
@@ -326,7 +479,6 @@ public class Mechanics {
 		planet.setY(Data.ui.planetY);
 
 		planet.setClicked(true);
-		Data.ui.updateResources();
 		planetClickedAction();
 		return true;
 	}
@@ -339,60 +491,32 @@ public class Mechanics {
 		TableEntry entry = Data.getSelectedEntry();
 		if(entry==null) return; //Do nothing if none selected
 
-		if(entry.isCreateClicked()) entry.addToEntry();
+		if(entry.isCreateClicked()){
+			if(hasResources(entry.getResourcesNeeded())){
+				entry.addToEntry();
+				subtractResources(entry.getResourcesNeeded());
+			}else{
+				printInsufficientResources();
+			}
+
+			if(entry instanceof ResourcesEntry) {
+				if(((ResourcesEntry) entry).isAbsolute()){
+					addResource(((ResourcesEntry) entry).getMaterial(), entry.getValue());
+				}
+			}
+		}
 		if(entry.isUpgradeClicked()){
-			if(entry.getNumberOf()>0) {
-				entry.subFromEntry();
-				entry.getUpgradeTo().addToEntry();
+			if(hasResources(entry.getResourcesNeededToUpgrade())) {
+				if (entry.getNumberOf() > 0) {
+					entry.subFromEntry();
+					entry.getUpgradeTo().addToEntry();
+					subtractResources(entry.getResourcesNeededToUpgrade());
+				}
+			}else{
+				printInsufficientResources();
 			}
 		}
 		Data.ui.refreshTable();
-
-		/*int resourcesCount = Data.main.getResourcesCount();
-		final Label insufficientResources = Data.ui.getInsufficientResources();
-
-		switch (Data.getResourceType()) {
-			case BUILDINGS:
-				if(resourcesCount>=resourcesPerBuilding) {
-					Data.main.setResourcesCount(resourcesCount-resourcesPerBuilding);
-					Data.main.setBuildingCount(Data.main.getBuildingCount()+1);
-				}else{
-					insufficientResources.setColor(0.8f,0.8f,0.8f,1);
-					new Thread(){
-						@Override
-						public void run() {
-							numberOfIRThreads++;
-							try {
-								sleep(1000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							float alpha = insufficientResources.getColor().a;
-							while(alpha!=0){
-								if(numberOfIRThreads>1){
-									numberOfIRThreads--;
-									return;
-								}
-								alpha = insufficientResources.getColor().a;
-								insufficientResources.setColor(0.8f,0.8f,0.8f,alpha-0.001f);
-								try {
-									sleep(3);
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
-							}
-							numberOfIRThreads--;
-						}
-					}.start();
-				}
-				break;
-			case FOOD:
-				Data.main.setFoodCount(Data.main.getFoodCount()+1);
-				break;
-			case RESOURCES:
-				Data.main.setResourcesCount(resourcesCount+1);
-				break;
-		}*/
 	}
 	public boolean planetUnclicked(){
 		Planet planet = Data.main.getPlanet();
@@ -403,6 +527,83 @@ public class Mechanics {
 		planet.setX(Gdx.graphics.getWidth()/2- planet.getWidth()/2);
 		planet.setY(Data.ui.planetY);
 		return true;
+	}
+
+	public boolean hasResources(ArrayList<RequiredResource> resources){
+		if(resources==null) return true;
+
+		for(RequiredResource resource: resources){
+			switch(resource.getMaterial()){
+				case WOOD:
+					if(Data.main.getWoodCount()<resource.getNumberRequired()) return false;
+					break;
+				case STONE:
+					if(Data.main.getStoneCount()<resource.getNumberRequired()) return false;
+					break;
+				case IRON:
+					if(Data.main.getIronCount()<resource.getNumberRequired()) return false;
+					break;
+				case BRONZE:
+					if(Data.main.getBronzeCount()<resource.getNumberRequired()) return false;
+					break;
+			}
+		}
+		return true;
+	}
+
+	public void subtractResources(ArrayList<RequiredResource> resources){
+		if(resources==null) return;
+
+		for(RequiredResource resource: resources){
+			switch(resource.getMaterial()){
+				case WOOD:
+					Data.main.setWoodCount(Data.main.getWoodCount()-resource.getNumberRequired());
+					break;
+				case STONE:
+					Data.main.setStoneCount(Data.main.getStoneCount()-resource.getNumberRequired());
+					break;
+				case IRON:
+					Data.main.setIronCount(Data.main.getIronCount()-resource.getNumberRequired());
+					break;
+				case BRONZE:
+					Data.main.setBronzeCount(Data.main.getBronzeCount()-resource.getNumberRequired());
+					break;
+			}
+		}
+	}
+
+	public void printInsufficientResources(){
+		final Label insufficientResources = Data.ui.getInsufficientResources();
+		insufficientResources.setColor(0.8f,0.8f,0.8f,1);
+
+		new Thread(){
+			@Override
+			public void run() {
+				numberOfIRThreads++;
+				try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				float alpha = insufficientResources.getColor().a;
+				while(alpha!=0){
+					if(numberOfIRThreads>1){
+						numberOfIRThreads--;
+						return;
+					}
+					alpha = insufficientResources.getColor().a;
+					insufficientResources.setColor(0.8f,0.8f,0.8f,alpha-0.001f);
+					try {
+						sleep(3);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				numberOfIRThreads--;
+				Thread.currentThread().interrupt();
+			}
+		}.start();
+
 	}
 
 	public void updateNumberOf(){
@@ -418,28 +619,41 @@ public class Mechanics {
 						foodEntries.get(1).getValue()*foodEntries.get(1).getNumberOf() +
 						foodEntries.get(2).getValue()*foodEntries.get(2).getNumberOf()
 		);
+	}
 
-		ArrayList<TableEntry> resources = Data.getResourcesTable().getEntries();
-		Data.main.setWoodCount(0);
-		Data.main.setBronzeCount(0);
-		Data.main.setIronCount(0);
-		for(TableEntry entry: resources){
-			if(((ResourcesEntry)entry).getMaterial()==ResourceMaterial.WOOD && Data.main.getWoodCount()==0){
-				Data.main.setWoodCount(Data.main.getWoodCount()+entry.getNumberOf());
-			}
-			if(((ResourcesEntry)entry).getMaterial()==ResourceMaterial.BRONZE && Data.main.getBronzeCount()==0){
-				Data.main.setBronzeCount(Data.main.getBronzeCount()+entry.getNumberOf());
-			}
-			if(((ResourcesEntry)entry).getMaterial()==ResourceMaterial.IRON && Data.main.getIronCount()==0){
-				Data.main.setIronCount(Data.main.getIronCount()+entry.getNumberOf());
-			}
+	public void addResource(ResourceMaterial material, int amount){
+		switch(material){
+			case WOOD:
+				Data.main.addWoodCount(amount);
+				break;
+			case STONE:
+				Data.main.addStoneCount(amount);
+				break;
+			case IRON:
+				Data.main.addIronCount(amount);
+				break;
+			case BRONZE:
+				Data.main.addBronzeCount(amount);
+				break;
 		}
+	}
+
+	public void removeEntryAndUnclick(){
+		if(Data.getSelectedEntry()!=null) {
+			Data.getSelectedEntry().setCreateClicked(false);
+			Data.getSelectedEntry().setUpgradeClicked(false);
+		}
+		Data.ui.loadSideBar(null, true);
+		Data.setSelectedEntry(null);
 	}
 
 	public static class buildingListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			if(Data.getCurrentTable()!=null) Data.getCurrentTable().unclickAll();
+
+			Data.mechanics.removeEntryAndUnclick();
+
 			Data.ui.setAllTablesInvisible();
 			Data.ui.refreshTable();
 			if(Data.getResourceType()==ResourceType.BUILDINGS){
@@ -459,6 +673,9 @@ public class Mechanics {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			if(Data.getCurrentTable()!=null) Data.getCurrentTable().unclickAll();
+
+			Data.mechanics.removeEntryAndUnclick();
+
 			Data.ui.setAllTablesInvisible();
 			Data.ui.refreshTable();
 			if(Data.getResourceType()==ResourceType.FOOD){
@@ -478,6 +695,9 @@ public class Mechanics {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			if(Data.getCurrentTable()!=null) Data.getCurrentTable().unclickAll();
+
+			Data.mechanics.removeEntryAndUnclick();
+
 			Data.ui.setAllTablesInvisible();
 			Data.ui.refreshTable();
 			if(Data.getResourceType()==ResourceType.RESOURCES){
@@ -501,6 +721,9 @@ public class Mechanics {
 				Data.main.setBuildingTableVisible(false);
 				Data.ui.refreshBuildingTable();
 			}
+
+			Data.mechanics.removeEntryAndUnclick();
+
 			Data.setResourceType(ResourceType.SPECIAL);
 			Data.ui.updateResources();
 			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

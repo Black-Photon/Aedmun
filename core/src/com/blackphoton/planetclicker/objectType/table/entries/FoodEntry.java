@@ -26,7 +26,6 @@ public class FoodEntry extends TableEntry {
 						}
 						if(FoodEntry.super.numberOf>0){
 							FoodEntry.super.subFromEntry();
-							Data.ui.refreshTable();
 							Data.mechanics.updateNumberOf();
 						}
 					}

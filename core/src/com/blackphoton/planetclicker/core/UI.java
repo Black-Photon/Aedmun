@@ -93,6 +93,8 @@ public class UI {
 	private Table resourcesTable;
 	private Texture wood_tex;
 	private Image wood;
+	private Texture stone_tex;
+	private Image stone;
 	private Texture bronze_tex;
 	private Image bronze;
 	private Texture iron_tex;
@@ -205,6 +207,8 @@ public class UI {
 
 		wood_tex = new Texture("wood.png");
 		wood = new Image(wood_tex);
+		stone_tex = new Texture("stone.png");
+		stone = new Image(stone_tex);
 		bronze_tex = new Texture("bronze_bar.png");
 		bronze = new Image(bronze_tex);
 		iron_tex = new Texture("iron_bar.png");
@@ -242,6 +246,16 @@ public class UI {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		populationLabel.setText("Population: "+Data.main.getPopulationCount());
+
+		if(Data.getSelectedEntry()!=null) {
+			if(Data.getSelectedEntry().getResourcesNeeded()!=null)
+				for (RequiredResource resource : Data.getSelectedEntry().getResourcesNeeded())
+					resource.setResourceNumberText();
+			if(Data.getSelectedEntry().getResourcesNeededToUpgrade()!=null)
+				for (RequiredResource resource : Data.getSelectedEntry().getResourcesNeededToUpgrade())
+					resource.setResourceNumberText();
+			Data.getSelectedEntry().setNumberLabelText();
+		}
 
 		Data.main.getStage().getBatch().setColor(1,1,1,1);
 	}
@@ -314,6 +328,7 @@ public class UI {
 		stage.addActor(populationGroup);
 		stage.addActor(era);
 		stage.addActor(planet);
+		stage.addActor(insufficientResources);
 		Data.main.setStage(stage);
 
 		multiplexer = new InputMultiplexer(stage, new InputDetector());
@@ -335,6 +350,11 @@ public class UI {
 		populationGroup.setX(Gdx.graphics.getWidth()/2-(pop_bar_left.getWidth()+pop_bar.getWidth()+pop_bar_right.getWidth())*heightScale/2);
 		populationGroup.setY(Gdx.graphics.getHeight()-pop_bar.getHeight()*heightScale);
 
+		glyphLayout.setText(bitmapFont, insufficientResources.getText());
+		insufficientResources.setX(Gdx.graphics.getWidth()/2-glyphLayout.width/2);
+		insufficientResources.setY(Gdx.graphics.getHeight()/2-glyphLayout.height/2);
+		insufficientResources.setTouchable(Touchable.disabled);
+
 		era.setX(Gdx.graphics.getWidth()/2-era.getWidth()/2);
 		era.setY(Gdx.graphics.getHeight()-pop_bar.getHeight()*heightScale-era.getHeight()-10);
 
@@ -350,6 +370,8 @@ public class UI {
 		refreshBuildingTable();
 		refreshFoodTable();
 		refreshResourcesTable();
+
+		if(Data.getSelectedEntry()!=null) loadSideBar(Data.getSelectedEntry(), Data.getSelectedEntry().isCreateClicked());
 	}
 
 	public void loadSideBar(TableEntry entry, boolean create){
@@ -362,7 +384,6 @@ public class UI {
 		reqResGroup.addActor(reqRes_top);
 		reqResGroup.addActor(reqRes);
 		reqResGroup.addActor(reqRes_bottom);
-		int numberOfResources = 0;
 		float totalHeight = 0;
 		ArrayList<RequiredResource> resources;
 
@@ -372,7 +393,7 @@ public class UI {
 		for(RequiredResource resource: resources){
 			Image image = resource.getResource();
 			int numberRequired = resource.getNumberRequired();
-			Label numberNeeded = new Label(Integer.toString(numberRequired), skin);
+			Label numberNeeded = resource.getResourceNumber();
 			glyphLayout = new GlyphLayout(bitmapFont, Integer.toString(numberRequired));
 
 			image.setPosition(reqRes.getWidth()/2-image.getWidth()/2, totalHeight+reqRes_bottom.getHeight()*3/4);
@@ -383,7 +404,6 @@ public class UI {
 
 			reqResGroup.addActor(image);
 			reqResGroup.addActor(numberNeeded);
-			numberOfResources++;
 		}
 		reqRes.setHeight(totalHeight-reqRes_bottom.getHeight());
 		reqRes_top.setPosition(0,reqRes_bottom.getHeight()+reqRes.getHeight());
@@ -660,12 +680,15 @@ public class UI {
 
 	public void refreshResourcesTable(){
 		wood.setScaling(Scaling.fit);
+		stone.setScaling(Scaling.fit);
 		bronze.setScaling(Scaling.fit);
 		iron.setScaling(Scaling.fit);
 
 		ArrayList<Row> list = new ArrayList<Row>();
 		list.add(new Row(1, wood));
 		list.add(new Row(0, null));
+		list.add(new Row(3, stone));
+		list.add(new Row(2, null));
 		list.add(new Row(5, bronze));
 		list.add(new Row(4, null));
 		list.add(new Row(7, iron));
@@ -756,7 +779,7 @@ public class UI {
 		table.add(picture).width(smallUnit).center();
 		table.add(info.getEntries().get(entry).getName()).width(largeUnit).center().fill();
 		table.add(Integer.toString(info.getEntries().get(entry).getValue())).width(largeUnit).center().fill();
-		table.add(Integer.toString(info.getEntries().get(entry).getNumberOf())).width(smallUnit).center().fill();
+		table.add(info.getEntries().get(entry).getNumberLabel()).width(smallUnit).center().fill();
 		table.add(info.getEntries().get(entry).getCreate()).width(largeUnit).center();
 		table.add(info.getEntries().get(entry).getUpgrade()).width(largeUnit).center();
 		if(!lastRow) table.row().height(rowHeight);
@@ -779,5 +802,9 @@ public class UI {
 
 	public Label getInsufficientResources() {
 		return insufficientResources;
+	}
+
+	public Skin getSkin() {
+		return skin;
 	}
 }
