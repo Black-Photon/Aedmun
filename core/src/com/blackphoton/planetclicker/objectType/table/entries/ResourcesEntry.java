@@ -64,6 +64,7 @@ public class ResourcesEntry extends TableEntry {
 					while (!Thread.currentThread().isInterrupted()) {
 						try {
 							Data.mechanics.addResource(ResourcesEntry.this.getMaterial(), ResourcesEntry.this.getValue()*ResourcesEntry.this.getNumberOf());
+							if(ResourcesEntry.this.resourcesNeeded!=null)
 							for(int i=0; i<ResourcesEntry.this.resourcesNeeded.size(); i++){
 								ResourcesEntry.this.resourcesNeeded.get(i).setNumberRequired(initialCost.get(i).getNumberRequired()*(numberOf+1));
 							}

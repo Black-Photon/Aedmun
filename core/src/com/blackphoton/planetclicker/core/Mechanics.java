@@ -67,17 +67,13 @@ public class Mechanics {
 					Data.main.setPopulationCount(populationCount+1);
 				}
 			}
-		if (buildingCount < populationCount || foodCount < populationCount)
+		if ((buildingCount < populationCount || foodCount < populationCount)&&populationCount>2)
 			for(int i=1;i<populationCount;i++) {
 				int randomInt = random.nextInt(1000);
 				if (randomInt == 888) {
 					Data.main.setPopulationCount(populationCount-1);
 				}
 			}
-		if(populationCount<2) populationCount=2;
-
-		System.out.printf("Buildings: %s, Food: %s\n", buildingCount, foodCount);
-
 
 		for(TableEntry entry: Data.getResourcesTable().getEntries()){
 			entry.setNumberLabelText();
@@ -534,7 +530,7 @@ public class Mechanics {
 				printInsufficientResources();
 			}
 		}
-		Data.ui.refreshTable();
+		//Data.ui.refreshTable();
 	}
 	public boolean planetUnclicked(){
 		Planet planet = Data.main.getPlanet();
