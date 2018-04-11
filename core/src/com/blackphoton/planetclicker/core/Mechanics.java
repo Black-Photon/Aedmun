@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Mechanics {
 
@@ -61,17 +62,25 @@ public class Mechanics {
 		}
 
 		if (buildingCount > populationCount && foodCount > populationCount)
-			for(int i=1;i<populationCount;i++) {
-				int randomInt = random.nextInt(1000);
-				if (randomInt == 42) {
-					Data.main.setPopulationCount(populationCount+1);
+			if(populationCount>1000){
+				int randomInt = (int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500);
+			}else {
+				for (int i = 1; i < populationCount; i++) {
+					int randomInt = random.nextInt(1000);
+					if (randomInt == 42) {
+						Data.main.setPopulationCount(populationCount + 1);
+					}
 				}
 			}
 		if ((buildingCount < populationCount || foodCount < populationCount)&&populationCount>2)
-			for(int i=1;i<populationCount;i++) {
-				int randomInt = random.nextInt(1000);
-				if (randomInt == 888) {
-					Data.main.setPopulationCount(populationCount-1);
+			if(populationCount>1000){
+				int randomInt = (int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500);
+			}else {
+				for (int i = 1; i < populationCount; i++) {
+					int randomInt = random.nextInt(1000);
+					if (randomInt == 888) {
+						Data.main.setPopulationCount(populationCount - 1);
+					}
 				}
 			}
 

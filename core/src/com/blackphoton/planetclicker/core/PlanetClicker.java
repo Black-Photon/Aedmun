@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.blackphoton.planetclicker.objectType.Planet;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class PlanetClicker extends ApplicationAdapter{
 	private SpriteBatch batch;
 	private Stage stage;
