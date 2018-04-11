@@ -19,5 +19,7 @@ If you want to actively help, that's great! I've not got much experience program
 
 If you happen to be an artist, that would also be great as I've not got particuarly good art skills. E-Mail me and I'll give you a list of stuff to do. The list should grow with the project.
 
+If you happen to be a musician, that would be just as good! Something with atmosphere would be great, and no words. It can be spacey, or maybe civilization-like - People talking depending on population and era. If you have something, send it to my e-mail and I'll give it a look-over.
+
 # Ideas
 You can't program, and don't know art, but have this perfect idea of what you can do with the game. E-Mail me with the idea and I'll see what I can do with it. Be aware not all (or even necessarily any) ideas will be implemented.
