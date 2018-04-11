@@ -64,6 +64,7 @@ public class Mechanics {
 		if (buildingCount > populationCount && foodCount > populationCount)
 			if(populationCount>1000){
 				int randomInt = (int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500);
+				Data.main.setPopulationCount(populationCount + randomInt);
 			}else {
 				for (int i = 1; i < populationCount; i++) {
 					int randomInt = random.nextInt(1000);
@@ -75,6 +76,7 @@ public class Mechanics {
 		if ((buildingCount < populationCount || foodCount < populationCount)&&populationCount>2)
 			if(populationCount>1000){
 				int randomInt = (int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500);
+				Data.main.setPopulationCount(populationCount - randomInt);
 			}else {
 				for (int i = 1; i < populationCount; i++) {
 					int randomInt = random.nextInt(1000);
