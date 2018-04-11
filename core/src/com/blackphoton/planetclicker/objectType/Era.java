@@ -2,9 +2,9 @@ package com.blackphoton.planetclicker.objectType;
 
 public class Era {
 	private String name;
-	private Exponent pop_req;
+	private Long pop_req;
 	private String imagePath;
-	public Era(String name, Exponent pop_req, String imagePath){
+	public Era(String name, Long pop_req, String imagePath){
 		this.imagePath = imagePath;
 		this.name = name;
 		this.pop_req = pop_req;
@@ -18,11 +18,11 @@ public class Era {
 		this.name = name;
 	}
 
-	public Exponent getPop_req() {
+	public Long getPop_req() {
 		return pop_req;
 	}
 
-	public void setPop_req(Exponent pop_req) {
+	public void setPop_req(Long pop_req) {
 		this.pop_req = pop_req;
 	}
 

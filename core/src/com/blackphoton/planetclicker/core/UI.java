@@ -93,6 +93,8 @@ public class UI {
 	private Table resourcesTable;
 	private Texture wood_tex;
 	private Image wood;
+	private Texture woodmill_tex;
+	private Image woodmill;
 	private Texture stone_tex;
 	private Image stone;
 	private Texture bronze_tex;
@@ -207,6 +209,8 @@ public class UI {
 
 		wood_tex = new Texture("wood.png");
 		wood = new Image(wood_tex);
+		woodmill_tex = new Texture("woodmill.png");
+		woodmill = new Image(woodmill_tex);
 		stone_tex = new Texture("stone.png");
 		stone = new Image(stone_tex);
 		bronze_tex = new Texture("bronze_bar.png");
@@ -687,13 +691,14 @@ public class UI {
 
 	public void refreshResourcesTable(){
 		wood.setScaling(Scaling.fit);
+		woodmill.setScaling(Scaling.fit);
 		stone.setScaling(Scaling.fit);
 		bronze.setScaling(Scaling.fit);
 		iron.setScaling(Scaling.fit);
 
 		ArrayList<Row> list = new ArrayList<Row>();
 		list.add(new Row(1, wood));
-		list.add(new Row(0, null));
+		list.add(new Row(0, woodmill));
 		list.add(new Row(3, stone));
 		list.add(new Row(2, null));
 		list.add(new Row(5, bronze));

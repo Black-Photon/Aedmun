@@ -5,7 +5,6 @@ import com.blackphoton.planetclicker.objectType.table.TableInfo;
 import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
 import com.blackphoton.planetclicker.resources.ResourceType;
 import com.blackphoton.planetclicker.objectType.Era;
-import com.blackphoton.planetclicker.objectType.Exponent;
 import com.blackphoton.planetclicker.objectType.Planet;
 
 import java.util.ArrayList;
@@ -41,15 +40,15 @@ public class Data {
 	 */
 	public static void setData(PlanetClicker planetClicker){
 		eraList = new ArrayList<Era>();
-		Era cavemen = new Era("Cavemen", Exponent.toExponent(2), "caveman.png");
-		Era bronze = new Era("Bronze", Exponent.toExponent(400), "bronze.png");
-		Era iron = new Era("Iron", Exponent.toExponent(2000), "iron.png");
-		Era ancient = new Era("Ancient", Exponent.toExponent(12000), "ancient.png");
-		Era medievil = new Era("Medievil", Exponent.toExponent(200000), "medievil.png");
-		Era classical = new Era("Classical", Exponent.toExponent(5000000), "classical.png");
-		Era industrial = new Era("Industrial", Exponent.toExponent(100000000), "industrial.png");
-		Era modern = new Era("Modern", new Exponent(7,9), "modern.png");
-		Era future = new Era("Future", new Exponent(1,10), "future.png");
+		Era cavemen = new Era("Cavemen", 2L, "caveman.png");
+		Era bronze = new Era("Bronze", 400L, "bronze.png");
+		Era iron = new Era("Iron", 2000L, "iron.png");
+		Era ancient = new Era("Ancient", 12000L, "ancient.png");
+		Era medievil = new Era("Medievil", 200000L, "medievil.png");
+		Era classical = new Era("Classical", 5000000L, "classical.png");
+		Era industrial = new Era("Industrial",100000000L, "industrial.png");
+		Era modern = new Era("Modern",7000000000L, "modern.png");
+		Era future = new Era("Future", 10000000000L, "future.png");
 		eraList.add(cavemen);
 		eraList.add(bronze);
 		eraList.add(iron);

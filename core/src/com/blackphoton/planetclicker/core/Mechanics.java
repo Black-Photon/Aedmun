@@ -51,7 +51,7 @@ public class Mechanics {
 		boolean found = false;
 		for(Era era: Data.getEraList()){
 			if(found){
-				if(populationCount>=era.getPop_req().toInt()){
+				if(populationCount>=era.getPop_req()){
 					thisEra = era;
 					Data.ui.updateEra(thisEra);
 				}
@@ -105,6 +105,7 @@ public class Mechanics {
 
 		ArrayList townArray = new ArrayList();
 		townArray.add(new RequiredResource(ResourceMaterial.WOOD, 100));
+		townArray.add(new RequiredResource(ResourceMaterial.STONE, 25));
 		townArray.add(new RequiredResource(ResourceMaterial.BRONZE, 5));
 		townArray.add(new RequiredResource(ResourceMaterial.IRON, 1));
 		BuildingEntry town = (BuildingEntry) buildingInfo.addEntry("Town", 20000, Data.getEraList().get(2), null, townArray, null, null);
@@ -112,8 +113,10 @@ public class Mechanics {
 		ArrayList villageArray = new ArrayList();
 		villageArray.add(new RequiredResource(ResourceMaterial.WOOD, 50));
 		villageArray.add(new RequiredResource(ResourceMaterial.BRONZE, 1));
+		villageArray.add(new RequiredResource(ResourceMaterial.STONE, 10));
 		ArrayList toTownArray = new ArrayList();
 		toTownArray.add(new RequiredResource(ResourceMaterial.WOOD, 25));
+		toTownArray.add(new RequiredResource(ResourceMaterial.STONE, 10));
 		toTownArray.add(new RequiredResource(ResourceMaterial.BRONZE, 3));
 		toTownArray.add(new RequiredResource(ResourceMaterial.IRON, 1));
 		BuildingEntry village = (BuildingEntry) buildingInfo.addEntry("Village", 100, Data.getEraList().get(1), town, villageArray, toTownArray, null);
@@ -121,6 +124,7 @@ public class Mechanics {
 		ArrayList houseArray = new ArrayList();
 		ArrayList toVillageArray = new ArrayList();
 		toVillageArray.add(new RequiredResource(ResourceMaterial.WOOD, 25));
+		toVillageArray.add(new RequiredResource(ResourceMaterial.STONE, 5));
 		toVillageArray.add(new RequiredResource(ResourceMaterial.BRONZE, 1));
 		houseArray.add(new RequiredResource(ResourceMaterial.WOOD, 5));
 		buildingInfo.addEntry("House", 4, Data.getEraList().get(0), village, houseArray, toVillageArray, null);
@@ -161,15 +165,16 @@ public class Mechanics {
 
 		ArrayList farmArray = new ArrayList();
 		farmArray.add(new RequiredResource(ResourceMaterial.WOOD, 40));
+		farmArray.add(new RequiredResource(ResourceMaterial.STONE, 3));
 		ArrayList toFarmArray = new ArrayList();
 		toFarmArray.add(new RequiredResource(ResourceMaterial.WOOD, 15));
+		toFarmArray.add(new RequiredResource(ResourceMaterial.STONE, 1));
 		FoodEntry farm = (FoodEntry) foodInfo.addEntry("Farm", 5000, Data.getEraList().get(2), null, farmArray, toFarmArray, noLimit);
 
 		ArrayList sfarmArray = new ArrayList();
 		sfarmArray.add(new RequiredResource(ResourceMaterial.WOOD, 15));
-		ArrayList toSFarmArray = new ArrayList();
-		toSFarmArray.add(new RequiredResource(ResourceMaterial.WOOD, 10));
-		FoodEntry smallfarm = (FoodEntry) foodInfo.addEntry("Small Farm", 20, Data.getEraList().get(1), farm, sfarmArray, toSFarmArray, noLimit);
+		sfarmArray.add(new RequiredResource(ResourceMaterial.STONE, 1));
+		FoodEntry smallfarm = (FoodEntry) foodInfo.addEntry("Small Farm", 20, Data.getEraList().get(1), farm, sfarmArray, null, noLimit);
 
 
 		foodInfo.addEntry("Hunt Food", 10, Data.getEraList().get(0), smallfarm, null, null, new ResourceBundle() {
@@ -454,20 +459,35 @@ public class Mechanics {
 		woodMill_l.add(new RequiredResource(ResourceMaterial.WOOD, 100));
 		woodMill_l.add(new RequiredResource(ResourceMaterial.STONE, 10));
 
+		ArrayList quarry_l = new ArrayList();
+		quarry_l.add(new RequiredResource(ResourceMaterial.WOOD, 40));
+		quarry_l.add(new RequiredResource(ResourceMaterial.STONE, 100));
+
+		ArrayList cast_l = new ArrayList();
+		cast_l.add(new RequiredResource(ResourceMaterial.WOOD, 10));
+		cast_l.add(new RequiredResource(ResourceMaterial.STONE, 100));
+		cast_l.add(new RequiredResource(ResourceMaterial.BRONZE, 25));
+		cast_l.add(new RequiredResource(ResourceMaterial.IRON, 5));
+
+		ArrayList forge_l = new ArrayList();
+		forge_l.add(new RequiredResource(ResourceMaterial.WOOD, 25));
+		forge_l.add(new RequiredResource(ResourceMaterial.STONE, 150));
+		forge_l.add(new RequiredResource(ResourceMaterial.BRONZE, 75));
+		forge_l.add(new RequiredResource(ResourceMaterial.IRON, 100));
 
 		resourcesInfo.addEntry("Woodmill", 1, Data.getEraList().get(1), null, woodMill_l, null, woodMill_r);
 
 		resourcesInfo.addEntry("Gather Wood", 1, Data.getEraList().get(0), null, null, null, wood);
 
-		resourcesInfo.addEntry("Quarry Stone", 1, Data.getEraList().get(1), null, null, null, quarryStone_r);
+		resourcesInfo.addEntry("Quarry Stone", 1, Data.getEraList().get(1), null, quarry_l, null, quarryStone_r);
 
 		resourcesInfo.addEntry("Mine Stone", 1, Data.getEraList().get(0), null, null, null, stone);
 
-		resourcesInfo.addEntry("Cast Bronze", 1, Data.getEraList().get(2), null, null, null, bronzeCast_r);
+		resourcesInfo.addEntry("Cast Bronze", 1, Data.getEraList().get(2), null, cast_l, null, bronzeCast_r);
 
 		resourcesInfo.addEntry("Smelt Bronze", 5, Data.getEraList().get(1), null, null, null, bronze);
 
-		resourcesInfo.addEntry("Forge Iron", 1, Data.getEraList().get(3), null, null, null, ironForge_r);
+		resourcesInfo.addEntry("Forge Iron", 1, Data.getEraList().get(3), null, forge_l, null, ironForge_r);
 
 		resourcesInfo.addEntry("Mine Iron", 3, Data.getEraList().get(2), null, null, null, iron);
 		return resourcesInfo;
