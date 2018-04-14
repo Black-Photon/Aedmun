@@ -88,7 +88,7 @@ public abstract class TableEntry {
 		if(createClicked){
 			create.setDrawable(new SpriteDrawable(new Sprite(createClicked_tex)));
 		}else
-		if(Data.main.getPopulationCount()>=requiredEra.getPop_req()){
+		if(Data.main.getPopulationCount()>=requiredEra.getPop_req() && Data.getCurrentEra().getPop_req()>=requiredEra.getPop_req()){
 			create.setDrawable(new SpriteDrawable(new Sprite(create_tex)));
 			canCreate = true;
 		}else{
@@ -103,7 +103,7 @@ public abstract class TableEntry {
 			upgrade.setDrawable(new SpriteDrawable(new Sprite(upgradeLocked_tex)));
 			canUpgrade = false;
 		}else
-		if(Data.main.getPopulationCount()>=upgradeTo.requiredEra.getPop_req()){
+		if(Data.main.getPopulationCount()>=upgradeTo.requiredEra.getPop_req() && Data.getCurrentEra().getPop_req()>=upgradeTo.requiredEra.getPop_req()){
 			upgrade.setDrawable(new SpriteDrawable(new Sprite(upgrade_tex)));
 			canUpgrade = true;
 		}else{
@@ -121,7 +121,11 @@ public abstract class TableEntry {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			if(!canCreate) return false;
-			if(createClicked){
+				if(getResourcesNeeded()!=null)
+					for (RequiredResource resource : getResourcesNeeded())
+						resource.setResourceNumberText();
+
+				if(createClicked){
 				unclick();
 				updateButtons();
 				Data.setSelectedEntry(null);
@@ -141,6 +145,11 @@ public abstract class TableEntry {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			if(!canUpgrade) return false;
+
+			if(getResourcesNeededToUpgrade()!=null)
+				for (RequiredResource resource : getResourcesNeededToUpgrade())
+					resource.setResourceNumberText();
+
 			if(upgradeClicked){
 				unclick();
 				updateButtons();

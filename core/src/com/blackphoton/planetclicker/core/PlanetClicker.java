@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.blackphoton.planetclicker.objectType.Planet;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public class PlanetClicker extends ApplicationAdapter{
 	private SpriteBatch batch;
 	private Stage stage;
@@ -17,7 +15,7 @@ public class PlanetClicker extends ApplicationAdapter{
 	private int stoneCount = 0;
 	private int bronzeCount = 0;
 	private int ironCount = 0;
-	private int populationCount = 5000;//TODO
+	private long populationCount = 399;//TODO
 	private Planet planet;
 	private boolean buildingTableVisible = false;
 	private boolean foodTableVisible = false;
@@ -140,11 +138,11 @@ public class PlanetClicker extends ApplicationAdapter{
 		this.ironCount += ironCount;
 	}
 
-	public int getPopulationCount() {
+	public long getPopulationCount() {
 		return populationCount;
 	}
 
-	public void setPopulationCount(int populationCount) {
+	public void setPopulationCount(long populationCount) {
 		this.populationCount = populationCount;
 	}
 
@@ -195,6 +193,7 @@ public class PlanetClicker extends ApplicationAdapter{
 	public void setSpecialTableVisible(boolean specialTableVisible) {
 		this.specialTableVisible = specialTableVisible;
 	}
+
 }
 
 

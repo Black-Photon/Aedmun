@@ -104,6 +104,13 @@ public class UI {
 
 	// - Special
 	private Table specialTable;
+	private ScrollPane specialScroll;
+	private Texture sh_tex;
+	private Image sh;
+	private Texture pyr_tex;
+	private Image pyr;
+	private Texture wall_tex;
+	private Image wall;
 
 	//Other
 	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -219,6 +226,13 @@ public class UI {
 		iron = new Image(iron_tex);
 		resourceScroll = new ScrollPane(null);
 
+		sh_tex = new Texture("stonehenge.png");
+		sh = new Image(sh_tex);
+		pyr_tex = new Texture("pyramid.png");
+		pyr = new Image(pyr_tex);
+		wall_tex = new Texture("great_wall.png");
+		wall = new Image(wall_tex);
+
 		//Other
 		space = new Texture("space.png");
 		space.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -294,8 +308,8 @@ public class UI {
 		}
 	}
 
-	public void updateEra(Era thisEra){
-		era.setTexture(new Texture(thisEra.getImagePath()));
+	public void updateEra(){
+		era.setTexture(new Texture(Data.getCurrentEra().getImagePath()));
 	}
 
 	public void resize(int width, int height) {
@@ -383,6 +397,7 @@ public class UI {
 		refreshBuildingTable();
 		refreshFoodTable();
 		refreshResourcesTable();
+		refreshSpecialTable();
 
 		if(Data.getSelectedEntry()!=null) loadSideBar(Data.getSelectedEntry(), Data.getSelectedEntry().isCreateClicked());
 	}
@@ -407,7 +422,7 @@ public class UI {
 			Image image = resource.getResource();
 			int numberRequired = resource.getNumberRequired();
 			Label numberNeeded = resource.getResourceNumber();
-			glyphLayout = new GlyphLayout(bitmapFont, Integer.toString(numberRequired));
+			glyphLayout = new GlyphLayout(bitmapFont, numberNeeded.getText());
 
 			image.setPosition(reqRes.getWidth()/2-image.getWidth()/2, totalHeight+reqRes_bottom.getHeight()*3/4);
 			numberNeeded.setPosition(reqRes.getWidth()/2-glyphLayout.width/2, totalHeight+reqRes_bottom.getHeight()*3/4-glyphLayout.height);
@@ -686,10 +701,12 @@ public class UI {
 	private Table buildingTitleTable;
 	private Table foodTitleTable;
 	private Table resourceTitleTable;
+	private Table specialTitleTable;
 
 	private ScrollPane buildingScroller;
 	private ScrollPane foodScroller;
 	private ScrollPane resourceScroller;
+	private ScrollPane specialScroller;
 
 	public void refreshResourcesTable(){
 		wood.setScaling(Scaling.fit);
@@ -711,7 +728,18 @@ public class UI {
 		refreshTableX(Data.getResourcesTable(), resourceTitleTable, resourceScroller, "Value", Data.main.isResourcesTableVisible(), list);
 	}
 
-	public void refreshSpecialTable(){ }
+	public void refreshSpecialTable(){
+		sh.setScaling(Scaling.fit);
+		pyr.setScaling(Scaling.fit);
+		wall.setScaling(Scaling.fit);
+
+		ArrayList<Row> list = new ArrayList<Row>();
+		list.add(new Row(0, sh));
+		list.add(new Row(1, pyr));
+		list.add(new Row(2, wall));
+
+		refreshTableX(Data.getSpecialTable(), specialTitleTable, specialScroller, "Clicks", Data.main.isSpecialTableVisible(), list);
+	}
 
 	public void refreshTableX(TableInfo info, Table titleTable, ScrollPane scroller, String secret, boolean isVisible, ArrayList<Row> rowList){
 		rows = 4;

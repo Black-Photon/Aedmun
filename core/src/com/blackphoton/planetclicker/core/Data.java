@@ -62,6 +62,8 @@ public class Data {
 		ui = new UI();
 		mechanics = new Mechanics();
 		main = planetClicker;
+
+		currentEra = cavemen;
 	}
 
 	//---Getters and Setters---

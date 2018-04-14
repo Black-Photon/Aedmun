@@ -1,7 +1,6 @@
 package com.blackphoton.planetclicker.core;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g3d.model.data.ModelMaterial;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -9,13 +8,9 @@ import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
-import com.blackphoton.planetclicker.objectType.table.entries.BuildingEntry;
-import com.blackphoton.planetclicker.objectType.table.entries.FoodEntry;
-import com.blackphoton.planetclicker.objectType.table.entries.ResourcesEntry;
-import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
+import com.blackphoton.planetclicker.objectType.table.entries.*;
 import com.blackphoton.planetclicker.resources.ResourceType;
 import com.blackphoton.planetclicker.resources.ResourceMaterial;
-import javafx.scene.control.Tab;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -26,8 +21,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Mechanics {
 
 	private Era thisEra;
-	private final int peoplePerBuilding = 4;
-	private final int resourcesPerBuilding = 1;
 	private Random random;
 	private final float clickMultiplier = 0.95f;
 	private int numberOfIRThreads = 0;
@@ -35,9 +28,12 @@ public class Mechanics {
 	public void create(){
 		thisEra = Data.getEraList().get(0);
 		random = new Random();
+
+		Data.main.setStoneCount(200);
+		Data.main.setWoodCount(200);
 	}
 	public void update(){
-		int populationCount = Data.main.getPopulationCount();
+		long populationCount = Data.main.getPopulationCount();
 		Data.main.setBuildingCount(0);
 		for(TableEntry entry:Data.getBuildingTable().getEntries()){
 			Data.main.setBuildingCount(Data.main.getBuildingCount()+entry.getNumberOf()*entry.getValue());
@@ -49,36 +45,40 @@ public class Mechanics {
 		}
 		int foodCount = Data.main.getFoodCount();
 
+		Era next = null;
+
 		boolean found = false;
 		for(Era era: Data.getEraList()){
 			if(found){
-				if(populationCount>=era.getPop_req()){
-					thisEra = era;
-					Data.ui.updateEra(thisEra);
-				}
+				next = era;
+				break;
 			}
 			if(era.equals(thisEra)){
 				found = true;
 			}
 		}
 
-		if (buildingCount > populationCount && foodCount > populationCount)
-			if(populationCount>1000){
-				int randomInt = (int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500);
-				Data.main.setPopulationCount(populationCount + randomInt);
-			}else {
-				for (int i = 1; i < populationCount; i++) {
-					int randomInt = random.nextInt(1000);
-					if (randomInt == 42) {
-						Data.main.setPopulationCount(populationCount + 1);
+		if(populationCount>next.getPop_req()) Data.main.setPopulationCount(next.getPop_req());
+
+		if(populationCount<next.getPop_req()) {
+			if (buildingCount > populationCount && foodCount > populationCount)
+				if (populationCount > 1000) {
+					int randomInt = (int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500);
+					Data.main.setPopulationCount(populationCount + randomInt);
+				} else {
+					for (int i = 1; i < populationCount; i++) {
+						int randomInt = random.nextInt(1000);
+						if (randomInt == 42) {
+							Data.main.setPopulationCount(populationCount + 1);
+						}
 					}
 				}
-			}
-		if ((buildingCount < populationCount || foodCount < populationCount)&&populationCount>2)
-			if(populationCount>1000){
+		}
+		if ((buildingCount < populationCount || foodCount < populationCount) && populationCount > 2)
+			if (populationCount > 1000) {
 				int randomInt = (int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500);
 				Data.main.setPopulationCount(populationCount - randomInt);
-			}else {
+			} else {
 				for (int i = 1; i < populationCount; i++) {
 					int randomInt = random.nextInt(1000);
 					if (randomInt == 888) {
@@ -496,20 +496,104 @@ public class Mechanics {
 	private TableInfo createSpecialTable(){
 		TableInfo specialInfo = new TableInfo(ResourceType.SPECIAL);
 
+		keyList = new ArrayList();
+		keyList.add("pop");
+
 		ArrayList<RequiredResource> stone = new ArrayList<RequiredResource>();
 		stone.add(new RequiredResource(ResourceMaterial.STONE, 150));
-		specialInfo.addEntry("Stonehenge", 50, Data.getEraList().get(0), null, stone, null, null);
+		specialInfo.addEntry("Stonehenge", 50, Data.getEraList().get(0), null, stone, null, new ResourceBundle() {
+			@Override
+			protected Object handleGetObject(String key) {
+				if(key.equals("pop")) return Data.getEraList().get(1).getPop_req().intValue();
+				return null;
+			}
+
+			int count = 0;
+
+			@Override
+			public Enumeration<String> getKeys() {
+				Enumeration<String> e = new Enumeration<String>() {
+					ArrayList<String> elements = keyList;
+
+					@Override
+					public boolean hasMoreElements() {
+						return count<elements.size();
+					}
+
+					@Override
+					public String nextElement() {
+						count++;
+						return elements.get(count-1);
+					}
+				};
+				return e;
+			}
+		});
 
 		ArrayList<RequiredResource> pyram = new ArrayList<RequiredResource>();
 		pyram.add(new RequiredResource(ResourceMaterial.STONE, 350));
 		pyram.add(new RequiredResource(ResourceMaterial.BRONZE, 50));
-		specialInfo.addEntry("Pyramids", 100, Data.getEraList().get(1), null, pyram, null, null);
+		specialInfo.addEntry("Pyramids", 100, Data.getEraList().get(1), null, pyram, null, new ResourceBundle() {
+			@Override
+			protected Object handleGetObject(String key) {
+				if(key.equals("pop")) return Data.getEraList().get(2).getPop_req().intValue();
+				return null;
+			}
+
+			int count = 0;
+
+			@Override
+			public Enumeration<String> getKeys() {
+				Enumeration<String> e = new Enumeration<String>() {
+					ArrayList<String> elements = keyList;
+
+					@Override
+					public boolean hasMoreElements() {
+						return count<elements.size();
+					}
+
+					@Override
+					public String nextElement() {
+						count++;
+						return elements.get(count-1);
+					}
+				};
+				return e;
+			}
+		});
 
 		ArrayList<RequiredResource> wall = new ArrayList<RequiredResource>();
 		wall.add(new RequiredResource(ResourceMaterial.STONE, 600));
 		wall.add(new RequiredResource(ResourceMaterial.BRONZE, 20));
 		wall.add(new RequiredResource(ResourceMaterial.IRON, 200));
-		specialInfo.addEntry("Great Wall", 250, Data.getEraList().get(2), null, wall, null, null);
+		specialInfo.addEntry("Great Wall", 250, Data.getEraList().get(2), null, wall, null, new ResourceBundle() {
+			@Override
+			protected Object handleGetObject(String key) {
+				if(key.equals("pop")) return Data.getEraList().get(3).getPop_req().intValue();
+				return null;
+			}
+
+			int count = 0;
+
+			@Override
+			public Enumeration<String> getKeys() {
+				Enumeration<String> e = new Enumeration<String>() {
+					ArrayList<String> elements = keyList;
+
+					@Override
+					public boolean hasMoreElements() {
+						return count<elements.size();
+					}
+
+					@Override
+					public String nextElement() {
+						count++;
+						return elements.get(count-1);
+					}
+				};
+				return e;
+			}
+		});
 
 		return specialInfo;
 	}
@@ -539,8 +623,51 @@ public class Mechanics {
 
 		if(entry.isCreateClicked()){
 			if(hasResources(entry.getResourcesNeeded())){
+				if(entry instanceof SpecialEntry) {
+					if (((SpecialEntry) entry).isCanBuild()){
+						if(((SpecialEntry) entry).getPercent()==100) return;
+
+						entry.addToEntry();
+						entry.setNumberLabelText();
+
+						if(((SpecialEntry) entry).getPercent()==100){
+							if(!((SpecialEntry) entry).isComplete()){
+								((SpecialEntry) entry).setComplete(true);
+								boolean found = false;
+								for(Era era: Data.getEraList()){
+									if(found){
+										Data.setCurrentEra(era);
+										thisEra = Data.getCurrentEra();
+										Data.ui.updateEra();
+										break;
+									}
+									if(era.equals(thisEra)) found = true;
+								}
+							}
+							return;
+						}
+
+						return;
+					}else{
+						((SpecialEntry) entry).setCanBuild(true);
+						subtractResources(entry.getResourcesNeeded());
+						entry.setResourcesNeeded(null);
+						Data.ui.loadSideBar(Data.getSelectedEntry(), true);
+						return;
+					}
+				}
+
 				entry.addToEntry();
 				subtractResources(entry.getResourcesNeeded());
+
+				if(Data.getSelectedEntry().getResourcesNeeded()!=null)
+					for (RequiredResource resource : Data.getSelectedEntry().getResourcesNeeded())
+						resource.setResourceNumberText();
+				if(Data.getSelectedEntry().getResourcesNeededToUpgrade()!=null)
+					for (RequiredResource resource : Data.getSelectedEntry().getResourcesNeededToUpgrade())
+						resource.setResourceNumberText();
+
+				Data.ui.loadSideBar(Data.getSelectedEntry(), true);
 			}else{
 				printInsufficientResources();
 			}
@@ -557,6 +684,15 @@ public class Mechanics {
 					entry.subFromEntry();
 					entry.getUpgradeTo().addToEntry();
 					subtractResources(entry.getResourcesNeededToUpgrade());
+
+					if(Data.getSelectedEntry().getResourcesNeeded()!=null)
+						for (RequiredResource resource : Data.getSelectedEntry().getResourcesNeeded())
+							resource.setResourceNumberText();
+					if(Data.getSelectedEntry().getResourcesNeededToUpgrade()!=null)
+						for (RequiredResource resource : Data.getSelectedEntry().getResourcesNeededToUpgrade())
+							resource.setResourceNumberText();
+
+					Data.ui.loadSideBar(Data.getSelectedEntry(), false);
 				}
 			}else{
 				printInsufficientResources();
@@ -762,15 +898,20 @@ public class Mechanics {
 	public static class specialListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			if(Data.getResourceType()==ResourceType.BUILDINGS){
-				Data.setResourceType(ResourceType.NONE);
-				Data.main.setBuildingTableVisible(false);
-				Data.ui.refreshBuildingTable();
-			}
+			if(Data.getCurrentTable()!=null) Data.getCurrentTable().unclickAll();
 
 			Data.mechanics.removeEntryAndUnclick();
 
-			Data.setResourceType(ResourceType.SPECIAL);
+			Data.ui.setAllTablesInvisible();
+			Data.ui.refreshTable();
+			if(Data.getResourceType()==ResourceType.SPECIAL){
+				Data.setResourceType(ResourceType.NONE);
+				Data.main.setSpecialTableVisible(false);
+				Data.ui.refreshBuildingTable();
+			} else {
+				Data.setResourceType(ResourceType.SPECIAL);
+				Data.main.setSpecialTableVisible(true);
+			}
 			Data.ui.updateResources();
 			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			return true;
