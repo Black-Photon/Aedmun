@@ -261,8 +261,10 @@ public class UI {
 
 		}
 		if(Data.getCurrentTable()!=null)
-			for(TableEntry entry: Data.getCurrentTable().getEntries())
+			for(TableEntry entry: Data.getCurrentTable().getEntries()) {
 				entry.setNumberLabelText();
+				entry.setValueLabelText();
+			}
 
 		Data.main.getStage().getBatch().setColor(1,1,1,1);
 	}
@@ -706,7 +708,7 @@ public class UI {
 		list.add(new Row(7, iron));
 		list.add(new Row(6, null));
 
-		refreshTableX(Data.getResourcesTable(), resourceTitleTable, resourceScroller, "Create", Data.main.isResourcesTableVisible(), list);
+		refreshTableX(Data.getResourcesTable(), resourceTitleTable, resourceScroller, "Value", Data.main.isResourcesTableVisible(), list);
 	}
 
 	public void refreshSpecialTable(){ }
@@ -790,7 +792,7 @@ public class UI {
 	private void addRow(Table table, boolean lastRow, float smallUnit, float largeUnit, TableInfo info, int entry, Image picture){
 		table.add(picture).width(smallUnit).center();
 		table.add(info.getEntries().get(entry).getName()).width(largeUnit).center().fill();
-		table.add(Integer.toString(info.getEntries().get(entry).getValue())).width(largeUnit).center().fill();
+		table.add(info.getEntries().get(entry).getValueLabel()).width(largeUnit).center().fill();
 		table.add(info.getEntries().get(entry).getNumberLabel()).width(smallUnit).center().fill();
 		table.add(info.getEntries().get(entry).getCreate()).width(largeUnit).center();
 		table.add(info.getEntries().get(entry).getUpgrade()).width(largeUnit).center();

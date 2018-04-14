@@ -42,6 +42,7 @@ public abstract class TableEntry {
 	protected ArrayList<RequiredResource> resourcesNeeded;
 	protected ArrayList<RequiredResource> resourcesNeededToUpgrade;
 	protected Label numberLabel;
+	protected Label valueLabel;
 
 	public TableEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, ResourceBundle resources){
 		this.type = type;
@@ -62,6 +63,7 @@ public abstract class TableEntry {
 		upgrade.addListener(new upgradeListener());
 
 		numberLabel = new Label(Integer.toString(numberOf), Data.ui.getSkin());
+		valueLabel = new Label(Integer.toString(value), Data.ui.getSkin());
 
 		updateButtons();
 	}
@@ -81,6 +83,8 @@ public abstract class TableEntry {
 	}
 
 	public void updateButtons(){
+		if(name==null) return;
+
 		if(createClicked){
 			create.setDrawable(new SpriteDrawable(new Sprite(createClicked_tex)));
 		}else
@@ -271,5 +275,17 @@ public abstract class TableEntry {
 
 	public void setNumberLabelText(String text) {
 		this.numberLabel.setText(text);
+	}
+
+	public Label getValueLabel() {
+		return valueLabel;
+	}
+
+	public void setValueLabelText() {
+		this.valueLabel.setText(Integer.toString(value));
+	}
+
+	public void setValueLabelText(String text) {
+		this.valueLabel.setText(text);
 	}
 }

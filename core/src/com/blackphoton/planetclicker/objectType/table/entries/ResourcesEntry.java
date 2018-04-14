@@ -12,19 +12,26 @@ import java.util.ResourceBundle;
 public class ResourcesEntry extends TableEntry {
 	private ResourceMaterial material;
 	private boolean absolute;
-	private float often;
+	private ResourcesEntry multiplierEntry;
+	private int initialValue;
 
-	public ResourcesEntry(ResourceType type, String name, int value, Era requiredEra, ArrayList<RequiredResource> resourcesNeeded, TableEntry upgradeTo, ResourceBundle resources) {
+	public ResourcesEntry(ResourceType type, String name, final int value, Era requiredEra, ArrayList<RequiredResource> resourcesNeeded, TableEntry upgradeTo, ResourceBundle resources) {
 		super(type, name, value, requiredEra, upgradeTo, resourcesNeeded, null, resources);
+		if(name==null) return;
 		material = (ResourceMaterial) resources.getObject(resources.getKeys().nextElement());
 		absolute = (Boolean) resources.getObject(resources.getKeys().nextElement());
-		often = (Float) resources.getObject(resources.getKeys().nextElement());
+		multiplierEntry = (ResourcesEntry) resources.getObject(resources.getKeys().nextElement());
+		initialValue = value;
 
 		if(absolute) {
 			new Thread() {
 				@Override
 				public synchronized void run() {
 					while (!Thread.currentThread().isInterrupted()) {
+						if(multiplierEntry!=null){
+							ResourcesEntry.super.setValue(initialValue*(multiplierEntry.getNumberOf()+1));
+						}
+
 						try {
 							switch (material) {
 								case WOOD:
@@ -44,7 +51,7 @@ public class ResourcesEntry extends TableEntry {
 										ResourcesEntry.super.numberOf = Data.main.getBronzeCount();
 									break;
 							}
-							sleep(1000);
+							sleep(10);
 						} catch (InterruptedException e) {
 							Thread.currentThread().interrupt();
 						}
@@ -63,12 +70,11 @@ public class ResourcesEntry extends TableEntry {
 				public void run() {
 					while (!Thread.currentThread().isInterrupted()) {
 						try {
-							Data.mechanics.addResource(ResourcesEntry.this.getMaterial(), ResourcesEntry.this.getValue()*ResourcesEntry.this.getNumberOf());
 							if(ResourcesEntry.this.resourcesNeeded!=null)
 							for(int i=0; i<ResourcesEntry.this.resourcesNeeded.size(); i++){
 								ResourcesEntry.this.resourcesNeeded.get(i).setNumberRequired(initialCost.get(i).getNumberRequired()*(numberOf+1));
 							}
-							sleep((long)(1000*often));
+							sleep(100);
 						} catch (InterruptedException e) {
 							Thread.currentThread().interrupt();
 						}
@@ -92,5 +98,12 @@ public class ResourcesEntry extends TableEntry {
 
 	public void setAbsolute(boolean absolute) {
 		this.absolute = absolute;
+	}
+
+	public void setValueLabelText() {
+		if(absolute)
+			this.valueLabel.setText(Integer.toString(value));
+		else
+			this.valueLabel.setText("x"+Integer.toString(numberOf+1));
 	}
 }
