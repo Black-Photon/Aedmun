@@ -40,7 +40,7 @@ public class Data {
 	 */
 	public static void setData(PlanetClicker planetClicker){
 		eraList = new ArrayList<Era>();
-		Era cavemen = new Era("Cavemen", 2L, "caveman.png");
+		Era cavemen = new Era("Cavemen", 2L, "cavemen.png");
 		Era bronze = new Era("Bronze", 400L, "bronze.png");
 		Era iron = new Era("Iron", 2000L, "iron.png");
 		Era ancient = new Era("Ancient", 12000L, "ancient.png");

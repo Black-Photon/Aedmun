@@ -1,13 +1,15 @@
 package com.blackphoton.planetclicker.objectType;
 
+import com.badlogic.gdx.graphics.Texture;
+
 public class Era {
 	private String name;
 	private Long pop_req;
-	private String imagePath;
+	private Texture texture;
 	public Era(String name, Long pop_req, String imagePath){
-		this.imagePath = imagePath;
 		this.name = name;
 		this.pop_req = pop_req;
+		texture = new Texture(imagePath);
 	}
 
 	public String getName() {
@@ -26,11 +28,11 @@ public class Era {
 		this.pop_req = pop_req;
 	}
 
-	public String getImagePath() {
-		return imagePath;
+	public Texture getTexture() {
+		return texture;
 	}
 
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
+	public void setTexture(Texture texture) {
+		this.texture = texture;
 	}
 }

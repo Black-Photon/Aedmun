@@ -125,6 +125,7 @@ public class UI {
 	private float heightScale;
 	private InputMultiplexer multiplexer;
 	public float planetY;
+	protected Texture required_tex = new Texture("requires.png");
 
 	public void createUI(){
 		//General Declarations
@@ -309,7 +310,7 @@ public class UI {
 	}
 
 	public void updateEra(){
-		era.setTexture(new Texture(Data.getCurrentEra().getImagePath()));
+		era.setTexture(Data.getCurrentEra().getTexture());
 	}
 
 	public void resize(int width, int height) {
@@ -848,5 +849,13 @@ public class UI {
 
 	public Skin getSkin() {
 		return skin;
+	}
+
+	public Texture getRequired_tex() {
+		return required_tex;
+	}
+
+	public void setRequired_tex(Texture required_tex) {
+		this.required_tex = required_tex;
 	}
 }

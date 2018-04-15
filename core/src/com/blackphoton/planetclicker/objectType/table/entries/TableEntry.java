@@ -92,8 +92,11 @@ public abstract class TableEntry {
 			create.setDrawable(new SpriteDrawable(new Sprite(create_tex)));
 			canCreate = true;
 		}else{
-			create.setDrawable(new SpriteDrawable(new Sprite(createLocked_tex)));
+			create.setDrawable(new SpriteDrawable(new Sprite(Data.ui.getRequired_tex())));
+			upgrade.setDrawable(new SpriteDrawable(new Sprite(requiredEra.getTexture())));
 			canCreate = false;
+			canUpgrade = false;
+			return;
 		}
 
 		if(upgradeClicked){
