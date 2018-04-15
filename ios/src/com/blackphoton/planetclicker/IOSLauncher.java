@@ -5,7 +5,7 @@ import org.robovm.apple.uikit.UIApplication;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
-import com.blackphoton.planetclicker.PlanetClicker;
+import com.blackphoton.planetclicker.core.PlanetClicker;
 
 public class IOSLauncher extends IOSApplication.Delegate {
     @Override

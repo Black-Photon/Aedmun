@@ -1,4 +1,4 @@
-package com.blackphoton.planetclicker;
+package com.blackphoton.planetclicker.resources;
 /**
  * Thrown to indicate that a shape, texture or other sort is not symmetrical, as in it's width and height are not the same
  * Applications can subclass this class to indicate similar exceptions.
