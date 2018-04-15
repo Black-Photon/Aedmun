@@ -119,7 +119,7 @@ public class UI {
 	private Texture space;
 	private Picture sun;
 	private Label countLabel;
-	private final Label insufficientResources = new Label("You don't have enough resources to build this", skin);
+	private final Image insufficientResources = new Image(new Texture("insufficient_resources.png"));
 	private GlyphLayout glyphLayout;
 	private BitmapFont bitmapFont;
 	private float heightScale;
@@ -255,10 +255,10 @@ public class UI {
 
 		Data.main.setPlanet(planet);
 
-		insufficientResources.setColor(0.8f,0.8f,0.8f,0);
-
 		multiplexer = new InputMultiplexer(Data.main.getStage(), new InputDetector());
 		Gdx.input.setInputProcessor(multiplexer);
+
+		insufficientResources.setColor(1f,1f,1f,0f);
 	}
 	public void updateUI(){
 		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
@@ -378,11 +378,6 @@ public class UI {
 		populationGroup.setX(Gdx.graphics.getWidth()/2-(pop_bar_left.getWidth()+pop_bar.getWidth()+pop_bar_right.getWidth())*heightScale/2);
 		populationGroup.setY(Gdx.graphics.getHeight()-pop_bar.getHeight()*heightScale);
 
-		glyphLayout.setText(bitmapFont, insufficientResources.getText());
-		insufficientResources.setX(Gdx.graphics.getWidth()/2-glyphLayout.width/2);
-		insufficientResources.setY(Gdx.graphics.getHeight()/2-glyphLayout.height/2);
-		insufficientResources.setTouchable(Touchable.disabled);
-
 		era.setX(Gdx.graphics.getWidth()/2-era.getWidth()/2);
 		era.setY(Gdx.graphics.getHeight()-pop_bar.getHeight()*heightScale-era.getHeight()-10);
 
@@ -395,6 +390,13 @@ public class UI {
 		planet.setY(planetY);
 		planet.setBounds(planet.getX(), planet.getY(), planet.getWidth(), planet.getHeight());
 
+		insufficientResources.setScaling(Scaling.fit);
+
+		insufficientResources.setScale(Gdx.graphics.getWidth()/320f);
+		insufficientResources.setX(planet.getX()+planet.getWidth()/2-insufficientResources.getWidth()*insufficientResources.getScaleX()/2);
+		insufficientResources.setY(planet.getY()+planet.getHeight()/2-insufficientResources.getHeight()*insufficientResources.getScaleY()/2);
+		insufficientResources.setTouchable(Touchable.disabled);
+
 		refreshBuildingTable();
 		refreshFoodTable();
 		refreshResourcesTable();
@@ -404,6 +406,9 @@ public class UI {
 	}
 
 	public void loadSideBar(TableEntry entry, boolean create){
+		float multiplier = Gdx.graphics.getWidth()/640f;
+		System.out.println(multiplier);
+
 		if(entry==null || (create && (entry.getResourcesNeeded()==null || entry.getResourcesNeeded().size()==0)) || (!create && (entry.getResourcesNeededToUpgrade()==null || entry.getResourcesNeededToUpgrade().size()==0))){
 			if(reqResGroup!=null) reqResGroup.remove();
 			return;
@@ -438,9 +443,10 @@ public class UI {
 		reqRes_top.setPosition(0,reqRes_bottom.getHeight()+reqRes.getHeight());
 		Data.main.getStage().addActor(reqResGroup);
 
+		reqResGroup.scaleBy(multiplier-1);
 
-		reqResGroup.setX(Gdx.graphics.getWidth() - reqRes.getWidth());
-		reqResGroup.setY(Gdx.graphics.getHeight() / 2 - (reqRes_bottom.getHeight()+reqRes.getHeight()+reqRes_top.getHeight())/2);
+		reqResGroup.setX(Gdx.graphics.getWidth() - reqRes.getWidth()*multiplier);
+		reqResGroup.setY(Gdx.graphics.getHeight() / 2 - (reqRes_bottom.getHeight()+reqRes.getHeight()+reqRes_top.getHeight())*multiplier/2);
 	}
 
 	private float scroll = 0;
@@ -843,7 +849,7 @@ public class UI {
 
 	}
 
-	public Label getInsufficientResources() {
+	public Image getInsufficientResources() {
 		return insufficientResources;
 	}
 

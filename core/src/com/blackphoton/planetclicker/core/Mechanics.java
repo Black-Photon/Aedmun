@@ -2,6 +2,7 @@ package com.blackphoton.planetclicker.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.blackphoton.planetclicker.objectType.Era;
@@ -28,9 +29,6 @@ public class Mechanics {
 	public void create(){
 		thisEra = Data.getEraList().get(0);
 		random = new Random();
-
-		Data.main.setStoneCount(200);
-		Data.main.setWoodCount(200);
 	}
 	public void update(){
 		long populationCount = Data.main.getPopulationCount();
@@ -106,7 +104,6 @@ public class Mechanics {
 		townArray.add(new RequiredResource(ResourceMaterial.BRONZE, 5));
 		townArray.add(new RequiredResource(ResourceMaterial.IRON, 1));
 		BuildingEntry town = (BuildingEntry) buildingInfo.addEntry("Town", 20000, Data.getEraList().get(2), null, townArray, null, null);
-		town.addToEntry(); //TODO
 
 		ArrayList villageArray = new ArrayList();
 		villageArray.add(new RequiredResource(ResourceMaterial.WOOD, 50));
@@ -168,7 +165,6 @@ public class Mechanics {
 		toFarmArray.add(new RequiredResource(ResourceMaterial.WOOD, 15));
 		toFarmArray.add(new RequiredResource(ResourceMaterial.STONE, 1));
 		FoodEntry farm = (FoodEntry) foodInfo.addEntry("Farm", 5000, Data.getEraList().get(2), null, farmArray, null, noLimit);
-		farm.addToEntry(); //TODO
 
 		ArrayList sfarmArray = new ArrayList();
 		sfarmArray.add(new RequiredResource(ResourceMaterial.WOOD, 15));
@@ -755,8 +751,9 @@ public class Mechanics {
 	}
 
 	public void printInsufficientResources(){
-		final Label insufficientResources = Data.ui.getInsufficientResources();
-		insufficientResources.setColor(0.8f,0.8f,0.8f,1);
+		final Image insufficientResources = Data.ui.getInsufficientResources();
+
+		insufficientResources.setColor(1f,1f,1f,1f);
 
 		new Thread(){
 			@Override
@@ -774,7 +771,7 @@ public class Mechanics {
 						return;
 					}
 					alpha = insufficientResources.getColor().a;
-					insufficientResources.setColor(0.8f,0.8f,0.8f,alpha-0.001f);
+					insufficientResources.setColor(1f,1f,1f,alpha-0.001f);
 					try {
 						sleep(3);
 					} catch (InterruptedException e) {
