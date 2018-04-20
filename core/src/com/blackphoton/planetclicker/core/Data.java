@@ -15,11 +15,6 @@ import java.util.ArrayList;
 public class Data {
 	public static com.blackphoton.planetclicker.core.PlanetClicker main;
 
-	private static Texture tex_earth = new Texture("earth.png");
-	private static Planet earth = new Planet(tex_earth, 128, 128, "01e");
-	private final static Planet[] planets = {earth};
-	private static Planet currentPlanet = planets[0];
-
 	private static ArrayList<Era> eraList;
 	private static Era currentEra;
 
@@ -67,34 +62,6 @@ public class Data {
 	}
 
 	//---Getters and Setters---
-
-	public static Texture getTex_earth() {
-		return tex_earth;
-	}
-
-	public static void setTex_earth(Texture tex_earth) {
-		Data.tex_earth = tex_earth;
-	}
-
-	public static Planet getEarth() {
-		return earth;
-	}
-
-	public static void setEarth(Planet earth) {
-		Data.earth = earth;
-	}
-
-	public static Planet[] getPlanets() {
-		return planets;
-	}
-
-	public static Planet getCurrentPlanet() {
-		return currentPlanet;
-	}
-
-	public static void setCurrentPlanet(Planet currentPlanet) {
-		Data.currentPlanet = currentPlanet;
-	}
 
 	public static ArrayList<Era> getEraList() {
 		return eraList;

@@ -1,31 +1,60 @@
 package com.blackphoton.planetclicker.core;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.blackphoton.planetclicker.file.SavegameFile;
 import com.blackphoton.planetclicker.objectType.Planet;
+import com.blackphoton.planetclicker.objectType.table.entries.SpecialEntry;
+import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
+
+import static com.badlogic.gdx.Application.ApplicationType.Android;
 
 public class PlanetClicker extends ApplicationAdapter{
 	private SpriteBatch batch;
 	private Stage stage;
-	private int buildingCount = 0;
-	private int foodCount = 0;
-	private int woodCount = 0;
-	private int stoneCount = 0;
-	private int bronzeCount = 0;
-	private int ironCount = 0;
-	private long populationCount = 2;
+	private int buildingCount;
+	private int foodCount;
+	private int woodCount;
+	private int stoneCount;
+	private int bronzeCount;
+	private int ironCount;
+	private long populationCount;
 	private Planet planet;
 	private boolean buildingTableVisible = false;
 	private boolean foodTableVisible = false;
 	private boolean resourcesTableVisible = false;
 	private boolean specialTableVisible = false;
 
+	private Texture tex_earth;
+	private Planet earth;
+	private Planet[] planets;
+	private Planet currentPlanet;
+
 	@Override
 	public void create() {
+		Gdx.app.setLogLevel(Application.LOG_INFO);
+
 		Data.setData(this);
 		Data.mechanics.createTables();
+
+		buildingCount = 0;
+		foodCount = 0;
+		woodCount = 0;
+		stoneCount = 0;
+		bronzeCount = 0;
+		ironCount = 0;
+		populationCount = 2;
+
+		tex_earth = new Texture("earth.png");
+		earth = new Planet(tex_earth, 128, 128, "01e");
+		planets = new Planet[]{earth};
+		currentPlanet = planets[0];
+
+		Gdx.input.setCatchBackKey(true);
 
 		batch = new SpriteBatch();
 		stage = new Stage();
@@ -113,7 +142,6 @@ public class PlanetClicker extends ApplicationAdapter{
 		this.ironCount = ironCount;
 	}
 
-
 	public void addBuildingCount(int buildingCount) {
 		this.buildingCount += buildingCount;
 	}
@@ -192,6 +220,34 @@ public class PlanetClicker extends ApplicationAdapter{
 
 	public void setSpecialTableVisible(boolean specialTableVisible) {
 		this.specialTableVisible = specialTableVisible;
+	}
+
+	public Texture getTex_earth() {
+		return tex_earth;
+	}
+
+	public void setTex_earth(Texture tex_earth) {
+		this.tex_earth = tex_earth;
+	}
+
+	public Planet getEarth() {
+		return earth;
+	}
+
+	public void setEarth(Planet earth) {
+		this.earth = earth;
+	}
+
+	public Planet[] getPlanets() {
+		return planets;
+	}
+
+	public Planet getCurrentPlanet() {
+		return currentPlanet;
+	}
+
+	public void setCurrentPlanet(Planet currentPlanet) {
+		this.currentPlanet = currentPlanet;
 	}
 
 }

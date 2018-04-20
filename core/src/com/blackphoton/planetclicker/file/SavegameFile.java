@@ -2,7 +2,6 @@ package com.blackphoton.planetclicker.file;
 
 import com.blackphoton.planetclicker.core.Data;
 import com.blackphoton.planetclicker.objectType.Era;
-import com.blackphoton.planetclicker.objectType.Picture;
 import com.blackphoton.planetclicker.objectType.table.entries.ResourcesEntry;
 import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
 
@@ -41,6 +40,8 @@ public class SavegameFile extends File {
 		handle.writeString(";\n", true);
 	}
 	public void readGame(){
+		if(!handle.exists())return;
+
 		everything = handle.readString();
 
 		String saveEntry = readWord();

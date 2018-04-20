@@ -41,6 +41,7 @@ public class Mechanics {
 					try{
 						file.saveGame();
 						sleep(1000);
+						Gdx.app.log("TAG!", "Saving...");
 					}catch (InterruptedException e){
 						e.printStackTrace();
 					}
@@ -82,6 +83,8 @@ public class Mechanics {
 				found = true;
 			}
 		}
+
+		if(populationCount<2) Data.main.setPopulationCount(2);
 
 		if(populationCount>next.getPop_req()) Data.main.setPopulationCount(next.getPop_req());
 

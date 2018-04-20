@@ -249,7 +249,7 @@ public class UI {
 
 		updateEra();
 
-		Planet planet = Data.getCurrentPlanet();
+		Planet planet = Data.main.getCurrentPlanet();
 		planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
 		planet.addListener(new Mechanics.planetListener());
 		planet.setTouchable(Touchable.enabled);

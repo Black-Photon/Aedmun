@@ -1,11 +1,22 @@
 package com.blackphoton.planetclicker.core;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.blackphoton.planetclicker.resources.ResourceType;
 
 public class InputDetector implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
+		if(keycode == Input.Keys.BACK){
+			Data.setResourceType(ResourceType.NONE);
+			Data.ui.refreshBuildingTable();
+			Data.ui.refreshFoodTable();
+			Data.ui.refreshResourcesTable();
+			Data.ui.refreshSpecialTable();
+			Gdx.app.exit();
+		}
 		return false;
 	}
 
