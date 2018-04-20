@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.blackphoton.planetclicker.file.SavegameFile;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
@@ -29,8 +30,34 @@ public class Mechanics {
 	public void create(){
 		thisEra = Data.getEraList().get(0);
 		random = new Random();
+
+		final SavegameFile file = new SavegameFile();
+		file.readGame();
+
+		new Thread(){
+			@Override
+			public void run() {
+				while (!Thread.currentThread().isInterrupted()) {
+					try{
+						file.saveGame();
+						sleep(1000);
+					}catch (InterruptedException e){
+						e.printStackTrace();
+					}
+				}
+			}
+		}.start();
+
+		for(TableEntry entry: Data.getSpecialTable().getEntries()){
+			if(entry.getNumberOf()>0) {
+				((SpecialEntry) entry).setCanBuild(true);
+				entry.setResourcesNeeded(null);
+			}
+		}
 	}
 	public void update(){
+		thisEra = Data.getCurrentEra();
+
 		long populationCount = Data.main.getPopulationCount();
 		Data.main.setBuildingCount(0);
 		for(TableEntry entry:Data.getBuildingTable().getEntries()){
@@ -649,6 +676,8 @@ public class Mechanics {
 						subtractResources(entry.getResourcesNeeded());
 						entry.setResourcesNeeded(null);
 						Data.ui.loadSideBar(Data.getSelectedEntry(), true);
+
+						entry.addToEntry();
 						return;
 					}
 				}

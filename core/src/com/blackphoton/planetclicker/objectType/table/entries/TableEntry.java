@@ -197,6 +197,10 @@ public abstract class TableEntry {
 		return numberOf;
 	}
 
+	public void setNumberOf(int numberOf) {
+		this.numberOf = numberOf;
+	}
+
 	public Image getCreate() {
 		return create;
 	}

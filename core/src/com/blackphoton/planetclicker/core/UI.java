@@ -247,6 +247,8 @@ public class UI {
 
 		era = new Picture(new Texture("cavemen.png"),0,0);
 
+		updateEra();
+
 		Planet planet = Data.getCurrentPlanet();
 		planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
 		planet.addListener(new Mechanics.planetListener());
@@ -407,7 +409,6 @@ public class UI {
 
 	public void loadSideBar(TableEntry entry, boolean create){
 		float multiplier = Gdx.graphics.getWidth()/640f;
-		System.out.println(multiplier);
 
 		if(entry==null || (create && (entry.getResourcesNeeded()==null || entry.getResourcesNeeded().size()==0)) || (!create && (entry.getResourcesNeededToUpgrade()==null || entry.getResourcesNeededToUpgrade().size()==0))){
 			if(reqResGroup!=null) reqResGroup.remove();

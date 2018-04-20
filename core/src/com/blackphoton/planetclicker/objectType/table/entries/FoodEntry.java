@@ -18,7 +18,7 @@ public class FoodEntry extends TableEntry {
 			new Thread(){
 				@Override
 				public void run(){
-					while(true){
+					while (!Thread.currentThread().isInterrupted()) {
 						try {
 							sleep(timeLimit);
 						} catch (InterruptedException e) {
