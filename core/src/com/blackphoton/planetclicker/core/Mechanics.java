@@ -41,7 +41,6 @@ public class Mechanics {
 					try{
 						file.saveGame();
 						sleep(1000);
-						Gdx.app.log("TAG!", "Saving...");
 					}catch (InterruptedException e){
 						e.printStackTrace();
 					}

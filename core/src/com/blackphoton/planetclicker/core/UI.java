@@ -7,14 +7,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Scaling;
-import com.blackphoton.planetclicker.objectType.Era;
-import com.blackphoton.planetclicker.objectType.Picture;
 import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.objectType.table.Row;
@@ -22,8 +22,6 @@ import com.blackphoton.planetclicker.objectType.table.TableInfo;
 import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
 
 import java.util.ArrayList;
-
-import static com.badlogic.gdx.scenes.scene2d.ui.Table.Debug.table;
 
 public class UI {
 
@@ -34,23 +32,23 @@ public class UI {
 	private Texture special_tex;
 	private Texture clicked;
 	private Texture unclicked;
-	private Picture buildings_background;
-	private Picture food_background;
-	private Picture resources_background;
-	private Picture special_background;
-	private Picture line;
-	private Picture buildings;
-	private Picture food;
-	private Picture resources;
-	private Picture special;
+	private Image buildings_background;
+	private Image food_background;
+	private Image resources_background;
+	private Image special_background;
+	private Image line;
+	private Image buildings;
+	private Image food;
+	private Image resources;
+	private Image special;
 	private Group resourceGroup;
 
 	//Population
 	private Label populationLabel;
 	private Group populationGroup;
-	private Picture pop_bar_left;
-	private Picture pop_bar;
-	private Picture pop_bar_right;
+	private Image pop_bar_left;
+	private Image pop_bar;
+	private Image pop_bar_right;
 
 	//Side Bar
 	private Group reqResGroup;
@@ -114,10 +112,10 @@ public class UI {
 
 	//Other
 	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-	private Picture era;
-	private Picture settings;
+	private Image era;
+	private Image settings;
 	private Texture space;
-	private Picture sun;
+	private Image sun;
 	private Label countLabel;
 	private final Image insufficientResources = new Image(new Texture("insufficient_resources.png"));
 	private GlyphLayout glyphLayout;
@@ -140,16 +138,16 @@ public class UI {
 		clicked = new Texture("clicked.png");
 		unclicked = new Texture("unclicked.png");
 
-		buildings = new Picture(buildings_tex, 0, 0);
-		food = new Picture(food_tex, 0, 0);
-		resources = new Picture(resources_tex, 0, 0);
-		special = new Picture(special_tex , 0, 0);
-		line = new Picture(new Texture("horizontal_line.png"), 0, 0);
+		buildings = new Image(buildings_tex);
+		food = new Image(food_tex);
+		resources = new Image(resources_tex);
+		special = new Image(special_tex );
+		line = new Image(new Texture("horizontal_line.png"));
 
-		buildings_background = new Picture(unclicked, 0, 0);
-		food_background = new Picture(unclicked, 0, 0);
-		resources_background = new Picture(unclicked, 0, 0);
-		special_background = new Picture(unclicked, 0, 0);
+		buildings_background = new Image(unclicked);
+		food_background = new Image(unclicked);
+		resources_background = new Image(unclicked);
+		special_background = new Image(unclicked);
 
 		resourceGroup = new Group();
 		resourceGroup.addActor(line);
@@ -184,9 +182,9 @@ public class UI {
 
 		//Population
 		populationLabel = new Label("Population: "+ Data.main.getPopulationCount(), skin);
-		pop_bar_left = new Picture(new Texture("pop_bar_left.png"),0,0);
-		pop_bar = new Picture(new Texture("pop_bar.png"),0,0);
-		pop_bar_right = new Picture(new Texture("pop_bar_right.png"),0,0);
+		pop_bar_left = new Image(new Texture("pop_bar_left.png"));
+		pop_bar = new Image(new Texture("pop_bar.png"));
+		pop_bar_right = new Image(new Texture("pop_bar_right.png"));
 
 		populationGroup = new Group();
 		populationGroup.addActor(pop_bar_left);
@@ -237,15 +235,15 @@ public class UI {
 		//Other
 		space = new Texture("space.png");
 		space.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-		sun = new Picture(new Texture("sun.png"),0,0);
-		settings = new Picture(new Texture("settings.png"),0,0);
+		sun = new Image(new Texture("sun.png"));
+		settings = new Image(new Texture("settings.png"));
 
 		create_tex = new Texture("create.png");
 		create_locked = new Texture("create_gray.png");
 		upgrade_tex = new Texture("upgrade.png");
 		upgrade_locked = new Texture("upgrade_gray.png");
 
-		era = new Picture(new Texture("cavemen.png"),0,0);
+		era = new Image(new Texture("cavemen.png"));
 
 		updateEra();
 
@@ -287,32 +285,32 @@ public class UI {
 	}
 
 	public void updateResources(){
-		buildings_background.setTexture(unclicked);
-		food_background.setTexture(unclicked);
-		resources_background.setTexture(unclicked);
-		special_background.setTexture(unclicked);
+		buildings_background.setDrawable(new SpriteDrawable(new Sprite(unclicked)));
+		food_background.setDrawable(new SpriteDrawable(new Sprite(unclicked)));
+		resources_background.setDrawable(new SpriteDrawable(new Sprite(unclicked)));
+		special_background.setDrawable(new SpriteDrawable(new Sprite(unclicked)));
 		switch (Data.getResourceType()) {
 			case BUILDINGS:
-				buildings_background.setTexture(clicked);
+				buildings_background.setDrawable(new SpriteDrawable(new Sprite(clicked)));
 				Data.setCurrentTable(Data.getBuildingTable());
 				break;
 			case FOOD:
-				food_background.setTexture(clicked);
+				food_background.setDrawable(new SpriteDrawable(new Sprite(clicked)));
 				Data.setCurrentTable(Data.getFoodTable());
 				break;
 			case RESOURCES:
-				resources_background.setTexture(clicked);
+				resources_background.setDrawable(new SpriteDrawable(new Sprite(clicked)));
 				Data.setCurrentTable(Data.getResourcesTable());
 				break;
 			case SPECIAL:
-				special_background.setTexture(clicked);
+				special_background.setDrawable(new SpriteDrawable(new Sprite(clicked)));
 				Data.setCurrentTable(Data.getSpecialTable());
 				break;
 		}
 	}
 
 	public void updateEra(){
-		era.setTexture(Data.getCurrentEra().getTexture());
+		era.setDrawable(new SpriteDrawable(new Sprite(Data.getCurrentEra().getTexture())));
 	}
 
 	public void resize(int width, int height) {
