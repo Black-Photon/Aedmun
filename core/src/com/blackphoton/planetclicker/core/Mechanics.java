@@ -27,12 +27,13 @@ public class Mechanics {
 	private Random random;
 	private final float clickMultiplier = 0.95f;
 	private int numberOfIRThreads = 0;
+	private final SavegameFile file = new SavegameFile();
 
 	public void create(){
 		thisEra = Data.getEraList().get(0);
 		random = new Random();
 
-		final SavegameFile file = new SavegameFile();
+
 		file.readGame();
 
 		new Thread(){
@@ -980,5 +981,9 @@ public class Mechanics {
 
 	public void dispose(){
 
+	}
+
+	public SavegameFile getFile() {
+		return file;
 	}
 }

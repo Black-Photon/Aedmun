@@ -10,6 +10,7 @@ import com.blackphoton.planetclicker.file.SavegameFile;
 import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.table.entries.SpecialEntry;
 import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
+import com.blackphoton.planetclicker.resources.ResourceType;
 
 import static com.badlogic.gdx.Application.ApplicationType.Android;
 
@@ -90,6 +91,15 @@ public class PlanetClicker extends ApplicationAdapter{
 	@Override
 	public void resize(int width, int height) {
 		Data.ui.resize(width, height);
+	}
+
+	public void exit(){
+		Data.setResourceType(ResourceType.NONE);
+		Data.ui.refreshBuildingTable();
+		Data.ui.refreshFoodTable();
+		Data.ui.refreshResourcesTable();
+		Data.ui.refreshSpecialTable();
+		Gdx.app.exit();
 	}
 
 	//Getters and Setters

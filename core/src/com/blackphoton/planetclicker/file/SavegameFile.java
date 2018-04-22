@@ -74,6 +74,29 @@ public class SavegameFile extends File {
 			processEntry(entry);
 		}
 	}
+	public void deleteGame(){
+		handle.delete();
+
+		Data.main.setPopulationCount(2);
+		for(Era era: Data.getEraList()){
+			Data.setCurrentEra(Data.getEraList().get(0));
+		}
+		for(TableEntry entry: Data.getBuildingTable().getEntries()) {
+			resetEntry(entry);
+		}
+		for(TableEntry entry: Data.getFoodTable().getEntries()) {
+			resetEntry(entry);
+		}
+		for(TableEntry entry: Data.getResourcesTable().getEntries()) {
+			resetEntry(entry);
+		}
+		for(TableEntry entry: Data.getSpecialTable().getEntries()) {
+			resetEntry(entry);
+		}
+
+		saveGame();
+		readGame();
+	}
 
 	private String readWord(){
 		String[] array = nextEntry(everything);
@@ -137,6 +160,28 @@ public class SavegameFile extends File {
 			}else entry.setNumberOf((int) numberOf);
 		}else
 			entry.setNumberOf((int) numberOf);
+		entry.setNumberLabelText();
+	}
+	private void resetEntry(TableEntry entry){
+		if(entry instanceof ResourcesEntry){
+			if(((ResourcesEntry) entry).isAbsolute()) {
+				switch (((ResourcesEntry) entry).getMaterial()) {
+					case WOOD:
+						Data.main.setWoodCount(0);
+						break;
+					case STONE:
+						Data.main.setStoneCount(0);
+						break;
+					case IRON:
+						Data.main.setIronCount(0);
+						break;
+					case BRONZE:
+						Data.main.setBronzeCount(0);
+						break;
+				}
+			}else entry.setNumberOf(0);
+		}else
+			entry.setNumberOf(0);
 		entry.setNumberLabelText();
 	}
 }

@@ -1,14 +1,11 @@
 package com.blackphoton.planetclicker.messages;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.blackphoton.planetclicker.core.Data;
-import com.blackphoton.planetclicker.core.Mechanics;
 
 public class Settings extends DisplayBox{
 	private Table settingsGroup;
@@ -17,6 +14,8 @@ public class Settings extends DisplayBox{
 	private TextButton reset;
 	private TextButton quit;
 	Info aboutInfo;
+	ConfirmBox resetConfirm;
+	ConfirmBox quitConfirm;
 
 	public Settings() {
 		super();
@@ -52,7 +51,26 @@ public class Settings extends DisplayBox{
 
 		settingsGroup.setVisible(false);
 
-		aboutInfo = new Info("About", "Aemun Version 0.2.0\nCreated by Black-Photon\nSoftware and Art Copyrighted to Joseph Keane April 2018", settingsGroup);
+		aboutInfo = new Info("About", "Aemun Version 0.2.1\nCreated by Black-Photon\nSoftware and Art Copyrighted to Joseph Keane April 2018\nDistributed under Apache Licence", settingsGroup);
+		resetConfirm = new ConfirmBox("Reset Data?", "The data will be lost forever, so be sure!", settingsGroup, new ClickListener(){
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				Data.mechanics.getFile().deleteGame();
+				settingsGroup.setVisible(true);
+				resetConfirm.getInfoTable().setVisible(false);
+				Data.ui.getPopulationLabel().setText("Population: "+Data.main.getPopulationCount());
+				Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+				Data.ui.updateEra();
+				return true;
+			}
+		});
+		quitConfirm = new ConfirmBox("Really Quit?", "Are you sure you want to quit?", settingsGroup, new ClickListener(){
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				Data.main.exit();
+				return true;
+			}
+		});
 	}
 
 	public void resize(int width, int height, float heightScale, Stage stage){
@@ -69,14 +87,14 @@ public class Settings extends DisplayBox{
 	public class resetListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
+			resetConfirm.show();
 			return true;
 		}
 	}
 	public class quitListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
+			quitConfirm.show();
 			return true;
 		}
 	}
@@ -92,5 +110,13 @@ public class Settings extends DisplayBox{
 
 	public Info getAboutInfo() {
 		return aboutInfo;
+	}
+
+	public ConfirmBox getResetConfirm() {
+		return resetConfirm;
+	}
+
+	public ConfirmBox getQuitConfirm() {
+		return quitConfirm;
 	}
 }

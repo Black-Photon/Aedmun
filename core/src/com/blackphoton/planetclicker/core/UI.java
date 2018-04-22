@@ -410,6 +410,8 @@ public class UI {
 
 		settings.resize(width, height, heightScale, stage);
 		settings.getAboutInfo().resize(width, height, heightScale, stage);
+		settings.getResetConfirm().resize(width, height, heightScale, stage);
+		settings.getQuitConfirm().resize(width, height, heightScale, stage);
 
 		if(Data.getSelectedEntry()!=null) loadSideBar(Data.getSelectedEntry(), Data.getSelectedEntry().isCreateClicked());
 	}
@@ -817,5 +819,9 @@ public class UI {
 
 	public void setBitmapFont(BitmapFont bitmapFont) {
 		this.bitmapFont = bitmapFont;
+	}
+
+	public Label getPopulationLabel() {
+		return populationLabel;
 	}
 }
