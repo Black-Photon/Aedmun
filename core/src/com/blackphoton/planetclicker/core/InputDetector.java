@@ -3,6 +3,7 @@ package com.blackphoton.planetclicker.core;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.blackphoton.planetclicker.resources.ResourceType;
 
 public class InputDetector implements InputProcessor {
@@ -10,12 +11,20 @@ public class InputDetector implements InputProcessor {
 	@Override
 	public boolean keyDown(int keycode) {
 		if(keycode == Input.Keys.BACK){
-			Data.setResourceType(ResourceType.NONE);
-			Data.ui.refreshBuildingTable();
-			Data.ui.refreshFoodTable();
-			Data.ui.refreshResourcesTable();
-			Data.ui.refreshSpecialTable();
-			Gdx.app.exit();
+			if(Data.ui.getSettings().getAboutInfo().getInfoTable().isVisible()) {
+				Data.ui.getSettings().getAboutInfo().getInfoTable().getParent().setVisible(true);
+				Data.ui.getSettings().getAboutInfo().getInfoTable().setVisible(false);
+			}else if(Data.ui.getSettings().getSettingsGroup().isVisible()){
+				Data.ui.setEverythingTouchable(Touchable.enabled);
+				return true;
+			}else {
+				Data.setResourceType(ResourceType.NONE);
+				Data.ui.refreshBuildingTable();
+				Data.ui.refreshFoodTable();
+				Data.ui.refreshResourcesTable();
+				Data.ui.refreshSpecialTable();
+				Gdx.app.exit();
+			}
 		}
 		return false;
 	}

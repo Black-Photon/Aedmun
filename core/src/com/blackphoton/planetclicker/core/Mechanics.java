@@ -963,37 +963,16 @@ public class Mechanics {
 	public static class settingsListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			Data.ui.getSettingsGroup().setVisible(!Data.ui.getSettingsGroup().isVisible());
+			Data.ui.getSettings().getSettingsGroup().setVisible(!Data.ui.getSettings().getSettingsGroup().isVisible());
 
 			Touchable touchable;
-			if(!Data.ui.getSettingsGroup().isVisible()) {
+			if(!Data.ui.getSettings().getSettingsGroup().isVisible()) {
 				touchable = Touchable.enabled;
 			}else {
 				touchable = Touchable.disabled;
 			}
 
 			Data.ui.setEverythingTouchable(touchable);
-
-			return true;
-		}
-	}
-	public static class aboutListener extends ClickListener {
-		@Override
-		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-			return true;
-		}
-	}
-	public static class resetListener extends ClickListener {
-		@Override
-		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-			return true;
-		}
-	}
-	public static class quitListener extends ClickListener {
-		@Override
-		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
 			return true;
 		}

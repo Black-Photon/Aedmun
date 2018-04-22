@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.blackphoton.planetclicker.messages.Settings;
 import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.objectType.table.Row;
@@ -110,25 +111,10 @@ public class UI {
 	private Texture wall_tex;
 	private Image wall;
 
-	//Settings
-	private Table settingsGroup;
-	private Label title;
-	private TextButton about;
-	private TextButton reset;
-	private TextButton quit;
-
-	private Texture setting_background = new Texture("setting_background.png");
-	private Texture setting_side = new Texture("setting_side.png");
-	private Texture setting_top = new Texture("setting_top.png");
-	private Texture setting_lb = new Texture("setting_lb.png");
-	private Texture setting_lt = new Texture("setting_lt.png");
-	private Texture setting_rb = new Texture("setting_rb.png");
-	private Texture setting_rt = new Texture("setting_rt.png");
-
 	//Other
+	private Image settingsImage;
 	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 	private Image era;
-	private Image settings;
 	private Texture space;
 	private Image sun;
 	private Label countLabel;
@@ -139,6 +125,8 @@ public class UI {
 	private InputMultiplexer multiplexer;
 	public float planetY;
 	protected Texture required_tex = new Texture("requires.png");
+
+	private Settings settings;
 
 	public void createUI(){
 		//General Declarations
@@ -247,47 +235,14 @@ public class UI {
 		wall_tex = new Texture("great_wall.png");
 		wall = new Image(wall_tex);
 
-		//Settings
-		final float padding = 5.0f;
-		final float outpadding = 25.0f;
-		final int width = 70;
-		final int rowHeight = 30;
-
-		settingsGroup = new Table();
-		title = new Label("Settings", skin);
-		about = new TextButton("About", skin);
-		reset = new TextButton("Reset", skin);
-		quit = new TextButton("Quit", skin);
-
-		about.addListener(new Mechanics.aboutListener());
-		reset.addListener(new Mechanics.resetListener());
-		quit.addListener(new Mechanics.quitListener());
-
-		settingsGroup.add(title).pad(outpadding, outpadding, padding, outpadding);
-		settingsGroup.row().width(width).height(rowHeight);
-		settingsGroup.add(about).pad(padding, outpadding, padding, outpadding);
-		settingsGroup.row().width(width).height(rowHeight);
-		settingsGroup.add(reset).pad(padding, outpadding, padding, outpadding);
-		settingsGroup.row().width(width).height(rowHeight);
-		settingsGroup.add(quit).pad(padding, outpadding, outpadding, outpadding);
-		settingsGroup.row().width(width).height(rowHeight);
-
-		settingsGroup.setWidth(width+2*outpadding);
-		settingsGroup.setHeight(rowHeight*settingsGroup.getRows()+(settingsGroup.getRows()-1)*padding+2*outpadding);
-
-		System.out.println("Width "+settingsGroup.getWidth());
-		System.out.println("Height "+settingsGroup.getHeight());
-
-		settingsGroup.setBackground(settingBackground);
-
-		settingsGroup.setVisible(false);
-
 		//Other
+		settings = new Settings();
+		settingsImage = new Image(new Texture("settings.png"));
+		settingsImage.addListener(new Mechanics.settingsListener());
+
 		space = new Texture("space.png");
 		space.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 		sun = new Image(new Texture("sun.png"));
-		settings = new Image(new Texture("settings.png"));
-		settings.addListener(new Mechanics.settingsListener());
 
 		create_tex = new Texture("create.png");
 		create_locked = new Texture("create_gray.png");
@@ -371,11 +326,11 @@ public class UI {
 		refreshSpecialTable();
 
 		//Bottom Bar
-		line.setWidth(Gdx.graphics.getWidth());
-		buildings_background.setWidth(Gdx.graphics.getWidth()/4);
-		food_background.setWidth(Gdx.graphics.getWidth()/4);
-		resources_background.setWidth(Gdx.graphics.getWidth()/4);
-		special_background.setWidth(Gdx.graphics.getWidth()/4);
+		line.setWidth(width);
+		buildings_background.setWidth(width/4);
+		food_background.setWidth(width/4);
+		resources_background.setWidth(width/4);
+		special_background.setWidth(width/4);
 
 		line.setPosition(0, buildings_background.getHeight()+1);
 		buildings_background.setPosition(0,0);
@@ -390,12 +345,12 @@ public class UI {
 
 		Planet planet = Data.main.getPlanet();
 
-		planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
-		heightScale = ((float) Gdx.graphics.getHeight())/480f; //480 = default height
+		planet.setMultiplier(width / planet.getInitial_width() * 0.325f);
+		heightScale = ((float) height/480f); //480 = default height
 		heightScale = (float) Math.pow(1.4, heightScale-1); //Magic. Oooooohh
 
 		sun.setScale(heightScale);
-		settings.setScale(heightScale);
+		settingsImage.setScale(heightScale);
 		populationGroup.setScale(heightScale);
 		era.setScale(heightScale);
 
@@ -403,7 +358,7 @@ public class UI {
 		Stage stage = new Stage();
 		stage.addActor(resourceGroup);
 		stage.addActor(sun);
-		stage.addActor(settings);
+		stage.addActor(settingsImage);
 		stage.addActor(populationGroup);
 		stage.addActor(era);
 		stage.addActor(planet);
@@ -414,10 +369,10 @@ public class UI {
 		Gdx.input.setInputProcessor(multiplexer);
 
 		sun.setX(0);
-		sun.setY(Gdx.graphics.getHeight()-sun.getHeight());
+		sun.setY(height-sun.getHeight()*heightScale);
 
-		settings.setX(Gdx.graphics.getWidth()-settings.getWidth());
-		settings.setY(Gdx.graphics.getHeight()-settings.getHeight());
+		settingsImage.setX(width-settingsImage.getWidth()*heightScale);
+		settingsImage.setY(height-settingsImage.getHeight()*heightScale);
 
 		glyphLayout.setText(bitmapFont, populationLabel.getText());
 		pop_bar.setWidth(glyphLayout.width+100);
@@ -426,40 +381,35 @@ public class UI {
 		pop_bar.setPosition(pop_bar_left.getWidth(), 0);
 		pop_bar_right.setPosition(pop_bar_left.getWidth()+pop_bar.getWidth(),0);
 		populationLabel.setPosition(pop_bar_left.getWidth()+pop_bar.getWidth()/2-glyphLayout.width/2,pop_bar.getHeight()/2-glyphLayout.height);
-		populationGroup.setX(Gdx.graphics.getWidth()/2-(pop_bar_left.getWidth()+pop_bar.getWidth()+pop_bar_right.getWidth())*heightScale/2);
-		populationGroup.setY(Gdx.graphics.getHeight()-pop_bar.getHeight()*heightScale);
+		populationGroup.setX(width/2-(pop_bar_left.getWidth()+pop_bar.getWidth()+pop_bar_right.getWidth())*heightScale/2);
+		populationGroup.setY(height-pop_bar.getHeight()*heightScale);
 
-		era.setX(Gdx.graphics.getWidth()/2-era.getWidth()/2);
-		era.setY(Gdx.graphics.getHeight()-pop_bar.getHeight()*heightScale-era.getHeight()-10);
+		era.setX(width/2-era.getWidth()*heightScale/2);
+		era.setY(height-pop_bar.getHeight()*heightScale-era.getHeight()*heightScale-10);
 
-		planet.setX(Gdx.graphics.getWidth()/2-planet.getWidth()/2);
+		planet.setX(width/2-planet.getWidth()/2);
 		if(Data.main.isBuildingTableVisible()||Data.main.isFoodTableVisible()||Data.main.isResourcesTableVisible()||Data.main.isSpecialTableVisible()){
 			planetY = (era.getY()+buildings_background.getHeight()+(Gdx.graphics.getHeight()-2*padding)/rows)/2-planet.getHeight()/2;
 		}else{
-			planetY = (Gdx.graphics.getHeight()/2-planet.getHeight()/2);
+			planetY = (height/2-planet.getHeight()/2);
 		}
 		planet.setY(planetY);
 		planet.setBounds(planet.getX(), planet.getY(), planet.getWidth(), planet.getHeight());
 
 		insufficientResources.setScaling(Scaling.fit);
 
-		insufficientResources.setScale(Gdx.graphics.getWidth()/320f);
+		insufficientResources.setScale(width/320f);
 		insufficientResources.setX(planet.getX()+planet.getWidth()/2-insufficientResources.getWidth()*insufficientResources.getScaleX()/2);
 		insufficientResources.setY(planet.getY()+planet.getHeight()/2-insufficientResources.getHeight()*insufficientResources.getScaleY()/2);
 		insufficientResources.setTouchable(Touchable.disabled);
-
-		settingsGroup.setX(Gdx.graphics.getWidth()/2-settingsGroup.getWidth()/2);
-		settingsGroup.setY(Gdx.graphics.getHeight()/2-settingsGroup.getHeight()/2);
-
-		System.out.println("X "+settingsGroup.getX());
-		System.out.println("Y "+settingsGroup.getY());
 
 		refreshBuildingTable();
 		refreshFoodTable();
 		refreshResourcesTable();
 		refreshSpecialTable();
 
-		stage.addActor(settingsGroup);
+		settings.resize(width, height, heightScale, stage);
+		settings.getAboutInfo().resize(width, height, heightScale, stage);
 
 		if(Data.getSelectedEntry()!=null) loadSideBar(Data.getSelectedEntry(), Data.getSelectedEntry().isCreateClicked());
 	}
@@ -652,84 +602,6 @@ public class UI {
 		}
 	};
 
-	Drawable settingBackground = new Drawable() {
-		@Override
-		public void draw(Batch batch, float x, float y, float width, float height) {
-			batch.draw(setting_background, x+5, y+5, width-10, height-10);
-
-			batch.draw(setting_lb, x, y);
-			batch.draw(setting_lt, x, y+height-10);
-			batch.draw(setting_rb, x+width-10, y);
-			batch.draw(setting_rt, x+width-10, y+height-10);
-
-			batch.draw(setting_side, x, y+5, 5, height-10);
-			batch.draw(setting_side, x+width-5, y+5, 5, height-10);
-			batch.draw(setting_top, x+5, y, width-10, 5);
-			batch.draw(setting_top, x+5, y+height-5, width-10, 5);
-
-		}
-
-		@Override
-		public float getLeftWidth() {
-			return 0;
-		}
-
-		@Override
-		public void setLeftWidth(float leftWidth) {
-
-		}
-
-		@Override
-		public float getRightWidth() {
-			return 0;
-		}
-
-		@Override
-		public void setRightWidth(float rightWidth) {
-
-		}
-
-		@Override
-		public float getTopHeight() {
-			return 0;
-		}
-
-		@Override
-		public void setTopHeight(float topHeight) {
-
-		}
-
-		@Override
-		public float getBottomHeight() {
-			return 0;
-		}
-
-		@Override
-		public void setBottomHeight(float bottomHeight) {
-
-		}
-
-		@Override
-		public float getMinWidth() {
-			return 0;
-		}
-
-		@Override
-		public void setMinWidth(float minWidth) {
-
-		}
-
-		@Override
-		public float getMinHeight() {
-			return 0;
-		}
-
-		@Override
-		public void setMinHeight(float minHeight) {
-
-		}
-	};
-
 	public void setEverythingTouchable(Touchable touchable){
 		Data.main.getPlanet().setTouchable(touchable);
 		resourceGroup.setTouchable(touchable);
@@ -741,16 +613,6 @@ public class UI {
 
 		sun.setTouchable(touchable);
 	}
-
-	private Table buildingTitleTable;
-	private Table foodTitleTable;
-	private Table resourceTitleTable;
-	private Table specialTitleTable;
-
-	private ScrollPane buildingScroller;
-	private ScrollPane foodScroller;
-	private ScrollPane resourceScroller;
-	private ScrollPane specialScroller;
 
 	public void refreshTable(){
 		switch (Data.getResourceType()){
@@ -779,7 +641,7 @@ public class UI {
 		list.add(new Row(1, village));
 		list.add(new Row(0, town));
 
-		buildingTable = refreshTableX(Data.getBuildingTable(), buildingTitleTable, buildingScroller, "Holds", Data.main.isBuildingTableVisible(), list);
+		buildingTable = refreshTableX(Data.getBuildingTable(),"Holds", Data.main.isBuildingTableVisible(), list);
 	}
 
 	public void refreshFoodTable(){
@@ -792,7 +654,7 @@ public class UI {
 		list.add(new Row(1, small_farm));
 		list.add(new Row(0, farm));
 
-		foodTable = refreshTableX(Data.getFoodTable(), foodTitleTable, foodScroller, "Feeds", Data.main.isFoodTableVisible(), list);
+		foodTable = refreshTableX(Data.getFoodTable(),"Feeds", Data.main.isFoodTableVisible(), list);
 	}
 
 	public void refreshResourcesTable(){
@@ -812,7 +674,7 @@ public class UI {
 		list.add(new Row(7, iron));
 		list.add(new Row(6, null));
 
-		resourcesTable = refreshTableX(Data.getResourcesTable(), resourceTitleTable, resourceScroller, "Value", Data.main.isResourcesTableVisible(), list);
+		resourcesTable = refreshTableX(Data.getResourcesTable(),"Value", Data.main.isResourcesTableVisible(), list);
 	}
 
 	public void refreshSpecialTable(){
@@ -825,23 +687,20 @@ public class UI {
 		list.add(new Row(1, pyr));
 		list.add(new Row(2, wall));
 
-		specialTable = refreshTableX(Data.getSpecialTable(), specialTitleTable, specialScroller, "Clicks", Data.main.isSpecialTableVisible(), list);
+		specialTable = refreshTableX(Data.getSpecialTable(),"Clicks", Data.main.isSpecialTableVisible(), list);
 	}
 
-	public ScrollPane refreshTableX(TableInfo info, Table titleTable, ScrollPane scroller, String secret, boolean isVisible, ArrayList<Row> rowList){
+	public ScrollPane refreshTableX(TableInfo info, String secret, boolean isVisible, ArrayList<Row> rowList){
 		rows = 4;
 		padding = Gdx.graphics.getHeight()/100;
 		rowHeight = (Gdx.graphics.getHeight())/rows/4; //4 because I want it to cover 1/4 of the screen
-
-		if(titleTable!=null) titleTable.remove();
-		if(scroller!=null) scroller.remove();
 
 		float smallUnit = Gdx.graphics.getWidth() * 1/7;
 		float largeUnit = Gdx.graphics.getWidth() * 1.25f/7;
 
 		Table scrollTable = new Table();
 
-		titleTable = new Table();
+		Table titleTable = new Table();
 		titleTable.setSkin(skin);
 		addTitleRow(titleTable, secret, smallUnit, largeUnit);
 		titleTable.pad(0, 0,0,0);
@@ -861,7 +720,7 @@ public class UI {
 		scrollTable.setBackground(tableBottomBackground);
 		titleTable.setBackground(tableTopBackground);
 
-		scroller = new ScrollPane(scrollTable);
+		ScrollPane scroller = new ScrollPane(scrollTable);
 		scroller.setScrollingDisabled(true,false);
 		scroller.setHeight(3*rowHeight);
 		scroller.setWidth(Gdx.graphics.getWidth());
@@ -915,10 +774,6 @@ public class UI {
 		if(!lastRow) table.row().height(rowHeight);
 	}
 
-	public void refreshStage(){
-
-	}
-
 	public void drawBackground(Batch batch){
 		batch.draw(space, (int)-scroll, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),0,0,4,4);
 		batch.draw(space, Gdx.graphics.getWidth()-(int)scroll, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),0,0,4,4);
@@ -929,6 +784,8 @@ public class UI {
 	public void dispose(){
 
 	}
+
+	//Getters and Setters
 
 	public Image getInsufficientResources() {
 		return insufficientResources;
@@ -946,11 +803,19 @@ public class UI {
 		this.required_tex = required_tex;
 	}
 
-	public Table getSettingsGroup() {
-		return settingsGroup;
+	public Settings getSettings() {
+		return settings;
 	}
 
-	public void setSettingsGroup(Table settingsGroup) {
-		this.settingsGroup = settingsGroup;
+	public void setSettings(Settings settings) {
+		this.settings = settings;
+	}
+
+	public BitmapFont getBitmapFont() {
+		return bitmapFont;
+	}
+
+	public void setBitmapFont(BitmapFont bitmapFont) {
+		this.bitmapFont = bitmapFont;
 	}
 }
