@@ -68,7 +68,7 @@ public class UI {
 
 	// - Building
 	private ScrollPane buildingScroll;
-	private Table buildingTable;
+	private ScrollPane buildingTable;
 	private Texture house_tex;
 	private Image house;
 	private Texture village_tex;
@@ -78,7 +78,7 @@ public class UI {
 
 	// - Food
 	private ScrollPane foodScroll;
-	private Table foodTable;
+	private ScrollPane foodTable;
 	private Texture hunt_tex;
 	private Image hunt;
 	private Texture small_farm_tex;
@@ -88,7 +88,7 @@ public class UI {
 
 	// - Resources
 	private ScrollPane resourceScroll;
-	private Table resourcesTable;
+	private ScrollPane resourcesTable;
 	private Texture wood_tex;
 	private Image wood;
 	private Texture woodmill_tex;
@@ -101,7 +101,7 @@ public class UI {
 	private Image iron;
 
 	// - Special
-	private Table specialTable;
+	private ScrollPane specialTable;
 	private ScrollPane specialScroll;
 	private Texture sh_tex;
 	private Image sh;
@@ -109,6 +109,21 @@ public class UI {
 	private Image pyr;
 	private Texture wall_tex;
 	private Image wall;
+
+	//Settings
+	private Table settingsGroup;
+	private Label title;
+	private TextButton about;
+	private TextButton reset;
+	private TextButton quit;
+
+	private Texture setting_background = new Texture("setting_background.png");
+	private Texture setting_side = new Texture("setting_side.png");
+	private Texture setting_top = new Texture("setting_top.png");
+	private Texture setting_lb = new Texture("setting_lb.png");
+	private Texture setting_lt = new Texture("setting_lt.png");
+	private Texture setting_rb = new Texture("setting_rb.png");
+	private Texture setting_rt = new Texture("setting_rt.png");
 
 	//Other
 	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -232,11 +247,47 @@ public class UI {
 		wall_tex = new Texture("great_wall.png");
 		wall = new Image(wall_tex);
 
+		//Settings
+		final float padding = 5.0f;
+		final float outpadding = 25.0f;
+		final int width = 70;
+		final int rowHeight = 30;
+
+		settingsGroup = new Table();
+		title = new Label("Settings", skin);
+		about = new TextButton("About", skin);
+		reset = new TextButton("Reset", skin);
+		quit = new TextButton("Quit", skin);
+
+		about.addListener(new Mechanics.aboutListener());
+		reset.addListener(new Mechanics.resetListener());
+		quit.addListener(new Mechanics.quitListener());
+
+		settingsGroup.add(title).pad(outpadding, outpadding, padding, outpadding);
+		settingsGroup.row().width(width).height(rowHeight);
+		settingsGroup.add(about).pad(padding, outpadding, padding, outpadding);
+		settingsGroup.row().width(width).height(rowHeight);
+		settingsGroup.add(reset).pad(padding, outpadding, padding, outpadding);
+		settingsGroup.row().width(width).height(rowHeight);
+		settingsGroup.add(quit).pad(padding, outpadding, outpadding, outpadding);
+		settingsGroup.row().width(width).height(rowHeight);
+
+		settingsGroup.setWidth(width+2*outpadding);
+		settingsGroup.setHeight(rowHeight*settingsGroup.getRows()+(settingsGroup.getRows()-1)*padding+2*outpadding);
+
+		System.out.println("Width "+settingsGroup.getWidth());
+		System.out.println("Height "+settingsGroup.getHeight());
+
+		settingsGroup.setBackground(settingBackground);
+
+		settingsGroup.setVisible(false);
+
 		//Other
 		space = new Texture("space.png");
 		space.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 		sun = new Image(new Texture("sun.png"));
 		settings = new Image(new Texture("settings.png"));
+		settings.addListener(new Mechanics.settingsListener());
 
 		create_tex = new Texture("create.png");
 		create_locked = new Texture("create_gray.png");
@@ -397,10 +448,18 @@ public class UI {
 		insufficientResources.setY(planet.getY()+planet.getHeight()/2-insufficientResources.getHeight()*insufficientResources.getScaleY()/2);
 		insufficientResources.setTouchable(Touchable.disabled);
 
+		settingsGroup.setX(Gdx.graphics.getWidth()/2-settingsGroup.getWidth()/2);
+		settingsGroup.setY(Gdx.graphics.getHeight()/2-settingsGroup.getHeight()/2);
+
+		System.out.println("X "+settingsGroup.getX());
+		System.out.println("Y "+settingsGroup.getY());
+
 		refreshBuildingTable();
 		refreshFoodTable();
 		refreshResourcesTable();
 		refreshSpecialTable();
+
+		stage.addActor(settingsGroup);
 
 		if(Data.getSelectedEntry()!=null) loadSideBar(Data.getSelectedEntry(), Data.getSelectedEntry().isCreateClicked());
 	}
@@ -454,73 +513,6 @@ public class UI {
 	int rows = 4;
 	float padding = 3;
 	float rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
-
-	Drawable tableBackground = new Drawable() {
-		@Override
-		public void draw(Batch batch, float x, float y, float width, float height) {
-			batch.draw(tableBackground_tex, 0, buildings_background.getHeight(), Gdx.graphics.getWidth(), rowHeight*rows+padding*2);
-		}
-
-		@Override
-		public float getLeftWidth() {
-			return 0;
-		}
-
-		@Override
-		public void setLeftWidth(float leftWidth) {
-
-		}
-
-		@Override
-		public float getRightWidth() {
-			return 0;
-		}
-
-		@Override
-		public void setRightWidth(float rightWidth) {
-
-		}
-
-		@Override
-		public float getTopHeight() {
-			return 0;
-		}
-
-		@Override
-		public void setTopHeight(float topHeight) {
-
-		}
-
-		@Override
-		public float getBottomHeight() {
-			return 0;
-		}
-
-		@Override
-		public void setBottomHeight(float bottomHeight) {
-
-		}
-
-		@Override
-		public float getMinWidth() {
-			return 0;
-		}
-
-		@Override
-		public void setMinWidth(float minWidth) {
-
-		}
-
-		@Override
-		public float getMinHeight() {
-			return 0;
-		}
-
-		@Override
-		public void setMinHeight(float minHeight) {
-
-		}
-	};
 
 	Drawable tableBottomBackground = new Drawable() {
 		@Override
@@ -660,6 +652,105 @@ public class UI {
 		}
 	};
 
+	Drawable settingBackground = new Drawable() {
+		@Override
+		public void draw(Batch batch, float x, float y, float width, float height) {
+			batch.draw(setting_background, x+5, y+5, width-10, height-10);
+
+			batch.draw(setting_lb, x, y);
+			batch.draw(setting_lt, x, y+height-10);
+			batch.draw(setting_rb, x+width-10, y);
+			batch.draw(setting_rt, x+width-10, y+height-10);
+
+			batch.draw(setting_side, x, y+5, 5, height-10);
+			batch.draw(setting_side, x+width-5, y+5, 5, height-10);
+			batch.draw(setting_top, x+5, y, width-10, 5);
+			batch.draw(setting_top, x+5, y+height-5, width-10, 5);
+
+		}
+
+		@Override
+		public float getLeftWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setLeftWidth(float leftWidth) {
+
+		}
+
+		@Override
+		public float getRightWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setRightWidth(float rightWidth) {
+
+		}
+
+		@Override
+		public float getTopHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setTopHeight(float topHeight) {
+
+		}
+
+		@Override
+		public float getBottomHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setBottomHeight(float bottomHeight) {
+
+		}
+
+		@Override
+		public float getMinWidth() {
+			return 0;
+		}
+
+		@Override
+		public void setMinWidth(float minWidth) {
+
+		}
+
+		@Override
+		public float getMinHeight() {
+			return 0;
+		}
+
+		@Override
+		public void setMinHeight(float minHeight) {
+
+		}
+	};
+
+	public void setEverythingTouchable(Touchable touchable){
+		Data.main.getPlanet().setTouchable(touchable);
+		resourceGroup.setTouchable(touchable);
+
+		if(buildingTable.isVisible()) buildingTable.setTouchable(touchable);
+		if(foodTable.isVisible()) foodTable.setTouchable(touchable);
+		if(resourcesTable.isVisible()) resourcesTable.setTouchable(touchable);
+		if(specialTable.isVisible()) specialTable.setTouchable(touchable);
+
+		sun.setTouchable(touchable);
+	}
+
+	private Table buildingTitleTable;
+	private Table foodTitleTable;
+	private Table resourceTitleTable;
+	private Table specialTitleTable;
+
+	private ScrollPane buildingScroller;
+	private ScrollPane foodScroller;
+	private ScrollPane resourceScroller;
+	private ScrollPane specialScroller;
 
 	public void refreshTable(){
 		switch (Data.getResourceType()){
@@ -688,7 +779,7 @@ public class UI {
 		list.add(new Row(1, village));
 		list.add(new Row(0, town));
 
-		refreshTableX(Data.getBuildingTable(), buildingTitleTable, buildingScroller, "Holds", Data.main.isBuildingTableVisible(), list);
+		buildingTable = refreshTableX(Data.getBuildingTable(), buildingTitleTable, buildingScroller, "Holds", Data.main.isBuildingTableVisible(), list);
 	}
 
 	public void refreshFoodTable(){
@@ -701,18 +792,8 @@ public class UI {
 		list.add(new Row(1, small_farm));
 		list.add(new Row(0, farm));
 
-		refreshTableX(Data.getFoodTable(), foodTitleTable, foodScroller, "Feeds", Data.main.isFoodTableVisible(), list);
+		foodTable = refreshTableX(Data.getFoodTable(), foodTitleTable, foodScroller, "Feeds", Data.main.isFoodTableVisible(), list);
 	}
-
-	private Table buildingTitleTable;
-	private Table foodTitleTable;
-	private Table resourceTitleTable;
-	private Table specialTitleTable;
-
-	private ScrollPane buildingScroller;
-	private ScrollPane foodScroller;
-	private ScrollPane resourceScroller;
-	private ScrollPane specialScroller;
 
 	public void refreshResourcesTable(){
 		wood.setScaling(Scaling.fit);
@@ -731,7 +812,7 @@ public class UI {
 		list.add(new Row(7, iron));
 		list.add(new Row(6, null));
 
-		refreshTableX(Data.getResourcesTable(), resourceTitleTable, resourceScroller, "Value", Data.main.isResourcesTableVisible(), list);
+		resourcesTable = refreshTableX(Data.getResourcesTable(), resourceTitleTable, resourceScroller, "Value", Data.main.isResourcesTableVisible(), list);
 	}
 
 	public void refreshSpecialTable(){
@@ -744,10 +825,10 @@ public class UI {
 		list.add(new Row(1, pyr));
 		list.add(new Row(2, wall));
 
-		refreshTableX(Data.getSpecialTable(), specialTitleTable, specialScroller, "Clicks", Data.main.isSpecialTableVisible(), list);
+		specialTable = refreshTableX(Data.getSpecialTable(), specialTitleTable, specialScroller, "Clicks", Data.main.isSpecialTableVisible(), list);
 	}
 
-	public void refreshTableX(TableInfo info, Table titleTable, ScrollPane scroller, String secret, boolean isVisible, ArrayList<Row> rowList){
+	public ScrollPane refreshTableX(TableInfo info, Table titleTable, ScrollPane scroller, String secret, boolean isVisible, ArrayList<Row> rowList){
 		rows = 4;
 		padding = Gdx.graphics.getHeight()/100;
 		rowHeight = (Gdx.graphics.getHeight())/rows/4; //4 because I want it to cover 1/4 of the screen
@@ -804,6 +885,7 @@ public class UI {
 		Stage stage = Data.main.getStage();
 		stage.addActor(titleTable);
 		stage.addActor(scroller);
+		return scroller;
 	}
 
 	public void setAllTablesInvisible(){
@@ -862,5 +944,13 @@ public class UI {
 
 	public void setRequired_tex(Texture required_tex) {
 		this.required_tex = required_tex;
+	}
+
+	public Table getSettingsGroup() {
+		return settingsGroup;
+	}
+
+	public void setSettingsGroup(Table settingsGroup) {
+		this.settingsGroup = settingsGroup;
 	}
 }

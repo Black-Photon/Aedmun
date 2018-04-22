@@ -250,6 +250,9 @@ public class PlanetClicker extends ApplicationAdapter{
 		this.currentPlanet = currentPlanet;
 	}
 
+	public SpriteBatch getBatch() {
+		return batch;
+	}
 }
 
 
