@@ -2,7 +2,7 @@ package com.blackphoton.planetclicker.objectType.table;
 
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
-import com.blackphoton.planetclicker.objectType.table.entries.*;
+import com.blackphoton.planetclicker.objectType.table.entries.template.*;
 import com.blackphoton.planetclicker.resources.ResourceType;
 
 import java.util.ArrayList;
@@ -21,24 +21,25 @@ public class TableInfo {
 		return entries;
 	}
 
-	public void addEntry(TableEntry entry) {
+	public TableEntry addEntry(TableEntry entry) {
 		entries.add(entry);
+		return entry;
 	}
 
 	public TableEntry addEntry(String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, ResourceBundle resources) {
 		TableEntry entry = null;
 		switch (type) {
 			case BUILDINGS:
-				entry = new BuildingEntry(type, name, value, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
+				entry = new BuildingEntry(name, value, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
 				break;
 			case FOOD:
-				entry = new FoodEntry(type, name, value, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
+				entry = new FoodEntry(name, value, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
 				break;
 			case RESOURCES:
-				entry = new ResourcesEntry(type, name, value, requiredEra, resourcesNeeded, upgradeTo, resources);
+				entry = new ResourcesEntry(name, value, requiredEra, resourcesNeeded, upgradeTo, resources);
 				break;
 			case SPECIAL:
-				entry = new SpecialEntry(type, name, value, requiredEra, upgradeTo, resourcesNeeded, resources);
+				entry = new SpecialEntry(name, value, requiredEra, upgradeTo, resourcesNeeded, resources);
 				break;
 			default: return null;
 		}

@@ -1,6 +1,5 @@
-package com.blackphoton.planetclicker.objectType.table.entries;
+package com.blackphoton.planetclicker.objectType.table.entries.template;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,7 +11,6 @@ import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.core.Data;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
-import com.blackphoton.planetclicker.resources.ResourceMaterial;
 import com.blackphoton.planetclicker.resources.ResourceType;
 
 import java.util.ArrayList;

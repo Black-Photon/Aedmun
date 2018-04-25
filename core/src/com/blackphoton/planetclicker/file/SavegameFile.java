@@ -2,8 +2,9 @@ package com.blackphoton.planetclicker.file;
 
 import com.blackphoton.planetclicker.core.Data;
 import com.blackphoton.planetclicker.objectType.Era;
-import com.blackphoton.planetclicker.objectType.table.entries.ResourcesEntry;
-import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
+import com.blackphoton.planetclicker.objectType.table.entries.resources.Absolute;
+import com.blackphoton.planetclicker.objectType.table.entries.template.ResourcesEntry;
+import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntry;
 
 public class SavegameFile extends File {
 	public SavegameFile() {
@@ -142,7 +143,7 @@ public class SavegameFile extends File {
 		if (!verifyEntry(stringEntry(saveEntry), entry.getName())) return;
 		long numberOf = numberEntry(saveEntry);
 		if(entry instanceof ResourcesEntry){
-			if(((ResourcesEntry) entry).isAbsolute()) {
+			if(entry instanceof Absolute){
 				switch (((ResourcesEntry) entry).getMaterial()) {
 					case WOOD:
 						Data.main.setWoodCount((int) numberOf);
@@ -164,7 +165,7 @@ public class SavegameFile extends File {
 	}
 	private void resetEntry(TableEntry entry){
 		if(entry instanceof ResourcesEntry){
-			if(((ResourcesEntry) entry).isAbsolute()) {
+			if(entry instanceof Absolute){
 				switch (((ResourcesEntry) entry).getMaterial()) {
 					case WOOD:
 						Data.main.setWoodCount(0);

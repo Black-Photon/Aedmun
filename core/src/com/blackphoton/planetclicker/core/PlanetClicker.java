@@ -6,13 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.blackphoton.planetclicker.file.SavegameFile;
 import com.blackphoton.planetclicker.objectType.Planet;
-import com.blackphoton.planetclicker.objectType.table.entries.SpecialEntry;
-import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
 import com.blackphoton.planetclicker.resources.ResourceType;
-
-import static com.badlogic.gdx.Application.ApplicationType.Android;
 
 public class PlanetClicker extends ApplicationAdapter{
 	private SpriteBatch batch;

@@ -20,7 +20,7 @@ import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.objectType.table.Row;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
-import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
+import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntry;
 
 import java.util.ArrayList;
 

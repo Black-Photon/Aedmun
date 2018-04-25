@@ -4,19 +4,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.blackphoton.planetclicker.file.SavegameFile;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
-import com.blackphoton.planetclicker.objectType.table.entries.*;
+import com.blackphoton.planetclicker.objectType.table.entries.food.Timeout;
+import com.blackphoton.planetclicker.objectType.table.entries.resources.Absolute;
+import com.blackphoton.planetclicker.objectType.table.entries.resources.Multiplier;
+import com.blackphoton.planetclicker.objectType.table.entries.resources.Resource_ResourceBundle;
+import com.blackphoton.planetclicker.objectType.table.entries.special.Special_ResourceBundle;
+import com.blackphoton.planetclicker.objectType.table.entries.template.*;
 import com.blackphoton.planetclicker.resources.ResourceType;
 import com.blackphoton.planetclicker.resources.ResourceMaterial;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
@@ -116,8 +119,7 @@ public class Mechanics {
 				}
 			}
 	}
-
-	private ArrayList keyList;
+	
 	public void createTables(){
 		Data.setTableInfo(
 			createBuildingsTable(),
@@ -158,35 +160,6 @@ public class Mechanics {
 		return buildingInfo;
 	}
 	private TableInfo createFoodTable(){
-		keyList = new ArrayList();
-		keyList.add("time");
-		ResourceBundle noLimit = new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("time")) return -1;
-				return null;
-			}
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-					int count = 0;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		};
 		TableInfo foodInfo = new TableInfo(ResourceType.FOOD);
 
 		ArrayList farmArray = new ArrayList();
@@ -195,178 +168,32 @@ public class Mechanics {
 		ArrayList toFarmArray = new ArrayList();
 		toFarmArray.add(new RequiredResource(ResourceMaterial.WOOD, 15));
 		toFarmArray.add(new RequiredResource(ResourceMaterial.STONE, 1));
-		FoodEntry farm = (FoodEntry) foodInfo.addEntry("Farm", 5000, Data.getEraList().get(2), null, farmArray, null, noLimit);
+		FoodEntry farm = (FoodEntry) foodInfo.addEntry("Farm", 5000, Data.getEraList().get(2), null, farmArray, null, null);
 
 		ArrayList sfarmArray = new ArrayList();
 		sfarmArray.add(new RequiredResource(ResourceMaterial.WOOD, 15));
 		sfarmArray.add(new RequiredResource(ResourceMaterial.STONE, 1));
-		FoodEntry smallfarm = (FoodEntry) foodInfo.addEntry("Small Farm", 20, Data.getEraList().get(1), farm, sfarmArray, toFarmArray, noLimit);
+		FoodEntry smallfarm = (FoodEntry) foodInfo.addEntry("Small Farm", 20, Data.getEraList().get(1), farm, sfarmArray, toFarmArray, null);
 
 
-		foodInfo.addEntry("Hunt Food", 10, Data.getEraList().get(0), smallfarm, null, null, new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("time")) return 3000;
-				return null;
-			}
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-					int count = 0;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		}).setUpgradable(false);
+		foodInfo.addEntry(new Timeout("Hunt Food", 10, Data.getEraList().get(0), smallfarm, null, null, 3000)).setUpgradable(false);
 
 		return foodInfo;
 	}
 	private TableInfo createResourcesTable(){
-		keyList = new ArrayList();
-		keyList.add("resource");
-		keyList.add("absolute");
-		keyList.add("multiplier");
 		TableInfo resourcesInfo = new TableInfo(ResourceType.RESOURCES);
 
-		final TableEntry empty = new ResourcesEntry(null, null, 0,null,null,null,null);
+		final TableEntry empty = new ResourcesEntry(null, 0,null,null,null, null);
 
 		//Don't need to be further down as don't rely on TableEntry's
-		ResourceBundle woodMill_r = new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("resource")) return ResourceMaterial.WOOD;
-				if(key.equals("absolute")) return false;
-				if(key.equals("multiplier")) return empty;
-				return null;
-			}
+		ResourceBundle woodmill_r = new Resource_ResourceBundle(ResourceMaterial.WOOD, empty);
+		ResourceBundle quarry_r = new Resource_ResourceBundle(ResourceMaterial.STONE, empty);
+		ResourceBundle cast_r = new Resource_ResourceBundle(ResourceMaterial.BRONZE, empty);
+		ResourceBundle forge_r = new Resource_ResourceBundle(ResourceMaterial.IRON, empty);
 
-			int count = 0;
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		};
-		ResourceBundle quarryStone_r = new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("resource")) return ResourceMaterial.STONE;
-				if(key.equals("absolute")) return false;
-				if(key.equals("multiplier")) return empty;
-				return null;
-			}
-
-			int count = 0;
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		};
-		ResourceBundle bronzeCast_r = new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("resource")) return ResourceMaterial.BRONZE;
-				if(key.equals("absolute")) return false;
-				if(key.equals("multiplier")) return empty;
-				return null;
-			}
-
-			int count = 0;
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		};
-		ResourceBundle ironForge_r = new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("resource")) return ResourceMaterial.IRON;
-				if(key.equals("absolute")) return false;
-				if(key.equals("multiplier")) return empty;
-				return null;
-			}
-
-			int count = 0;
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		};
-
-		ArrayList woodMill_l = new ArrayList();
-		woodMill_l.add(new RequiredResource(ResourceMaterial.WOOD, 100));
-		woodMill_l.add(new RequiredResource(ResourceMaterial.STONE, 10));
+		ArrayList woodmill_l = new ArrayList();
+		woodmill_l.add(new RequiredResource(ResourceMaterial.WOOD, 100));
+		woodmill_l.add(new RequiredResource(ResourceMaterial.STONE, 10));
 
 		ArrayList quarry_l = new ArrayList();
 		quarry_l.add(new RequiredResource(ResourceMaterial.WOOD, 40));
@@ -384,243 +211,41 @@ public class Mechanics {
 		forge_l.add(new RequiredResource(ResourceMaterial.BRONZE, 75));
 		forge_l.add(new RequiredResource(ResourceMaterial.IRON, 100));
 
-		final TableEntry woodmill = resourcesInfo.addEntry("Woodmill", 1, Data.getEraList().get(1), null, woodMill_l, null, woodMill_r);
-
-		ResourceBundle wood = new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("resource")) return ResourceMaterial.WOOD;
-				if(key.equals("absolute")) return true;
-				if(key.equals("multiplier")) return woodmill;
-				return null;
-			}
-
-			int count = 0;
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		};
-		resourcesInfo.addEntry("Gather Wood", 1, Data.getEraList().get(0), null, null, null, wood);
-
-		final TableEntry quarry = resourcesInfo.addEntry("Quarry Stone", 1, Data.getEraList().get(1), null, quarry_l, null, quarryStone_r);
-
-		ResourceBundle stone = new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("resource")) return ResourceMaterial.STONE;
-				if(key.equals("absolute")) return true;
-				if(key.equals("multiplier")) return quarry;
-				return null;
-			}
-
-			int count = 0;
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		};
-		resourcesInfo.addEntry("Mine Stone", 1, Data.getEraList().get(0), null, null, null, stone);
-
-		final TableEntry cast = resourcesInfo.addEntry("Cast Bronze", 1, Data.getEraList().get(2), null, cast_l, null, bronzeCast_r);
-
-		ResourceBundle bronze = new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("resource")) return ResourceMaterial.BRONZE;
-				if(key.equals("absolute")) return true;
-				if(key.equals("multiplier")) return cast;
-				return null;
-			}
-
-			int count = 0;
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		};
-		resourcesInfo.addEntry("Smelt Bronze", 5, Data.getEraList().get(1), null, null, null, bronze);
-
-		final TableEntry forge = resourcesInfo.addEntry("Forge Iron", 1, Data.getEraList().get(3), null, forge_l, null, ironForge_r);
-
-		ResourceBundle iron = new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("resource")) return ResourceMaterial.IRON;
-				if(key.equals("absolute")) return true;
-				if(key.equals("multiplier")) return forge;
-				return null;
-			}
-
-			int count = 0;
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		};
-		resourcesInfo.addEntry("Mine Iron", 3, Data.getEraList().get(2), null, null, null, iron);
+		final TableEntry woodmill = resourcesInfo.addEntry(new Multiplier("Woodmill", 1, Data.getEraList().get(1), woodmill_l, null, woodmill_r));
+		ResourceBundle wood = new Resource_ResourceBundle(ResourceMaterial.WOOD, woodmill);
+		resourcesInfo.addEntry(new Absolute("Gather Wood", 1, Data.getEraList().get(0), null, null, wood));
+		
+		final TableEntry quarry = resourcesInfo.addEntry(new Multiplier("Quarry Stone", 1, Data.getEraList().get(1), quarry_l, null, quarry_r));
+		ResourceBundle stone = new Resource_ResourceBundle(ResourceMaterial.STONE, quarry);
+		resourcesInfo.addEntry(new Absolute("Mine Stone", 1, Data.getEraList().get(0), null, null, stone));
+		
+		final TableEntry cast = resourcesInfo.addEntry(new Multiplier("Cast Bronze", 1, Data.getEraList().get(2), cast_l, null, cast_r));
+		ResourceBundle bronze = new Resource_ResourceBundle(ResourceMaterial.BRONZE, cast);
+		resourcesInfo.addEntry(new Absolute("Smelt Bronze", 1, Data.getEraList().get(1), null, null, bronze));
+		
+		final TableEntry forge = resourcesInfo.addEntry(new Multiplier("Forge Iron", 1, Data.getEraList().get(3), forge_l, null, forge_r));
+		ResourceBundle iron = new Resource_ResourceBundle(ResourceMaterial.IRON, forge);
+		resourcesInfo.addEntry(new Absolute("Mine Iron", 1, Data.getEraList().get(2), null, null, iron));
+		
 		return resourcesInfo;
 	}
 	private TableInfo createSpecialTable(){
 		TableInfo specialInfo = new TableInfo(ResourceType.SPECIAL);
 
-		keyList = new ArrayList();
-		keyList.add("pop");
-
 		ArrayList<RequiredResource> stone = new ArrayList<RequiredResource>();
 		stone.add(new RequiredResource(ResourceMaterial.STONE, 150));
-		specialInfo.addEntry("Stonehenge", 50, Data.getEraList().get(0), null, stone, null, new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("pop")) return Data.getEraList().get(1).getPop_req().intValue();
-				return null;
-			}
-
-			int count = 0;
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		});
+		specialInfo.addEntry("Stonehenge", 50, Data.getEraList().get(0), null, stone, null, new Special_ResourceBundle(1));
 
 		ArrayList<RequiredResource> pyram = new ArrayList<RequiredResource>();
 		pyram.add(new RequiredResource(ResourceMaterial.STONE, 350));
 		pyram.add(new RequiredResource(ResourceMaterial.BRONZE, 50));
-		specialInfo.addEntry("Pyramids", 100, Data.getEraList().get(1), null, pyram, null, new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("pop")) return Data.getEraList().get(2).getPop_req().intValue();
-				return null;
-			}
-
-			int count = 0;
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		});
+		specialInfo.addEntry("Pyramids", 100, Data.getEraList().get(1), null, pyram, null, new Special_ResourceBundle(2));
 
 		ArrayList<RequiredResource> wall = new ArrayList<RequiredResource>();
 		wall.add(new RequiredResource(ResourceMaterial.STONE, 600));
 		wall.add(new RequiredResource(ResourceMaterial.BRONZE, 20));
 		wall.add(new RequiredResource(ResourceMaterial.IRON, 200));
-		specialInfo.addEntry("Great Wall", 250, Data.getEraList().get(2), null, wall, null, new ResourceBundle() {
-			@Override
-			protected Object handleGetObject(String key) {
-				if(key.equals("pop")) return Data.getEraList().get(3).getPop_req().intValue();
-				return null;
-			}
-
-			int count = 0;
-
-			@Override
-			public Enumeration<String> getKeys() {
-				Enumeration<String> e = new Enumeration<String>() {
-					ArrayList<String> elements = keyList;
-
-					@Override
-					public boolean hasMoreElements() {
-						return count<elements.size();
-					}
-
-					@Override
-					public String nextElement() {
-						count++;
-						return elements.get(count-1);
-					}
-				};
-				return e;
-			}
-		});
+		specialInfo.addEntry("Great Wall", 250, Data.getEraList().get(2), null, wall, null, new Special_ResourceBundle(3));
 
 		return specialInfo;
 	}
@@ -701,10 +326,8 @@ public class Mechanics {
 				printInsufficientResources();
 			}
 
-			if(entry instanceof ResourcesEntry) {
-				if(((ResourcesEntry) entry).isAbsolute()){
-					addResource(((ResourcesEntry) entry).getMaterial(), entry.getValue());
-				}
+			if(entry instanceof Absolute) {
+				addResource(((ResourcesEntry) entry).getMaterial(), entry.getValue());
 			}
 		}
 		if(entry.isUpgradeClicked()){

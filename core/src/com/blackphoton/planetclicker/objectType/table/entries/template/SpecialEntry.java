@@ -1,4 +1,4 @@
-package com.blackphoton.planetclicker.objectType.table.entries;
+package com.blackphoton.planetclicker.objectType.table.entries.template;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -19,8 +19,8 @@ public class SpecialEntry extends TableEntry {
 
 	private boolean complete;
 
-	public SpecialEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ResourceBundle resources) {
-		super(type, name, value, requiredEra, upgradeTo,resourcesNeeded, null, resources);
+	public SpecialEntry(String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ResourceBundle resources) {
+		super(ResourceType.SPECIAL, name, value, requiredEra, upgradeTo,resourcesNeeded, null, resources);
 
 		int pop_req = (Integer) resources.getObject(resources.getKeys().nextElement());
 
@@ -69,17 +69,6 @@ public class SpecialEntry extends TableEntry {
 	public void setNumberLabelText(String text) {
 		this.numberLabel.setText(text);
 	}
-
-	//Number of Label
-
-	//1 use resources
-
-	//Clicks to Full
-
-	//On create finished
-
-	//Population Req
-
 
 	public boolean isCanBuild() {
 		return canBuild;

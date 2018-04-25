@@ -1,11 +1,9 @@
 package com.blackphoton.planetclicker.core;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
-import com.blackphoton.planetclicker.objectType.table.entries.TableEntry;
+import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntry;
 import com.blackphoton.planetclicker.resources.ResourceType;
 import com.blackphoton.planetclicker.objectType.Era;
-import com.blackphoton.planetclicker.objectType.Planet;
 
 import java.util.ArrayList;
 
@@ -43,7 +41,8 @@ public class Data {
 		Era classical = new Era("Classical", 5000000L, "classical.png");
 		Era industrial = new Era("Industrial",100000000L, "industrial.png");
 		Era modern = new Era("Modern",7000000000L, "modern.png");
-		Era future = new Era("Future", 10000000000L, "future.png");
+		Era future = new Era("Future", 25000000000L, "future.png");
+		Era endgame = new Era("Future", 50000000000L, "future.png");
 		eraList.add(cavemen);
 		eraList.add(bronze);
 		eraList.add(iron);
@@ -53,6 +52,7 @@ public class Data {
 		eraList.add(industrial);
 		eraList.add(modern);
 		eraList.add(future);
+		eraList.add(endgame);
 
 		ui = new UI();
 		mechanics = new Mechanics();
