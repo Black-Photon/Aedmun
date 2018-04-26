@@ -675,6 +675,17 @@ public class UI {
 		list.add(new Row(4, null));
 		list.add(new Row(7, iron));
 		list.add(new Row(6, null));
+		list.add(new Row(9, null));//Clay
+		list.add(new Row(8, null));
+		list.add(new Row(11, null));//Brick
+		list.add(new Row(10, null));
+		list.add(new Row(13, null));//Concrete
+		list.add(new Row(12, null));
+		list.add(new Row(15, null));//Steel
+		list.add(new Row(14, null));
+		list.add(new Row(17, null));//Gems
+		list.add(new Row(16, null));
+		list.add(new Row(18, null));//Carbon
 
 		resourcesTable = refreshTableX(Data.getResourcesTable(),"Value", Data.main.isResourcesTableVisible(), list);
 	}

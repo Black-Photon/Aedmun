@@ -52,6 +52,12 @@ public class Absolute extends ResourcesEntry{
 	};
 
 	@Override
+	public void onClick() {
+		super.onClick();
+		Data.mechanics.addResource(getMaterial(), getValue());
+	}
+
+	@Override
 	public void setValueLabelText() {
 		this.valueLabel.setText(Integer.toString(value));
 	}

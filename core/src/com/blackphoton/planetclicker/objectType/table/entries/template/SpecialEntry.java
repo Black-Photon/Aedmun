@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.blackphoton.planetclicker.core.Data;
+import com.blackphoton.planetclicker.core.Mechanics;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.resources.ResourceMaterial;
@@ -26,6 +27,42 @@ public class SpecialEntry extends TableEntry {
 
 		this.resourcesNeeded.add(new RequiredResource(ResourceMaterial.POPULATION, pop_req));
 		setNumberLabelText();
+	}
+
+	@Override
+	public void onClick(){
+		if (isCanBuild()){
+			if(getPercent()==100) return;
+
+			addToEntry();
+			setNumberLabelText();
+
+			if(getPercent()==100){
+				if(!isComplete()){
+					setComplete(true);
+					boolean found = false;
+					for(Era era: Data.getEraList()){
+						if(found){
+							Data.setCurrentEra(era);
+							Data.mechanics.setThisEra(Data.getCurrentEra());
+							Data.ui.updateEra();
+							break;
+						}
+						if(era.equals(Data.getCurrentEra())) found = true;
+					}
+				}
+				return;
+			}
+
+			return;
+		}else{
+			setCanBuild(true);
+			Data.mechanics.subtractResources(getResourcesNeeded());
+			setResourcesNeeded(null);
+			Data.ui.loadSideBar(Data.getSelectedEntry(), true);
+
+			addToEntry();
+		}
 	}
 
 	public int getPercent(){

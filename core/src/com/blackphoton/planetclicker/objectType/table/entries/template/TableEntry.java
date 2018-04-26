@@ -113,6 +113,11 @@ public abstract class TableEntry {
 		}
 	}
 
+	public void onClick(){
+		addToEntry();
+		Data.mechanics.subtractResources(getResourcesNeeded());
+	}
+
 	public void unclick(){
 		createClicked = false;
 		upgradeClicked = false;

@@ -12,6 +12,7 @@ import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
 import com.blackphoton.planetclicker.objectType.table.entries.food.Timeout;
 import com.blackphoton.planetclicker.objectType.table.entries.resources.Absolute;
+import com.blackphoton.planetclicker.objectType.table.entries.resources.Gems;
 import com.blackphoton.planetclicker.objectType.table.entries.resources.Multiplier;
 import com.blackphoton.planetclicker.objectType.table.entries.resources.Resource_ResourceBundle;
 import com.blackphoton.planetclicker.objectType.table.entries.special.Special_ResourceBundle;
@@ -19,6 +20,7 @@ import com.blackphoton.planetclicker.objectType.table.entries.template.*;
 import com.blackphoton.planetclicker.resources.ResourceType;
 import com.blackphoton.planetclicker.resources.ResourceMaterial;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -131,6 +133,14 @@ public class Mechanics {
 	private TableInfo createBuildingsTable(){
 		TableInfo buildingInfo = new TableInfo(ResourceType.BUILDINGS);
 
+		ArrayList capitalArray = new ArrayList(); //TODO
+		capitalArray.add(new RequiredResource(ResourceMaterial.WOOD, 100));
+		BuildingEntry capital = (BuildingEntry) buildingInfo.addEntry("Town", 20000, Data.getEraList().get(2), null, capitalArray, null, null);
+
+		ArrayList cityArray = new ArrayList(); //TODO
+		cityArray.add(new RequiredResource(ResourceMaterial.WOOD, 100));
+		BuildingEntry city = (BuildingEntry) buildingInfo.addEntry("Town", 20000, Data.getEraList().get(2), null, cityArray, null, null);
+
 		ArrayList townArray = new ArrayList();
 		townArray.add(new RequiredResource(ResourceMaterial.WOOD, 100));
 		townArray.add(new RequiredResource(ResourceMaterial.STONE, 25));
@@ -149,6 +159,10 @@ public class Mechanics {
 		toTownArray.add(new RequiredResource(ResourceMaterial.IRON, 1));
 		BuildingEntry village = (BuildingEntry) buildingInfo.addEntry("Village", 100, Data.getEraList().get(1), town, villageArray, toTownArray, null);
 
+		ArrayList hamletArray = new ArrayList(); //TODO
+		hamletArray.add(new RequiredResource(ResourceMaterial.WOOD, 100));
+		BuildingEntry hamlet = (BuildingEntry) buildingInfo.addEntry("Town", 20000, Data.getEraList().get(2), null, hamletArray, null, null);
+
 		ArrayList houseArray = new ArrayList();
 		ArrayList toVillageArray = new ArrayList();
 		toVillageArray.add(new RequiredResource(ResourceMaterial.WOOD, 25));
@@ -156,6 +170,14 @@ public class Mechanics {
 		toVillageArray.add(new RequiredResource(ResourceMaterial.BRONZE, 1));
 		houseArray.add(new RequiredResource(ResourceMaterial.WOOD, 5));
 		buildingInfo.addEntry("House", 4, Data.getEraList().get(0), village, houseArray, toVillageArray, null);
+
+		ArrayList shackArray = new ArrayList(); //TODO
+		shackArray.add(new RequiredResource(ResourceMaterial.WOOD, 100));
+		BuildingEntry shack = (BuildingEntry) buildingInfo.addEntry("Town", 20000, Data.getEraList().get(2), null, shackArray, null, null);
+
+		ArrayList caveArray = new ArrayList(); //TODO
+		caveArray.add(new RequiredResource(ResourceMaterial.WOOD, 100));
+		BuildingEntry cave = (BuildingEntry) buildingInfo.addEntry("Town", 20000, Data.getEraList().get(2), null, caveArray, null, null);
 
 		return buildingInfo;
 	}
@@ -190,6 +212,11 @@ public class Mechanics {
 		ResourceBundle quarry_r = new Resource_ResourceBundle(ResourceMaterial.STONE, empty);
 		ResourceBundle cast_r = new Resource_ResourceBundle(ResourceMaterial.BRONZE, empty);
 		ResourceBundle forge_r = new Resource_ResourceBundle(ResourceMaterial.IRON, empty);
+		ResourceBundle mould_r = new Resource_ResourceBundle(ResourceMaterial.CLAY, empty);
+		ResourceBundle oven_r = new Resource_ResourceBundle(ResourceMaterial.BRICK, empty);
+		ResourceBundle kiln_r = new Resource_ResourceBundle(ResourceMaterial.CONCRETE, empty);
+		ResourceBundle refine_r = new Resource_ResourceBundle(ResourceMaterial.STEEL, empty);
+		ResourceBundle compress_r = new Resource_ResourceBundle(ResourceMaterial.GEMS, empty);
 
 		ArrayList woodmill_l = new ArrayList();
 		woodmill_l.add(new RequiredResource(ResourceMaterial.WOOD, 100));
@@ -211,6 +238,51 @@ public class Mechanics {
 		forge_l.add(new RequiredResource(ResourceMaterial.BRONZE, 75));
 		forge_l.add(new RequiredResource(ResourceMaterial.IRON, 100));
 
+		ArrayList mould_l = new ArrayList();
+		mould_l.add(new RequiredResource(ResourceMaterial.WOOD, 5));
+		mould_l.add(new RequiredResource(ResourceMaterial.STONE, 200));
+		mould_l.add(new RequiredResource(ResourceMaterial.BRONZE, 100));
+		mould_l.add(new RequiredResource(ResourceMaterial.IRON, 100));
+		mould_l.add(new RequiredResource(ResourceMaterial.CLAY, 100));
+		mould_l.add(new RequiredResource(ResourceMaterial.BRICK, 25));
+
+		ArrayList oven_l = new ArrayList();
+		oven_l.add(new RequiredResource(ResourceMaterial.STONE, 500));
+		oven_l.add(new RequiredResource(ResourceMaterial.BRONZE, 50));
+		oven_l.add(new RequiredResource(ResourceMaterial.IRON, 150));
+		oven_l.add(new RequiredResource(ResourceMaterial.CLAY, 50));
+		oven_l.add(new RequiredResource(ResourceMaterial.BRICK, 125));
+		oven_l.add(new RequiredResource(ResourceMaterial.CONCRETE, 5));
+
+		ArrayList kiln_l = new ArrayList();
+		kiln_l.add(new RequiredResource(ResourceMaterial.WOOD, 25));
+		kiln_l.add(new RequiredResource(ResourceMaterial.STONE, 1000));
+		kiln_l.add(new RequiredResource(ResourceMaterial.BRONZE, 250));
+		kiln_l.add(new RequiredResource(ResourceMaterial.IRON, 300));
+		kiln_l.add(new RequiredResource(ResourceMaterial.BRICK, 100));
+		kiln_l.add(new RequiredResource(ResourceMaterial.CONCRETE, 50));
+		kiln_l.add(new RequiredResource(ResourceMaterial.STEEL, 5));
+
+		ArrayList refine_l = new ArrayList();
+		refine_l.add(new RequiredResource(ResourceMaterial.WOOD, 250));
+		refine_l.add(new RequiredResource(ResourceMaterial.STONE, 400));
+		refine_l.add(new RequiredResource(ResourceMaterial.BRONZE, 600));
+		refine_l.add(new RequiredResource(ResourceMaterial.IRON, 1000));
+		refine_l.add(new RequiredResource(ResourceMaterial.BRICK, 200));
+		refine_l.add(new RequiredResource(ResourceMaterial.CONCRETE, 150));
+		refine_l.add(new RequiredResource(ResourceMaterial.STEEL, 100));
+		refine_l.add(new RequiredResource(ResourceMaterial.GEMS, 1));
+
+		ArrayList compress_l = new ArrayList();
+		refine_l.add(new RequiredResource(ResourceMaterial.BRONZE, 1500));
+		refine_l.add(new RequiredResource(ResourceMaterial.IRON, 500));
+		refine_l.add(new RequiredResource(ResourceMaterial.CONCRETE, 250));
+		refine_l.add(new RequiredResource(ResourceMaterial.STEEL, 1000));
+		refine_l.add(new RequiredResource(ResourceMaterial.GEMS, 10));
+
+		ArrayList clayNeeded = new ArrayList();
+		clayNeeded.add(new RequiredResource(ResourceMaterial.CLAY, 1));
+
 		final TableEntry woodmill = resourcesInfo.addEntry(new Multiplier("Woodmill", 1, Data.getEraList().get(1), woodmill_l, null, woodmill_r));
 		ResourceBundle wood = new Resource_ResourceBundle(ResourceMaterial.WOOD, woodmill);
 		resourcesInfo.addEntry(new Absolute("Gather Wood", 1, Data.getEraList().get(0), null, null, wood));
@@ -226,7 +298,30 @@ public class Mechanics {
 		final TableEntry forge = resourcesInfo.addEntry(new Multiplier("Forge Iron", 1, Data.getEraList().get(3), forge_l, null, forge_r));
 		ResourceBundle iron = new Resource_ResourceBundle(ResourceMaterial.IRON, forge);
 		resourcesInfo.addEntry(new Absolute("Mine Iron", 1, Data.getEraList().get(2), null, null, iron));
-		
+
+		final TableEntry mould = resourcesInfo.addEntry(new Multiplier("Mould Clay", 1, Data.getEraList().get(4), mould_l, null, mould_r));
+		ResourceBundle clay = new Resource_ResourceBundle(ResourceMaterial.CLAY, mould);
+		resourcesInfo.addEntry(new Absolute("Collect Clay", 1, Data.getEraList().get(3), null, null, clay));
+
+		final TableEntry oven = resourcesInfo.addEntry(new Multiplier("Cook Brick", 1, Data.getEraList().get(5), oven_l, null, oven_r));
+		ResourceBundle brick = new Resource_ResourceBundle(ResourceMaterial.BRICK, oven);
+		resourcesInfo.addEntry(new Absolute("Create Brick", 1, Data.getEraList().get(4), clayNeeded, null, brick));
+
+		final TableEntry kiln = resourcesInfo.addEntry(new Multiplier("Fire Concrete", 1, Data.getEraList().get(6), kiln_l, null, kiln_r));
+		ResourceBundle concrete = new Resource_ResourceBundle(ResourceMaterial.CONCRETE, kiln);
+		resourcesInfo.addEntry(new Absolute("Mix Concrete", 1, Data.getEraList().get(5), clayNeeded, null, concrete));
+
+		final TableEntry refine = resourcesInfo.addEntry(new Multiplier("Refine Steel", 1, Data.getEraList().get(7), refine_l, null, refine_r));
+		ResourceBundle steel = new Resource_ResourceBundle(ResourceMaterial.STEEL, refine);
+		resourcesInfo.addEntry(new Absolute("Smelt Steel", 1, Data.getEraList().get(6), null, null, steel));
+
+		final TableEntry compress = resourcesInfo.addEntry(new Multiplier("Compress Gem",1, Data.getEraList().get(8), compress_l, null, compress_r));
+		ResourceBundle gems = new Resource_ResourceBundle(ResourceMaterial.GEMS, compress);
+		resourcesInfo.addEntry(new Gems("Mine Gems", 1, Data.getEraList().get(7), null, null, gems));
+
+		ResourceBundle carbon = new Resource_ResourceBundle(ResourceMaterial.CARBON, empty);
+		resourcesInfo.addEntry(new Absolute("Carbon", 1, Data.getEraList().get(8), null, null, carbon));
+
 		return resourcesInfo;
 	}
 	private TableInfo createSpecialTable(){
@@ -275,44 +370,7 @@ public class Mechanics {
 
 		if(entry.isCreateClicked()){
 			if(hasResources(entry.getResourcesNeeded())){
-				if(entry instanceof SpecialEntry) {
-					if (((SpecialEntry) entry).isCanBuild()){
-						if(((SpecialEntry) entry).getPercent()==100) return;
-
-						entry.addToEntry();
-						entry.setNumberLabelText();
-
-						if(((SpecialEntry) entry).getPercent()==100){
-							if(!((SpecialEntry) entry).isComplete()){
-								((SpecialEntry) entry).setComplete(true);
-								boolean found = false;
-								for(Era era: Data.getEraList()){
-									if(found){
-										Data.setCurrentEra(era);
-										thisEra = Data.getCurrentEra();
-										Data.ui.updateEra();
-										break;
-									}
-									if(era.equals(thisEra)) found = true;
-								}
-							}
-							return;
-						}
-
-						return;
-					}else{
-						((SpecialEntry) entry).setCanBuild(true);
-						subtractResources(entry.getResourcesNeeded());
-						entry.setResourcesNeeded(null);
-						Data.ui.loadSideBar(Data.getSelectedEntry(), true);
-
-						entry.addToEntry();
-						return;
-					}
-				}
-
-				entry.addToEntry();
-				subtractResources(entry.getResourcesNeeded());
+				entry.onClick();
 
 				if(Data.getSelectedEntry().getResourcesNeeded()!=null)
 					for (RequiredResource resource : Data.getSelectedEntry().getResourcesNeeded())
@@ -324,10 +382,6 @@ public class Mechanics {
 				Data.ui.loadSideBar(Data.getSelectedEntry(), true);
 			}else{
 				printInsufficientResources();
-			}
-
-			if(entry instanceof Absolute) {
-				addResource(((ResourcesEntry) entry).getMaterial(), entry.getValue());
 			}
 		}
 		if(entry.isUpgradeClicked()){
@@ -350,7 +404,6 @@ public class Mechanics {
 				printInsufficientResources();
 			}
 		}
-		//Data.ui.refreshTable();
 	}
 	public boolean planetUnclicked(){
 		Planet planet = Data.main.getPlanet();
@@ -608,5 +661,9 @@ public class Mechanics {
 
 	public SavegameFile getFile() {
 		return file;
+	}
+
+	public void setThisEra(Era thisEra) {
+		this.thisEra = thisEra;
 	}
 }
