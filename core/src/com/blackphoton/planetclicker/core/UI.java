@@ -436,18 +436,21 @@ public class UI {
 
 		for(RequiredResource resource: resources){
 			Image image = resource.getResource();
-			int numberRequired = resource.getNumberRequired();
-			Label numberNeeded = resource.getResourceNumber();
-			glyphLayout = new GlyphLayout(bitmapFont, numberNeeded.getText());
+			if(image!=null) {//TODO remove once all resources have pictures
+				if(resource.getNumberRequired()!=0) {
+					Label numberNeeded = resource.getResourceNumber();
+					glyphLayout = new GlyphLayout(bitmapFont, numberNeeded.getText());
 
-			image.setPosition(reqRes.getWidth()/2-image.getWidth()/2, totalHeight+reqRes_bottom.getHeight()*3/4);
-			numberNeeded.setPosition(reqRes.getWidth()/2-glyphLayout.width/2, totalHeight+reqRes_bottom.getHeight()*3/4-glyphLayout.height);
+					image.setPosition(reqRes.getWidth() / 2 - image.getWidth() / 2, totalHeight + reqRes_bottom.getHeight() * 3 / 4);
+					numberNeeded.setPosition(reqRes.getWidth() / 2 - glyphLayout.width / 2, totalHeight + reqRes_bottom.getHeight() * 3 / 4 - glyphLayout.height);
 
-			totalHeight+=image.getHeight();
-			totalHeight+=glyphLayout.height;
+					totalHeight += image.getHeight();
+					totalHeight += glyphLayout.height;
 
-			reqResGroup.addActor(image);
-			reqResGroup.addActor(numberNeeded);
+					reqResGroup.addActor(image);
+					reqResGroup.addActor(numberNeeded);
+				}
+			}
 		}
 		reqRes.setHeight(totalHeight-reqRes_bottom.getHeight());
 		reqRes_top.setPosition(0,reqRes_bottom.getHeight()+reqRes.getHeight());
@@ -639,9 +642,14 @@ public class UI {
 		town.setScaling(Scaling.fit);
 
 		ArrayList<Row> list = new ArrayList<Row>();
-		list.add(new Row(2, house));
-		list.add(new Row(1, village));
-		list.add(new Row(0, town));
+		list.add(new Row(7, null));
+		list.add(new Row(6, null));
+		list.add(new Row(5, house));
+		list.add(new Row(4, null));
+		list.add(new Row(3, village));
+		list.add(new Row(2, town));
+		list.add(new Row(1, null));
+		list.add(new Row(0, null));
 
 		buildingTable = refreshTableX(Data.getBuildingTable(),"Holds", Data.main.isBuildingTableVisible(), list);
 	}
@@ -652,9 +660,14 @@ public class UI {
 		farm.setScaling(Scaling.fit);
 
 		ArrayList<Row> list = new ArrayList<Row>();
-		list.add(new Row(2, hunt));
-		list.add(new Row(1, small_farm));
-		list.add(new Row(0, farm));
+		list.add(new Row(7, hunt));
+		list.add(new Row(6, small_farm));
+		list.add(new Row(5, farm));
+		list.add(new Row(4, null));
+		list.add(new Row(3, null));
+		list.add(new Row(2, null));
+		list.add(new Row(1, null));
+		list.add(new Row(0, null));
 
 		foodTable = refreshTableX(Data.getFoodTable(),"Feeds", Data.main.isFoodTableVisible(), list);
 	}
@@ -699,6 +712,12 @@ public class UI {
 		list.add(new Row(0, sh));
 		list.add(new Row(1, pyr));
 		list.add(new Row(2, wall));
+		list.add(new Row(3, null));
+		list.add(new Row(4, null));
+		list.add(new Row(5, null));
+		list.add(new Row(6, null));
+		list.add(new Row(7, null));
+		list.add(new Row(8, null));
 
 		specialTable = refreshTableX(Data.getSpecialTable(),"Clicks", Data.main.isSpecialTableVisible(), list);
 	}
