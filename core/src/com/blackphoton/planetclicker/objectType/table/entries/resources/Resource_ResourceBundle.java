@@ -1,18 +1,18 @@
 package com.blackphoton.planetclicker.objectType.table.entries.resources;
 
+import com.blackphoton.planetclicker.objectType.Resource;
 import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntry;
-import com.blackphoton.planetclicker.resources.ResourceMaterial;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 
 public class Resource_ResourceBundle extends ResourceBundle {
-	ResourceMaterial material;
+	Resource material;
 	TableEntry entry;
 	private ArrayList keyList;
 
-	public Resource_ResourceBundle(ResourceMaterial material, TableEntry entry) {
+	public Resource_ResourceBundle(Resource material, TableEntry entry) {
 		this.material = material;
 		this.entry = entry;
 		keyList = new ArrayList();

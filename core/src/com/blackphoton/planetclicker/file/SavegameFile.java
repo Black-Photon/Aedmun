@@ -144,20 +144,7 @@ public class SavegameFile extends File {
 		long numberOf = numberEntry(saveEntry);
 		if(entry instanceof ResourcesEntry){
 			if(entry instanceof Absolute){
-				switch (((ResourcesEntry) entry).getMaterial()) {
-					case WOOD:
-						Data.main.setWoodCount((int) numberOf);
-						break;
-					case STONE:
-						Data.main.setStoneCount((int) numberOf);
-						break;
-					case IRON:
-						Data.main.setIronCount((int) numberOf);
-						break;
-					case BRONZE:
-						Data.main.setBronzeCount((int) numberOf);
-						break;
-				}
+				((ResourcesEntry) entry).getMaterial().setCount(numberOf);
 			}else entry.setNumberOf((int) numberOf);
 		}else
 			entry.setNumberOf((int) numberOf);
@@ -166,20 +153,7 @@ public class SavegameFile extends File {
 	private void resetEntry(TableEntry entry){
 		if(entry instanceof ResourcesEntry){
 			if(entry instanceof Absolute){
-				switch (((ResourcesEntry) entry).getMaterial()) {
-					case WOOD:
-						Data.main.setWoodCount(0);
-						break;
-					case STONE:
-						Data.main.setStoneCount(0);
-						break;
-					case IRON:
-						Data.main.setIronCount(0);
-						break;
-					case BRONZE:
-						Data.main.setBronzeCount(0);
-						break;
-				}
+				((ResourcesEntry) entry).getMaterial().setCount(0);
 			}else entry.setNumberOf(0);
 		}else
 			entry.setNumberOf(0);

@@ -18,7 +18,6 @@ import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.messages.Settings;
 import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
-import com.blackphoton.planetclicker.objectType.table.Row;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
 import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntry;
 
@@ -70,46 +69,19 @@ public class UI {
 	// - Building
 	private ScrollPane buildingScroll;
 	private ScrollPane buildingTable;
-	private Texture house_tex;
-	private Image house;
-	private Texture village_tex;
-	private Image village;
-	private Texture town_tex;
-	private Image town;
 
 	// - Food
 	private ScrollPane foodScroll;
 	private ScrollPane foodTable;
-	private Texture hunt_tex;
-	private Image hunt;
-	private Texture small_farm_tex;
-	private Image small_farm;
-	private Texture farm_tex;
-	private Image farm;
 
 	// - Resources
 	private ScrollPane resourceScroll;
 	private ScrollPane resourcesTable;
-	private Texture wood_tex;
-	private Image wood;
-	private Texture woodmill_tex;
-	private Image woodmill;
-	private Texture stone_tex;
-	private Image stone;
-	private Texture bronze_tex;
-	private Image bronze;
-	private Texture iron_tex;
-	private Image iron;
+
 
 	// - Special
 	private ScrollPane specialTable;
 	private ScrollPane specialScroll;
-	private Texture sh_tex;
-	private Image sh;
-	private Texture pyr_tex;
-	private Image pyr;
-	private Texture wall_tex;
-	private Image wall;
 
 	//Other
 	private Image settingsImage;
@@ -202,38 +174,7 @@ public class UI {
 		populationLabel.setPosition(pop_bar_left.getWidth()+pop_bar.getWidth()/2-glyphLayout.width/2,pop_bar.getHeight()/2-glyphLayout.height/2);
 
 		//Options
-		house_tex = new Texture("house.png");
-		house = new Image(house_tex);
-		village_tex = new Texture("village.png");
-		village = new Image(village_tex);
-		town_tex = new Texture("town.png");
-		town = new Image(town_tex);
-
-		hunt_tex = new Texture("hunt.png");
-		hunt = new Image(hunt_tex);
-		small_farm_tex = new Texture("small_farm.png");
-		small_farm = new Image(small_farm_tex);
-		farm_tex = new Texture("farm.png");
-		farm = new Image(farm_tex);
-
-		wood_tex = new Texture("wood.png");
-		wood = new Image(wood_tex);
-		woodmill_tex = new Texture("woodmill.png");
-		woodmill = new Image(woodmill_tex);
-		stone_tex = new Texture("stone.png");
-		stone = new Image(stone_tex);
-		bronze_tex = new Texture("bronze_bar.png");
-		bronze = new Image(bronze_tex);
-		iron_tex = new Texture("iron_bar.png");
-		iron = new Image(iron_tex);
 		resourceScroll = new ScrollPane(null);
-
-		sh_tex = new Texture("stonehenge.png");
-		sh = new Image(sh_tex);
-		pyr_tex = new Texture("pyramid.png");
-		pyr = new Image(pyr_tex);
-		wall_tex = new Texture("great_wall.png");
-		wall = new Image(wall_tex);
 
 		//Other
 		settings = new Settings();
@@ -436,20 +377,18 @@ public class UI {
 
 		for(RequiredResource resource: resources){
 			Image image = resource.getResource();
-			if(image!=null) {//TODO remove once all resources have pictures
-				if(resource.getNumberRequired()!=0) {
-					Label numberNeeded = resource.getResourceNumber();
-					glyphLayout = new GlyphLayout(bitmapFont, numberNeeded.getText());
+			if(resource.getNumberRequired()!=0) {
+				Label numberNeeded = resource.getResourceNumber();
+				glyphLayout = new GlyphLayout(bitmapFont, numberNeeded.getText());
 
-					image.setPosition(reqRes.getWidth() / 2 - image.getWidth() / 2, totalHeight + reqRes_bottom.getHeight() * 3 / 4);
-					numberNeeded.setPosition(reqRes.getWidth() / 2 - glyphLayout.width / 2, totalHeight + reqRes_bottom.getHeight() * 3 / 4 - glyphLayout.height);
+				image.setPosition(reqRes.getWidth() / 2 - image.getWidth() / 2, totalHeight + reqRes_bottom.getHeight() * 3 / 4);
+				numberNeeded.setPosition(reqRes.getWidth() / 2 - glyphLayout.width / 2, totalHeight + reqRes_bottom.getHeight() * 3 / 4 - glyphLayout.height);
 
-					totalHeight += image.getHeight();
-					totalHeight += glyphLayout.height;
+				totalHeight += image.getHeight();
+				totalHeight += glyphLayout.height;
 
-					reqResGroup.addActor(image);
-					reqResGroup.addActor(numberNeeded);
-				}
+				reqResGroup.addActor(image);
+				reqResGroup.addActor(numberNeeded);
 			}
 		}
 		reqRes.setHeight(totalHeight-reqRes_bottom.getHeight());
@@ -637,92 +576,74 @@ public class UI {
 	}
 
 	public void refreshBuildingTable(){
-		house.setScaling(Scaling.fit);
-		village.setScaling(Scaling.fit);
-		town.setScaling(Scaling.fit);
-
-		ArrayList<Row> list = new ArrayList<Row>();
-		list.add(new Row(7, null));
-		list.add(new Row(6, null));
-		list.add(new Row(5, house));
-		list.add(new Row(4, null));
-		list.add(new Row(3, village));
-		list.add(new Row(2, town));
-		list.add(new Row(1, null));
-		list.add(new Row(0, null));
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		list.add(7);
+		list.add(6);
+		list.add(5);
+		list.add(4);
+		list.add(3);
+		list.add(2);
+		list.add(1);
+		list.add(0);
 
 		buildingTable = refreshTableX(Data.getBuildingTable(),"Holds", Data.main.isBuildingTableVisible(), list);
 	}
 
 	public void refreshFoodTable(){
-		hunt.setScaling(Scaling.fit);
-		small_farm.setScaling(Scaling.fit);
-		farm.setScaling(Scaling.fit);
-
-		ArrayList<Row> list = new ArrayList<Row>();
-		list.add(new Row(7, hunt));
-		list.add(new Row(6, small_farm));
-		list.add(new Row(5, farm));
-		list.add(new Row(4, null));
-		list.add(new Row(3, null));
-		list.add(new Row(2, null));
-		list.add(new Row(1, null));
-		list.add(new Row(0, null));
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		list.add(7);
+		list.add(6);
+		list.add(5);
+		list.add(4);
+		list.add(3);
+		list.add(2);
+		list.add(1);
+		list.add(0);
 
 		foodTable = refreshTableX(Data.getFoodTable(),"Feeds", Data.main.isFoodTableVisible(), list);
 	}
 
 	public void refreshResourcesTable(){
-		wood.setScaling(Scaling.fit);
-		woodmill.setScaling(Scaling.fit);
-		stone.setScaling(Scaling.fit);
-		bronze.setScaling(Scaling.fit);
-		iron.setScaling(Scaling.fit);
-
-		ArrayList<Row> list = new ArrayList<Row>();
-		list.add(new Row(1, wood));
-		list.add(new Row(0, woodmill));
-		list.add(new Row(3, stone));
-		list.add(new Row(2, null));
-		list.add(new Row(5, bronze));
-		list.add(new Row(4, null));
-		list.add(new Row(7, iron));
-		list.add(new Row(6, null));
-		list.add(new Row(9, null));//Clay
-		list.add(new Row(8, null));
-		list.add(new Row(11, null));//Brick
-		list.add(new Row(10, null));
-		list.add(new Row(13, null));//Concrete
-		list.add(new Row(12, null));
-		list.add(new Row(15, null));//Steel
-		list.add(new Row(14, null));
-		list.add(new Row(17, null));//Gems
-		list.add(new Row(16, null));
-		list.add(new Row(18, null));//Carbon
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		list.add(1);
+		list.add(0);
+		list.add(3);
+		list.add(2);
+		list.add(5);
+		list.add(4);
+		list.add(7);
+		list.add(6);
+		list.add(9);
+		list.add(8);
+		list.add(11);
+		list.add(10);
+		list.add(13);
+		list.add(12);
+		list.add(15);
+		list.add(14);
+		list.add(17);
+		list.add(16);
+		list.add(18);
 
 		resourcesTable = refreshTableX(Data.getResourcesTable(),"Value", Data.main.isResourcesTableVisible(), list);
 	}
 
 	public void refreshSpecialTable(){
-		sh.setScaling(Scaling.fit);
-		pyr.setScaling(Scaling.fit);
-		wall.setScaling(Scaling.fit);
-
-		ArrayList<Row> list = new ArrayList<Row>();
-		list.add(new Row(0, sh));
-		list.add(new Row(1, pyr));
-		list.add(new Row(2, wall));
-		list.add(new Row(3, null));
-		list.add(new Row(4, null));
-		list.add(new Row(5, null));
-		list.add(new Row(6, null));
-		list.add(new Row(7, null));
-		list.add(new Row(8, null));
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		list.add(0);
+		list.add(1);
+		list.add(2);
+		list.add(3);
+		list.add(4);
+		list.add(5);
+		list.add(6);
+		list.add(7);
+		list.add(8);
 
 		specialTable = refreshTableX(Data.getSpecialTable(),"Clicks", Data.main.isSpecialTableVisible(), list);
 	}
 
-	public ScrollPane refreshTableX(TableInfo info, String secret, boolean isVisible, ArrayList<Row> rowList){
+	public ScrollPane refreshTableX(TableInfo info, String secret, boolean isVisible, ArrayList<Integer> rowList){
 		rows = 4;
 		padding = Gdx.graphics.getHeight()/100;
 		rowHeight = (Gdx.graphics.getHeight())/rows/4; //4 because I want it to cover 1/4 of the screen
@@ -741,9 +662,9 @@ public class UI {
 
 		scrollTable.setSkin(skin);
 		scrollTable.row().height(rowHeight);
-		for(Row row: rowList){
-			if(!row.equals(rowList.get(rowList.size()-1))) addRow(scrollTable, false, smallUnit, largeUnit, info, row.getLine(), row.getImage());
-			else addRow(scrollTable, true, smallUnit, largeUnit, info, row.getLine(), row.getImage());
+		for(Integer i: rowList){
+			if(!i.equals(rowList.get(rowList.size()-1))) addRow(scrollTable, false, smallUnit, largeUnit, info, i, info.getEntries().get(i).getImage());
+			else addRow(scrollTable, true, smallUnit, largeUnit, info, i, info.getEntries().get(i).getImage());
 		}
 
 

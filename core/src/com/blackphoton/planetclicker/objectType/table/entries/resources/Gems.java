@@ -2,6 +2,7 @@ package com.blackphoton.planetclicker.objectType.table.entries.resources;
 
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
+import com.blackphoton.planetclicker.objectType.Resource;
 import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntry;
 
 import java.util.ArrayList;
@@ -9,8 +10,8 @@ import java.util.Random;
 import java.util.ResourceBundle;
 
 public class Gems extends Absolute {
-	public Gems(String name, int value, Era requiredEra, ArrayList<RequiredResource> resourcesNeeded, TableEntry upgradeTo, ResourceBundle resources) {
-		super(name, value, requiredEra, resourcesNeeded, upgradeTo, resources);
+	public Gems(String name, int value, Resource resource, Era requiredEra, ArrayList<RequiredResource> resourcesNeeded, TableEntry upgradeTo, ResourceBundle resources) {
+		super(name, value, resource, requiredEra, resourcesNeeded, upgradeTo, resources);
 		probability.start();
 	}
 

@@ -4,63 +4,45 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.core.Data;
-import com.blackphoton.planetclicker.resources.ResourceMaterial;
 
 public class RequiredResource {
-	ResourceMaterial material;
-	int numberRequired;
+	Resource material;
+	long numberRequired;
 	Image resource;
 	Label resourceNumber;
 
-	public RequiredResource(ResourceMaterial material, int numberRequired) {
+	public RequiredResource(Resource material, long numberRequired) {
 		this.material = material;
 		this.numberRequired = numberRequired;
 		Texture texture = null;
 		long numberOf = 0;
-		switch(material){
-			case WOOD:
-				texture = new Texture("wood.png");
-				numberOf = Data.main.getWoodCount();
-				break;
-			case STONE:
-				texture = new Texture("stone.png");
-				numberOf = Data.main.getStoneCount();
-				break;
-			case BRONZE:
-				texture = new Texture("bronze_bar.png");
-				numberOf = Data.main.getBronzeCount();
-				break;
-			case IRON:
-				texture = new Texture("iron_bar.png");
-				numberOf = Data.main.getIronCount();
-				break;
-			case POPULATION:
-				texture = new Texture("population.png");
-				numberOf = Data.main.getPopulationCount();
-				break;
-		}
+
+		texture = material.getTexture();
+		numberOf = material.getCount();
 		if(texture!=null){
 			resource = new Image(texture);
+			resource.setScaling(Scaling.fit);
 			resource.setWidth(64);
 			resource.setHeight(64);
 		}
-		resourceNumber = new Label(Long.toString(numberOf)+"/"+Integer.toString(numberRequired), Data.ui.getSkin());
+		resourceNumber = new Label(Long.toString(numberOf)+"/"+Long.toString(numberRequired), Data.ui.getSkin());
 	}
 
-	public ResourceMaterial getMaterial() {
+	public Resource getMaterial() {
 		return material;
 	}
 
-	public void setMaterial(ResourceMaterial material) {
+	public void setMaterial(Resource material) {
 		this.material = material;
 	}
 
-	public int getNumberRequired() {
+	public long getNumberRequired() {
 		return numberRequired;
 	}
 
-	public void setNumberRequired(int numberRequired) {
+	public void setNumberRequired(long numberRequired) {
 		this.numberRequired = numberRequired;
 	}
 
@@ -78,23 +60,7 @@ public class RequiredResource {
 
 	public void setResourceNumberText() {
 		long numberOf = 0;
-		switch(material){
-			case WOOD:
-				numberOf = Data.main.getWoodCount();
-				break;
-			case STONE:
-				numberOf = Data.main.getStoneCount();
-				break;
-			case BRONZE:
-				numberOf = Data.main.getBronzeCount();
-				break;
-			case IRON:
-				numberOf = Data.main.getIronCount();
-				break;
-			case POPULATION:
-				numberOf = Data.main.getPopulationCount();
-				break;
-		}
+		numberOf = material.getCount();
 
 		resourceNumber.setText(simplify(numberOf)+"/"+simplify(numberRequired));
 		if(numberOf<numberRequired) resourceNumber.setColor(Color.RED);
@@ -122,4 +88,6 @@ public class RequiredResource {
 	public void setResourceNumberText(String text) {
 		resourceNumber.setText(text);
 	}
+
+
 }

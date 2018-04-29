@@ -9,6 +9,7 @@ import com.blackphoton.planetclicker.file.SavegameFile;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
+import com.blackphoton.planetclicker.objectType.Resource;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
 import com.blackphoton.planetclicker.objectType.table.entries.food.Timeout;
 import com.blackphoton.planetclicker.objectType.table.entries.resources.Absolute;
@@ -18,9 +19,7 @@ import com.blackphoton.planetclicker.objectType.table.entries.resources.Resource
 import com.blackphoton.planetclicker.objectType.table.entries.special.Special_ResourceBundle;
 import com.blackphoton.planetclicker.objectType.table.entries.template.*;
 import com.blackphoton.planetclicker.resources.ResourceType;
-import com.blackphoton.planetclicker.resources.ResourceMaterial;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -70,12 +69,12 @@ public class Mechanics {
 		for(TableEntry entry:Data.getBuildingTable().getEntries()){
 			Data.main.setBuildingCount(Data.main.getBuildingCount()+entry.getNumberOf()*entry.getValue());
 		}
-		int buildingCount = Data.main.getBuildingCount();
+		long buildingCount = Data.main.getBuildingCount();
 		Data.main.setFoodCount(0);
 		for(TableEntry entry:Data.getFoodTable().getEntries()){
 			Data.main.setFoodCount(Data.main.getFoodCount()+entry.getNumberOf()*entry.getValue());
 		}
-		int foodCount = Data.main.getFoodCount();
+		long foodCount = Data.main.getFoodCount();
 
 		Era next = null;
 
@@ -120,6 +119,8 @@ public class Mechanics {
 					}
 				}
 			}
+
+		Data.main.POPULATION.setCount(populationCount);
 	}
 	
 	public void createTables(){
@@ -134,40 +135,40 @@ public class Mechanics {
 		TableInfo buildingInfo = new TableInfo(ResourceType.BUILDINGS);
 
 		ArrayList capitalArray = new ArrayList();
-		bundleResources(capitalArray, 10000, 20000, 5000, 100000, 100, 25000, 25000, 30000, 50, 0);
-		BuildingEntry capital = (BuildingEntry) buildingInfo.addEntry("Capital City", 10000000, Data.getEraList().get(7), null, capitalArray, null, null);
+		bundleResources(capitalArray, 0, 0, 0, 0, 0, 25000, 25000, 30000, 50);
+		BuildingEntry capital = (BuildingEntry) buildingInfo.addEntry("Capital City", 10000000, "capital.png", Data.getEraList().get(7), null, capitalArray, null, null);
 
 		ArrayList cityArray = new ArrayList();
-		bundleResources(cityArray, 5000, 10000, 1000, 1200, 50, 10000, 10000, 10000, 0, 0);
-		BuildingEntry city = (BuildingEntry) buildingInfo.addEntry("City", 5000000, Data.getEraList().get(6), null, cityArray, null, null);
+		bundleResources(cityArray, 0, 0, 0, 1200, 0, 10000, 10000, 10000);
+		BuildingEntry city = (BuildingEntry) buildingInfo.addEntry("City", 5000000, "city.png", Data.getEraList().get(6), null, cityArray, null, null);
 
 		ArrayList townArray = new ArrayList();
-		bundleResources(townArray, 4000, 4000, 100, 100, 100, 1000, 1000, 0, 0, 0);
-		BuildingEntry town = (BuildingEntry) buildingInfo.addEntry("Town", 250000, Data.getEraList().get(5), null, townArray, null, null);
+		bundleResources(townArray, 0, 4000, 0, 100, 0, 1000, 1000);
+		BuildingEntry town = (BuildingEntry) buildingInfo.addEntry("Town", 250000, "town.png", Data.getEraList().get(5), null, townArray, null, null);
 
 		ArrayList villageArray = new ArrayList();
-		bundleResources(villageArray, 1000, 1000, 50, 40, 500, 500, 0, 0, 0, 0);
+		bundleResources(villageArray, 1000, 1000, 0, 40, 0, 500);
 		ArrayList toTownArray = new ArrayList();
-		bundleResources(toTownArray, 3000, 3000, 50, 60, 0, 500, 1000, 0, 0, 0);
-		BuildingEntry village = (BuildingEntry) buildingInfo.addEntry("Village", 20000, Data.getEraList().get(4), town, villageArray, toTownArray, null);
+		bundleResources(toTownArray, 0, 3000, 0, 50, 0, 500, 1000);
+		BuildingEntry village = (BuildingEntry) buildingInfo.addEntry("Village", 20000, "village.png", Data.getEraList().get(4), town, villageArray, toTownArray, null);
 
 		ArrayList hamletArray = new ArrayList();
-		bundleResources(hamletArray, 500, 250, 25, 20, 50, 0, 0, 0, 0, 0);
-		BuildingEntry hamlet = (BuildingEntry) buildingInfo.addEntry("Hamlet", 200, Data.getEraList().get(3), null, hamletArray, null, null);
+		bundleResources(hamletArray, 500, 250, 25, 0, 50);
+		BuildingEntry hamlet = (BuildingEntry) buildingInfo.addEntry("Hamlet", 200, "hamlet.png", Data.getEraList().get(3), null, hamletArray, null, null);
 
 		ArrayList houseArray = new ArrayList();
-		bundleResources(houseArray, 100, 60, 25, 15, 0, 0, 0, 0, 0, 0);
+		bundleResources(houseArray, 100, 60, 25, 15);
 		ArrayList toVillageArray = new ArrayList();
-		bundleResources(toVillageArray, 400, 180, 0, 5, 50, 0, 0, 0, 0, 0);
-		BuildingEntry house = (BuildingEntry) buildingInfo.addEntry("House", 50, Data.getEraList().get(2), village, houseArray, toVillageArray, null);
+		bundleResources(toVillageArray, 400, 180, 0, 5, 50);
+		BuildingEntry house = (BuildingEntry) buildingInfo.addEntry("House", 50, "house.png", Data.getEraList().get(2), village, houseArray, toVillageArray, null);
 
 		ArrayList shackArray = new ArrayList();
-		bundleResources(shackArray, 50, 25, 5, 0, 0, 0, 0, 0, 0, 0);
-		BuildingEntry shack = (BuildingEntry) buildingInfo.addEntry("Shack", 25, Data.getEraList().get(1), null, shackArray, null, null);
+		bundleResources(shackArray, 50, 25, 5);
+		BuildingEntry shack = (BuildingEntry) buildingInfo.addEntry("Shack", 25, "shack.png", Data.getEraList().get(1), null, shackArray, null, null);
 
 		ArrayList caveArray = new ArrayList();
-		bundleResources(caveArray, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-		buildingInfo.addEntry("Cave", 4, Data.getEraList().get(0), null, caveArray, null, null);
+		bundleResources(caveArray, 0, 5);
+		buildingInfo.addEntry("Cave", 4, "cave.png", Data.getEraList().get(0), null, caveArray, null, null);
 
 		return buildingInfo;
 	}
@@ -175,159 +176,129 @@ public class Mechanics {
 		TableInfo foodInfo = new TableInfo(ResourceType.FOOD);
 
 		ArrayList hydroArray = new ArrayList();
-		bundleResources(hydroArray, 0, 0, 0, 0, 0, 1000, 1000, 10000, 100, 0);
-		FoodEntry hydro = (FoodEntry) foodInfo.addEntry("Hydroponics", 100000000, Data.getEraList().get(7), null, hydroArray, null, null);
+		bundleResources(hydroArray, 0, 0, 0, 0, 0, 1000, 1000, 10000, 100);
+		FoodEntry hydro = (FoodEntry) foodInfo.addEntry("Hydroponics", 100000000, "hydroponics.png", Data.getEraList().get(7), null, hydroArray, null, null);
 
 		ArrayList iFarmArray = new ArrayList();
-		bundleResources(iFarmArray, 2500, 1000, 100, 100, 500, 75, 40, 0, 0, 0);
-		FoodEntry iFarm = (FoodEntry) foodInfo.addEntry("Industrial Farm", 25000000, Data.getEraList().get(6), null, iFarmArray, null, null);
+		bundleResources(iFarmArray, 0, 1000, 100, 100, 0, 0, 40);
+		FoodEntry iFarm = (FoodEntry) foodInfo.addEntry("Industrial Farm", 25000000, "industrial_farm.png", Data.getEraList().get(6), null, iFarmArray, null, null);
 
 		ArrayList lFarmArray = new ArrayList();
-		bundleResources(lFarmArray, 1000, 500, 25, 40, 250, 15, 0, 0, 0, 0);
-		FoodEntry lFarm = (FoodEntry) foodInfo.addEntry("Large Farm", 1000000, Data.getEraList().get(5), null, lFarmArray, null, null);
+		bundleResources(lFarmArray, 1000, 500, 0, 40, 250, 15);
+		FoodEntry lFarm = (FoodEntry) foodInfo.addEntry("Large Farm", 1000000, "large_farm.png", Data.getEraList().get(5), null, lFarmArray, null, null);
 
 		ArrayList barnArray = new ArrayList();
-		bundleResources(barnArray, 250, 50, 10, 0, 25, 0, 0, 0, 0, 0);
-		FoodEntry barn = (FoodEntry) foodInfo.addEntry("Barn", 10000, Data.getEraList().get(4), null, barnArray, null, null);
+		bundleResources(barnArray, 250, 50, 10, 0, 25);
+		FoodEntry barn = (FoodEntry) foodInfo.addEntry("Barn", 10000, "barn.png", Data.getEraList().get(4), null, barnArray, null, null);
 
 		ArrayList fishingArray = new ArrayList();
-		bundleResources(fishingArray, 100, 0, 0, 10, 0, 0, 0, 0, 0, 0);
-		FoodEntry fishing = (FoodEntry) foodInfo.addEntry("Fishing", 250, Data.getEraList().get(3), null, fishingArray, null, null);
+		bundleResources(fishingArray, 100, 0, 0, 10);
+		FoodEntry fishing = (FoodEntry) foodInfo.addEntry("Fishing", 250, "fishing.png", Data.getEraList().get(3), null, fishingArray, null, null);
 
 		ArrayList fieldArray = new ArrayList();
-		bundleResources(fieldArray, 50, 5, 0, 0, 0, 0, 0, 0, 0, 0);
+		bundleResources(fieldArray, 50, 5);
 		ArrayList toFieldArray = new ArrayList();
-		bundleResources(toFieldArray, 35, 3, 0, 0, 0, 0, 0, 0, 0, 0);
-		FoodEntry field = (FoodEntry) foodInfo.addEntry("Farm", 100, Data.getEraList().get(2), null, fieldArray, null, null);
+		bundleResources(toFieldArray, 35, 3);
+		FoodEntry field = (FoodEntry) foodInfo.addEntry("Farm", 100, "farm.png", Data.getEraList().get(2), null, fieldArray, null, null);
 
 		ArrayList sfieldArray = new ArrayList();
-		bundleResources(sfieldArray, 15, 1, 0, 0, 0, 0, 0, 0, 0, 0);
-		FoodEntry smallfield = (FoodEntry) foodInfo.addEntry("Small Farm", 20, Data.getEraList().get(1), field, sfieldArray, toFieldArray, null);
+		bundleResources(sfieldArray, 15, 1);
+		FoodEntry smallfield = (FoodEntry) foodInfo.addEntry("Small Farm", 20, "small_farm.png", Data.getEraList().get(1), field, sfieldArray, toFieldArray, null);
 
 
-		foodInfo.addEntry(new Timeout("Hunt Food", 10, Data.getEraList().get(0), smallfield, null, null, 3000)).setUpgradable(false);
+		foodInfo.addEntry(new Timeout("Hunt Food", 10, "hunt.png", Data.getEraList().get(0), smallfield, null, null, 3000)).setUpgradable(false);
 
 		return foodInfo;
 	}
 	private TableInfo createResourcesTable(){
 		TableInfo resourcesInfo = new TableInfo(ResourceType.RESOURCES);
 
-		final TableEntry empty = new ResourcesEntry(null, 0,null,null,null, null);
+		final TableEntry empty = new ResourcesEntry(null, 0, "empty.png",null,null,null, null);
 
 		//Don't need to be further down as don't rely on TableEntry's
-		ResourceBundle woodmill_r = new Resource_ResourceBundle(ResourceMaterial.WOOD, empty);
-		ResourceBundle quarry_r = new Resource_ResourceBundle(ResourceMaterial.STONE, empty);
-		ResourceBundle cast_r = new Resource_ResourceBundle(ResourceMaterial.BRONZE, empty);
-		ResourceBundle forge_r = new Resource_ResourceBundle(ResourceMaterial.IRON, empty);
-		ResourceBundle mould_r = new Resource_ResourceBundle(ResourceMaterial.CLAY, empty);
-		ResourceBundle oven_r = new Resource_ResourceBundle(ResourceMaterial.BRICK, empty);
-		ResourceBundle kiln_r = new Resource_ResourceBundle(ResourceMaterial.CONCRETE, empty);
-		ResourceBundle refine_r = new Resource_ResourceBundle(ResourceMaterial.STEEL, empty);
-		ResourceBundle compress_r = new Resource_ResourceBundle(ResourceMaterial.GEMS, empty);
+		ResourceBundle woodmill_r = new Resource_ResourceBundle(Data.main.WOOD, empty);
+		ResourceBundle quarry_r = new Resource_ResourceBundle(Data.main.STONE, empty);
+		ResourceBundle cast_r = new Resource_ResourceBundle(Data.main.BRONZE, empty);
+		ResourceBundle forge_r = new Resource_ResourceBundle(Data.main.IRON, empty);
+		ResourceBundle mould_r = new Resource_ResourceBundle(Data.main.CLAY, empty);
+		ResourceBundle oven_r = new Resource_ResourceBundle(Data.main.BRICK, empty);
+		ResourceBundle kiln_r = new Resource_ResourceBundle(Data.main.CONCRETE, empty);
+		ResourceBundle refine_r = new Resource_ResourceBundle(Data.main.STEEL, empty);
+		ResourceBundle compress_r = new Resource_ResourceBundle(Data.main.GEMS, empty);
 
 		ArrayList woodmill_l = new ArrayList();
-		woodmill_l.add(new RequiredResource(ResourceMaterial.WOOD, 100));
-		woodmill_l.add(new RequiredResource(ResourceMaterial.STONE, 10));
+		bundleResources(woodmill_l, 100, 10);
 
 		ArrayList quarry_l = new ArrayList();
-		quarry_l.add(new RequiredResource(ResourceMaterial.WOOD, 40));
-		quarry_l.add(new RequiredResource(ResourceMaterial.STONE, 100));
+		bundleResources(quarry_l, 40, 100);
 
 		ArrayList cast_l = new ArrayList();
-		cast_l.add(new RequiredResource(ResourceMaterial.WOOD, 10));
-		cast_l.add(new RequiredResource(ResourceMaterial.STONE, 100));
-		cast_l.add(new RequiredResource(ResourceMaterial.BRONZE, 25));
-		cast_l.add(new RequiredResource(ResourceMaterial.IRON, 5));
+		bundleResources(cast_l, 10, 100, 25, 5);
 
 		ArrayList forge_l = new ArrayList();
-		forge_l.add(new RequiredResource(ResourceMaterial.WOOD, 25));
-		forge_l.add(new RequiredResource(ResourceMaterial.STONE, 150));
-		forge_l.add(new RequiredResource(ResourceMaterial.BRONZE, 75));
-		forge_l.add(new RequiredResource(ResourceMaterial.IRON, 100));
+		bundleResources(forge_l, 25, 150, 75, 100);
 
 		ArrayList mould_l = new ArrayList();
-		mould_l.add(new RequiredResource(ResourceMaterial.WOOD, 5));
-		mould_l.add(new RequiredResource(ResourceMaterial.STONE, 200));
-		mould_l.add(new RequiredResource(ResourceMaterial.BRONZE, 100));
-		mould_l.add(new RequiredResource(ResourceMaterial.IRON, 100));
-		mould_l.add(new RequiredResource(ResourceMaterial.CLAY, 100));
-		mould_l.add(new RequiredResource(ResourceMaterial.BRICK, 25));
+		bundleResources(mould_l, 0, 200, 100, 0, 100, 25);
 
 		ArrayList oven_l = new ArrayList();
-		oven_l.add(new RequiredResource(ResourceMaterial.STONE, 500));
-		oven_l.add(new RequiredResource(ResourceMaterial.BRONZE, 50));
-		oven_l.add(new RequiredResource(ResourceMaterial.IRON, 150));
-		oven_l.add(new RequiredResource(ResourceMaterial.CLAY, 50));
-		oven_l.add(new RequiredResource(ResourceMaterial.BRICK, 125));
-		oven_l.add(new RequiredResource(ResourceMaterial.CONCRETE, 5));
+		bundleResources(oven_l, 0, 500, 0, 150, 0, 125, 50);
 
 		ArrayList kiln_l = new ArrayList();
-		kiln_l.add(new RequiredResource(ResourceMaterial.WOOD, 25));
-		kiln_l.add(new RequiredResource(ResourceMaterial.STONE, 1000));
-		kiln_l.add(new RequiredResource(ResourceMaterial.BRONZE, 250));
-		kiln_l.add(new RequiredResource(ResourceMaterial.IRON, 300));
-		kiln_l.add(new RequiredResource(ResourceMaterial.BRICK, 100));
-		kiln_l.add(new RequiredResource(ResourceMaterial.CONCRETE, 50));
-		kiln_l.add(new RequiredResource(ResourceMaterial.STEEL, 5));
+		bundleResources(kiln_l, 0, 1000, 250, 0, 0, 100, 0, 50);
 
 		ArrayList refine_l = new ArrayList();
-		refine_l.add(new RequiredResource(ResourceMaterial.WOOD, 250));
-		refine_l.add(new RequiredResource(ResourceMaterial.STONE, 400));
-		refine_l.add(new RequiredResource(ResourceMaterial.BRONZE, 600));
-		refine_l.add(new RequiredResource(ResourceMaterial.IRON, 1000));
-		refine_l.add(new RequiredResource(ResourceMaterial.BRICK, 200));
-		refine_l.add(new RequiredResource(ResourceMaterial.CONCRETE, 150));
-		refine_l.add(new RequiredResource(ResourceMaterial.STEEL, 100));
-		refine_l.add(new RequiredResource(ResourceMaterial.GEMS, 1));
+		bundleResources(refine_l, 0, 0, 600, 1000, 0, 0, 100, 10);
 
 		ArrayList compress_l = new ArrayList();
-		refine_l.add(new RequiredResource(ResourceMaterial.BRONZE, 1500));
-		refine_l.add(new RequiredResource(ResourceMaterial.IRON, 500));
-		refine_l.add(new RequiredResource(ResourceMaterial.CONCRETE, 250));
-		refine_l.add(new RequiredResource(ResourceMaterial.STEEL, 1000));
-		refine_l.add(new RequiredResource(ResourceMaterial.GEMS, 10));
+		bundleResources(compress_l, 0, 0, 1500, 0, 0, 0,250, 1000, 10);
 
 		ArrayList clayNeeded = new ArrayList();
-		clayNeeded.add(new RequiredResource(ResourceMaterial.CLAY, 1));
+		clayNeeded.add(new RequiredResource(Data.main.CLAY, 1));
 
-		final TableEntry woodmill = resourcesInfo.addEntry(new Multiplier("Woodmill", 1, Data.getEraList().get(1), woodmill_l, null, woodmill_r));
-		ResourceBundle wood = new Resource_ResourceBundle(ResourceMaterial.WOOD, woodmill);
-		resourcesInfo.addEntry(new Absolute("Gather Wood", 1, Data.getEraList().get(0), null, null, wood));
+		ArrayList ironNeeded = new ArrayList();
+		ironNeeded.add(new RequiredResource(Data.main.IRON, 1));
+
+		final TableEntry woodmill = resourcesInfo.addEntry(new Multiplier("Woodmill", 1, "woodmill.png", Data.getEraList().get(1), woodmill_l, null, woodmill_r));
+		ResourceBundle wood = new Resource_ResourceBundle(Data.main.WOOD, woodmill);
+		resourcesInfo.addEntry(new Absolute("Gather Wood", 1, Data.main.WOOD, Data.getEraList().get(0), null, null, wood));
 		
-		final TableEntry quarry = resourcesInfo.addEntry(new Multiplier("Quarry Stone", 1, Data.getEraList().get(1), quarry_l, null, quarry_r));
-		ResourceBundle stone = new Resource_ResourceBundle(ResourceMaterial.STONE, quarry);
-		resourcesInfo.addEntry(new Absolute("Mine Stone", 1, Data.getEraList().get(0), null, null, stone));
+		final TableEntry quarry = resourcesInfo.addEntry(new Multiplier("Quarry Stone", 1, "quarry.png", Data.getEraList().get(1), quarry_l, null, quarry_r));
+		ResourceBundle stone = new Resource_ResourceBundle(Data.main.STONE, quarry);
+		resourcesInfo.addEntry(new Absolute("Mine Stone", 1, Data.main.STONE, Data.getEraList().get(0), null, null, stone));
 		
-		final TableEntry cast = resourcesInfo.addEntry(new Multiplier("Cast Bronze", 1, Data.getEraList().get(2), cast_l, null, cast_r));
-		ResourceBundle bronze = new Resource_ResourceBundle(ResourceMaterial.BRONZE, cast);
-		resourcesInfo.addEntry(new Absolute("Smelt Bronze", 1, Data.getEraList().get(1), null, null, bronze));
+		final TableEntry cast = resourcesInfo.addEntry(new Multiplier("Cast Bronze", 1, "cast.png", Data.getEraList().get(2), cast_l, null, cast_r));
+		ResourceBundle bronze = new Resource_ResourceBundle(Data.main.BRONZE, cast);
+		resourcesInfo.addEntry(new Absolute("Smelt Bronze", 1, Data.main.BRONZE, Data.getEraList().get(1), null, null, bronze));
 		
-		final TableEntry forge = resourcesInfo.addEntry(new Multiplier("Forge Iron", 1, Data.getEraList().get(3), forge_l, null, forge_r));
-		ResourceBundle iron = new Resource_ResourceBundle(ResourceMaterial.IRON, forge);
-		resourcesInfo.addEntry(new Absolute("Mine Iron", 1, Data.getEraList().get(2), null, null, iron));
+		final TableEntry forge = resourcesInfo.addEntry(new Multiplier("Forge Iron", 1, "forge.png", Data.getEraList().get(3), forge_l, null, forge_r));
+		ResourceBundle iron = new Resource_ResourceBundle(Data.main.IRON, forge);
+		resourcesInfo.addEntry(new Absolute("Mine Iron", 1, Data.main.IRON, Data.getEraList().get(2), null, null, iron));
 
-		final TableEntry mould = resourcesInfo.addEntry(new Multiplier("Mould Clay", 1, Data.getEraList().get(4), mould_l, null, mould_r));
-		ResourceBundle clay = new Resource_ResourceBundle(ResourceMaterial.CLAY, mould);
-		resourcesInfo.addEntry(new Absolute("Collect Clay", 1, Data.getEraList().get(3), null, null, clay));
+		final TableEntry mould = resourcesInfo.addEntry(new Multiplier("Mould Clay", 1, "mould.png", Data.getEraList().get(4), mould_l, null, mould_r));
+		ResourceBundle clay = new Resource_ResourceBundle(Data.main.CLAY, mould);
+		resourcesInfo.addEntry(new Absolute("Collect Clay", 1, Data.main.CLAY, Data.getEraList().get(3), null, null, clay));
 
-		final TableEntry oven = resourcesInfo.addEntry(new Multiplier("Cook Brick", 1, Data.getEraList().get(5), oven_l, null, oven_r));
-		ResourceBundle brick = new Resource_ResourceBundle(ResourceMaterial.BRICK, oven);
-		resourcesInfo.addEntry(new Absolute("Create Brick", 1, Data.getEraList().get(4), clayNeeded, null, brick));
+		final TableEntry oven = resourcesInfo.addEntry(new Multiplier("Cook Brick", 1, "oven.png", Data.getEraList().get(5), oven_l, null, oven_r));
+		ResourceBundle brick = new Resource_ResourceBundle(Data.main.BRICK, oven);
+		resourcesInfo.addEntry(new Absolute("Create Brick", 1, Data.main.BRICK, Data.getEraList().get(4), clayNeeded, null, brick));
 
-		final TableEntry kiln = resourcesInfo.addEntry(new Multiplier("Fire Concrete", 1, Data.getEraList().get(6), kiln_l, null, kiln_r));
-		ResourceBundle concrete = new Resource_ResourceBundle(ResourceMaterial.CONCRETE, kiln);
-		resourcesInfo.addEntry(new Absolute("Mix Concrete", 1, Data.getEraList().get(5), clayNeeded, null, concrete));
+		final TableEntry kiln = resourcesInfo.addEntry(new Multiplier("Fire Concrete", 1, "kiln.png", Data.getEraList().get(6), kiln_l, null, kiln_r));
+		ResourceBundle concrete = new Resource_ResourceBundle(Data.main.CONCRETE, kiln);
+		resourcesInfo.addEntry(new Absolute("Mix Concrete", 1, Data.main.CONCRETE, Data.getEraList().get(5), clayNeeded, null, concrete));
 
-		final TableEntry refine = resourcesInfo.addEntry(new Multiplier("Refine Steel", 1, Data.getEraList().get(7), refine_l, null, refine_r));
-		ResourceBundle steel = new Resource_ResourceBundle(ResourceMaterial.STEEL, refine);
-		resourcesInfo.addEntry(new Absolute("Smelt Steel", 1, Data.getEraList().get(6), null, null, steel));
+		final TableEntry refine = resourcesInfo.addEntry(new Multiplier("Refine Steel", 1, "refine.png", Data.getEraList().get(7), refine_l, null, refine_r));
+		ResourceBundle steel = new Resource_ResourceBundle(Data.main.STEEL, refine);
+		resourcesInfo.addEntry(new Absolute("Smelt Steel", 1, Data.main.STEEL, Data.getEraList().get(6), ironNeeded, null, steel));
 
-		final TableEntry compress = resourcesInfo.addEntry(new Multiplier("Compress Gem",1, Data.getEraList().get(8), compress_l, null, compress_r));
-		ResourceBundle gems = new Resource_ResourceBundle(ResourceMaterial.GEMS, compress);
-		resourcesInfo.addEntry(new Gems("Mine Gems", 1, Data.getEraList().get(7), null, null, gems));
+		final TableEntry compress = resourcesInfo.addEntry(new Multiplier("Compress Gem",1, "compress.png", Data.getEraList().get(8), compress_l, null, compress_r));
+		ResourceBundle gems = new Resource_ResourceBundle(Data.main.GEMS, compress);
+		resourcesInfo.addEntry(new Gems("Mine Gems", 1, Data.main.GEMS, Data.getEraList().get(7), null, null, gems));
 
-		ResourceBundle carbon = new Resource_ResourceBundle(ResourceMaterial.CARBON, empty);
-		resourcesInfo.addEntry(new Absolute("Carbon", 1, Data.getEraList().get(8), null, null, carbon));
+		ResourceBundle carbon = new Resource_ResourceBundle(Data.main.CARBON, empty);
+		resourcesInfo.addEntry(new Absolute("Carbon", 1, Data.main.CARBON, Data.getEraList().get(8), null, null, carbon));
+
+		new Absolute("Population", 1, Data.main.WOOD, Data.getEraList().get(0), null, null, null);
 
 		return resourcesInfo;
 	}
@@ -336,54 +307,81 @@ public class Mechanics {
 
 		ArrayList<RequiredResource> stone = new ArrayList<RequiredResource>();
 		bundleResources(stone, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0);
-		specialInfo.addEntry("Stonehenge", 50, Data.getEraList().get(0), null, stone, null, new Special_ResourceBundle(1));
+		specialInfo.addEntry("Stonehenge", 50, "stonehenge.png", Data.getEraList().get(0), null, stone, null, new Special_ResourceBundle(1));
 
 		ArrayList<RequiredResource> pyram = new ArrayList<RequiredResource>();
 		bundleResources(pyram, 0, 1000, 350, 0, 0, 0, 0, 0, 0, 0);
-		specialInfo.addEntry("Pyramids", 100, Data.getEraList().get(1), null, pyram, null, new Special_ResourceBundle(2));
+		specialInfo.addEntry("Pyramids", 100, "pyramid.png", Data.getEraList().get(1), null, pyram, null, new Special_ResourceBundle(2));
 
 		ArrayList<RequiredResource> wall = new ArrayList<RequiredResource>();
 		bundleResources(wall, 0, 1500, 50, 1000, 0, 0, 0, 0, 0, 0);
-		specialInfo.addEntry("Great Wall", 250, Data.getEraList().get(2), null, wall, null, new Special_ResourceBundle(3));
+		specialInfo.addEntry("Great Wall", 250, "great_wall.png", Data.getEraList().get(2), null, wall, null, new Special_ResourceBundle(3));
 
 		ArrayList<RequiredResource> colosseum = new ArrayList<RequiredResource>();
 		bundleResources(colosseum, 0, 1500, 0, 500, 1000, 0, 0, 0, 0, 0);
-		specialInfo.addEntry("Colosseum", 750, Data.getEraList().get(3), null, colosseum, null, new Special_ResourceBundle(4));
+		specialInfo.addEntry("Colosseum", 750, "colosseum.png", Data.getEraList().get(3), null, colosseum, null, new Special_ResourceBundle(4));
 
 		ArrayList<RequiredResource> pisa = new ArrayList<RequiredResource>();
 		bundleResources(pisa, 0, 200, 0, 1000, 0, 1500, 0, 0, 0, 0);
-		specialInfo.addEntry("Leaning Tower", 1000, Data.getEraList().get(4), null, pisa, null, new Special_ResourceBundle(5));
+		specialInfo.addEntry("Leaning Tower", 1000, "tower_of_pisa.png", Data.getEraList().get(4), null, pisa, null, new Special_ResourceBundle(5));
 
 		ArrayList<RequiredResource> taj = new ArrayList<RequiredResource>();
-		bundleResources(taj, 1000, 500, 500, 0, 0, 0, 1500, 0, 0, 0);
-		specialInfo.addEntry("Taj Mahal", 1200, Data.getEraList().get(5), null, taj, null, new Special_ResourceBundle(6));
+		bundleResources(taj, 0, 500, 500, 0, 0, 0, 1500, 0, 0, 0);
+		specialInfo.addEntry("Taj Mahal", 1200, "taj_mahal.png", Data.getEraList().get(5), null, taj, null, new Special_ResourceBundle(6));
 
 		ArrayList<RequiredResource> eiffel = new ArrayList<RequiredResource>();
 		bundleResources(eiffel, 0, 0, 150, 1000, 0, 0, 0, 2500, 0, 0);
-		specialInfo.addEntry("Eiffel Tower", 1500, Data.getEraList().get(6), null, eiffel, null, new Special_ResourceBundle(7));
+		specialInfo.addEntry("Eiffel Tower", 1500, "eiffel_tower.png", Data.getEraList().get(6), null, eiffel, null, new Special_ResourceBundle(7));
 
 		ArrayList<RequiredResource> liberty = new ArrayList<RequiredResource>();
-		bundleResources(liberty, 0, 2000, 0, 200, 0, 0, 100, 500, 150, 0);
-		specialInfo.addEntry("Statue of Liberty", 2000, Data.getEraList().get(7), null, liberty, null, new Special_ResourceBundle(8));
+		bundleResources(liberty, 0, 0, 0, 0, 0, 0, 1000, 5000, 150, 0);
+		specialInfo.addEntry("Statue of Liberty", 2000, "statue_liberty.png", Data.getEraList().get(7), null, liberty, null, new Special_ResourceBundle(8));
 
 		ArrayList<RequiredResource> space = new ArrayList<RequiredResource>();
-		bundleResources(space, 0, 0, 1000, 0, 1000, 1000, 1000, 2500, 500, 5000);
-		specialInfo.addEntry("Space Island", 2500, Data.getEraList().get(8), null, space, null, new Special_ResourceBundle(9));
+		bundleResources(space, 0, 0, 0, 0, 0, 0, 0, 2500, 500, 5000);
+		specialInfo.addEntry("Space Island", 2500, "space_island.png", Data.getEraList().get(8), null, space, null, new Special_ResourceBundle(9));
 
 		return specialInfo;
 	}
 
+	private void bundleResources(ArrayList array, int wood) {
+		bundleResources(array, wood, 0);
+	}
+	private void bundleResources(ArrayList array, int wood, int stone) {
+		bundleResources(array, wood, stone, 0);
+	}
+	private void bundleResources(ArrayList array, int wood, int stone, int bronze) {
+		bundleResources(array, wood, stone, bronze, 0);
+	}
+	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron) {
+		bundleResources(array, wood, stone, bronze, iron, 0);
+	}
+	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay) {
+		bundleResources(array, wood, stone, bronze, iron, clay, 0);
+	}
+	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay, int brick) {
+		bundleResources(array, wood, stone, bronze, iron, clay, brick, 0);
+	}
+	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete) {
+		bundleResources(array, wood, stone, bronze, iron, clay, brick, concrete, 0);
+	}
+	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete, int steel) {
+		bundleResources(array, wood, stone, bronze, iron, clay, brick, concrete, steel, 0);
+	}
+	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete, int steel, int gems){
+		bundleResources(array, wood, stone, bronze, iron, clay, brick, concrete, steel, gems, 0);
+	}
 	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete, int steel, int gems, int carbon){
-		array.add(new RequiredResource(ResourceMaterial.WOOD, wood));
-		array.add(new RequiredResource(ResourceMaterial.STONE, stone));
-		array.add(new RequiredResource(ResourceMaterial.BRONZE, bronze));
-		array.add(new RequiredResource(ResourceMaterial.IRON, iron));
-		array.add(new RequiredResource(ResourceMaterial.CLAY, clay));
-		array.add(new RequiredResource(ResourceMaterial.BRICK, brick));
-		array.add(new RequiredResource(ResourceMaterial.CONCRETE, concrete));
-		array.add(new RequiredResource(ResourceMaterial.STEEL, steel));
-		array.add(new RequiredResource(ResourceMaterial.GEMS, gems));
-		array.add(new RequiredResource(ResourceMaterial.CARBON, carbon));
+		array.add(new RequiredResource(Data.main.WOOD, wood));
+		array.add(new RequiredResource(Data.main.STONE, stone));
+		array.add(new RequiredResource(Data.main.BRONZE, bronze));
+		array.add(new RequiredResource(Data.main.IRON, iron));
+		array.add(new RequiredResource(Data.main.CLAY, clay));
+		array.add(new RequiredResource(Data.main.BRICK, brick));
+		array.add(new RequiredResource(Data.main.CONCRETE, concrete));
+		array.add(new RequiredResource(Data.main.STEEL, steel));
+		array.add(new RequiredResource(Data.main.GEMS, gems));
+		array.add(new RequiredResource(Data.main.CARBON, carbon));
 	}
 
 	/**
@@ -461,20 +459,7 @@ public class Mechanics {
 		if(resources==null) return true;
 
 		for(RequiredResource resource: resources){
-			switch(resource.getMaterial()){
-				case WOOD:
-					if(Data.main.getWoodCount()<resource.getNumberRequired()) return false;
-					break;
-				case STONE:
-					if(Data.main.getStoneCount()<resource.getNumberRequired()) return false;
-					break;
-				case IRON:
-					if(Data.main.getIronCount()<resource.getNumberRequired()) return false;
-					break;
-				case BRONZE:
-					if(Data.main.getBronzeCount()<resource.getNumberRequired()) return false;
-					break;
-			}
+			if(resource.getMaterial().getCount()<resource.getNumberRequired()) return false;
 		}
 		return true;
 	}
@@ -483,20 +468,7 @@ public class Mechanics {
 		if(resources==null) return;
 
 		for(RequiredResource resource: resources){
-			switch(resource.getMaterial()){
-				case WOOD:
-					Data.main.setWoodCount(Data.main.getWoodCount()-resource.getNumberRequired());
-					break;
-				case STONE:
-					Data.main.setStoneCount(Data.main.getStoneCount()-resource.getNumberRequired());
-					break;
-				case IRON:
-					Data.main.setIronCount(Data.main.getIronCount()-resource.getNumberRequired());
-					break;
-				case BRONZE:
-					Data.main.setBronzeCount(Data.main.getBronzeCount()-resource.getNumberRequired());
-					break;
-			}
+			resource.getMaterial().addCount(-resource.getNumberRequired());
 		}
 	}
 
@@ -550,21 +522,8 @@ public class Mechanics {
 		);
 	}
 
-	public void addResource(ResourceMaterial material, int amount){
-		switch(material){
-			case WOOD:
-				Data.main.addWoodCount(amount);
-				break;
-			case STONE:
-				Data.main.addStoneCount(amount);
-				break;
-			case IRON:
-				Data.main.addIronCount(amount);
-				break;
-			case BRONZE:
-				Data.main.addBronzeCount(amount);
-				break;
-		}
+	public void addResource(Resource material, long amount){
+		material.addCount(amount);
 	}
 
 	public void removeEntryAndUnclick(){

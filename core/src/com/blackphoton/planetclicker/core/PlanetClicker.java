@@ -1,23 +1,19 @@
 package com.blackphoton.planetclicker.core;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.blackphoton.planetclicker.objectType.Planet;
+import com.blackphoton.planetclicker.objectType.Resource;
 import com.blackphoton.planetclicker.resources.ResourceType;
 
 public class PlanetClicker extends ApplicationAdapter{
 	private SpriteBatch batch;
 	private Stage stage;
-	private int buildingCount;
-	private int foodCount;
-	private int woodCount;
-	private int stoneCount;
-	private int bronzeCount;
-	private int ironCount;
+	private long buildingCount;
+	private long foodCount;
 	private long populationCount;
 	private Planet planet;
 	private boolean buildingTableVisible = false;
@@ -30,19 +26,38 @@ public class PlanetClicker extends ApplicationAdapter{
 	private Planet[] planets;
 	private Planet currentPlanet;
 
+	public Resource WOOD;
+	public Resource STONE;
+	public Resource BRONZE;
+	public Resource IRON;
+	public Resource CLAY;
+	public Resource BRICK;
+	public Resource CONCRETE;
+	public Resource STEEL;
+	public Resource GEMS;
+	public Resource CARBON;
+	public Resource POPULATION;
+
 	@Override
 	public void create() {
-		Gdx.app.setLogLevel(Application.LOG_INFO);
+		WOOD = new Resource("wood.png");
+		STONE = new Resource("stone.png");
+		BRONZE = new Resource("bronze_bar.png");
+		IRON = new Resource("iron_bar.png");
+		CLAY = new Resource("clay.png");
+		BRICK = new Resource("brick.png");
+		CONCRETE = new Resource("concrete.png");
+		STEEL = new Resource("steel.png");
+		GEMS = new Resource("gems.png");
+		CARBON = new Resource("carbon.png");
+		POPULATION = new Resource("population.png");
+		POPULATION.addCount(2);
 
 		Data.setData(this);
 		Data.mechanics.createTables();
 
 		buildingCount = 0;
 		foodCount = 0;
-		woodCount = 0;
-		stoneCount = 0;
-		bronzeCount = 0;
-		ironCount = 0;
 		populationCount = 2;
 
 		tex_earth = new Texture("earth.png");
@@ -99,52 +114,20 @@ public class PlanetClicker extends ApplicationAdapter{
 
 	//Getters and Setters
 
-	public int getBuildingCount() {
+	public long getBuildingCount() {
 		return buildingCount;
 	}
 
-	public void setBuildingCount(int buildingCount) {
+	public void setBuildingCount(long buildingCount) {
 		this.buildingCount = buildingCount;
 	}
 
-	public int getFoodCount() {
+	public long getFoodCount() {
 		return foodCount;
 	}
 
-	public void setFoodCount(int foodCount) {
+	public void setFoodCount(long foodCount) {
 		this.foodCount = foodCount;
-	}
-
-	public int getWoodCount() {
-		return woodCount;
-	}
-
-	public void setWoodCount(int woodCount) {
-		this.woodCount = woodCount;
-	}
-
-	public int getStoneCount() {
-		return stoneCount;
-	}
-
-	public void setStoneCount(int stoneCount) {
-		this.stoneCount = stoneCount;
-	}
-
-	public int getBronzeCount() {
-		return bronzeCount;
-	}
-
-	public void setBronzeCount(int bronzeCount) {
-		this.bronzeCount = bronzeCount;
-	}
-
-	public int getIronCount() {
-		return ironCount;
-	}
-
-	public void setIronCount(int ironCount) {
-		this.ironCount = ironCount;
 	}
 
 	public void addBuildingCount(int buildingCount) {
@@ -153,22 +136,6 @@ public class PlanetClicker extends ApplicationAdapter{
 
 	public void addFoodCount(int foodCount) {
 		this.foodCount += foodCount;
-	}
-
-	public void addWoodCount(int woodCount) {
-		this.woodCount += woodCount;
-	}
-
-	public void addStoneCount(int stoneCount) {
-		this.stoneCount += stoneCount;
-	}
-
-	public void addBronzeCount(int bronzeCount) {
-		this.bronzeCount += bronzeCount;
-	}
-
-	public void addIronCount(int ironCount) {
-		this.ironCount += ironCount;
 	}
 
 	public long getPopulationCount() {
@@ -259,22 +226,3 @@ public class PlanetClicker extends ApplicationAdapter{
 		return batch;
 	}
 }
-
-
-/*  ----- Template - These take way to long manually -----
-			switch(material){
-				case WOOD:
-
-					break;
-				case STONE:
-
-					break;
-				case IRON:
-
-					break;
-				case BRONZE:
-
-					break;
-			}
-
- */

@@ -26,20 +26,20 @@ public class TableInfo {
 		return entry;
 	}
 
-	public TableEntry addEntry(String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, ResourceBundle resources) {
+	public TableEntry addEntry(String name, int value, String location, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, ResourceBundle resources) {
 		TableEntry entry = null;
 		switch (type) {
 			case BUILDINGS:
-				entry = new BuildingEntry(name, value, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
+				entry = new BuildingEntry(name, value, location, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
 				break;
 			case FOOD:
-				entry = new FoodEntry(name, value, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
+				entry = new FoodEntry(name, value, location, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, resources);
 				break;
 			case RESOURCES:
-				entry = new ResourcesEntry(name, value, requiredEra, resourcesNeeded, upgradeTo, resources);
+				entry = new ResourcesEntry(name, value, location, requiredEra, resourcesNeeded, upgradeTo, resources);
 				break;
 			case SPECIAL:
-				entry = new SpecialEntry(name, value, requiredEra, upgradeTo, resourcesNeeded, resources);
+				entry = new SpecialEntry(name, value, location, requiredEra, upgradeTo, resourcesNeeded, resources);
 				break;
 			default: return null;
 		}

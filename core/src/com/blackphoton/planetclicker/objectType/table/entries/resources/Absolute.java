@@ -1,19 +1,25 @@
 package com.blackphoton.planetclicker.objectType.table.entries.resources;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.core.Data;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
+import com.blackphoton.planetclicker.objectType.Resource;
 import com.blackphoton.planetclicker.objectType.table.entries.template.ResourcesEntry;
 import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntry;
-import com.blackphoton.planetclicker.resources.ResourceType;
 
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class Absolute extends ResourcesEntry{
-	public Absolute(String name, int value, Era requiredEra, ArrayList<RequiredResource> resourcesNeeded, TableEntry upgradeTo, ResourceBundle resources) {
-		super(name, value, requiredEra, resourcesNeeded, upgradeTo, resources);
+	public Absolute(String name, int value, Resource resource, Era requiredEra, ArrayList<RequiredResource> resourcesNeeded, TableEntry upgradeTo, ResourceBundle resources) {
+		super(name, value, "empty.png", requiredEra, resourcesNeeded, upgradeTo, resources);
 		absolute.start();
+		setTexture(resource.getTexture());
+		setImage(new Image(texture));
+		image.setScaling(Scaling.fit);
+		material = resource;
 	}
 
 	public Thread absolute = new Thread() {
@@ -25,24 +31,8 @@ public class Absolute extends ResourcesEntry{
 				}
 
 				try {
-					switch (material) {
-						case WOOD:
-							if (Data.main.getWoodCount() != numberOf)
-								numberOf = Data.main.getWoodCount();
-							break;
-						case STONE:
-							if (Data.main.getStoneCount() != numberOf)
-								numberOf = Data.main.getStoneCount();
-							break;
-						case IRON:
-							if (Data.main.getIronCount() != numberOf)
-								numberOf = Data.main.getIronCount();
-							break;
-						case BRONZE:
-							if (Data.main.getBronzeCount() != numberOf)
-								numberOf = Data.main.getBronzeCount();
-							break;
-					}
+					if(material.getCount() != numberOf)
+						numberOf = material.getCount();
 					sleep(10);
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
@@ -59,6 +49,6 @@ public class Absolute extends ResourcesEntry{
 
 	@Override
 	public void setValueLabelText() {
-		this.valueLabel.setText(Integer.toString(value));
+		this.valueLabel.setText(Long.toString(value));
 	}
 }

@@ -19,8 +19,8 @@ import java.util.ResourceBundle;
 public abstract class TableEntry {
 	protected ResourceType type;
 	protected String name;
-	protected int value;
-	protected int numberOf;
+	protected long value;
+	protected long numberOf;
 	protected ResourceBundle resources;
 	protected Era requiredEra;
 	final protected Texture create_tex = new Texture("create.png");
@@ -41,8 +41,10 @@ public abstract class TableEntry {
 	protected ArrayList<RequiredResource> resourcesNeededToUpgrade;
 	protected Label numberLabel;
 	protected Label valueLabel;
+	protected Texture texture;
+	protected Image image;
 
-	public TableEntry(ResourceType type, String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, ResourceBundle resources){
+	public TableEntry(ResourceType type, String name, int value, String location, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, ResourceBundle resources){
 		this.type = type;
 		numberOf = 0;
 		this.resources = resources;
@@ -52,6 +54,9 @@ public abstract class TableEntry {
 		this.value = value;
 		this.resourcesNeeded = resourcesNeeded;
 		this.resourcesNeededToUpgrade = resourcesNeededToUpgrade;
+		texture = new Texture(location);
+		image = new Image(texture);
+		image.setScaling(Scaling.fit);
 
 		create = new Image(create_tex);
 		create.setScaling(Scaling.fit);
@@ -60,7 +65,7 @@ public abstract class TableEntry {
 		upgrade.setScaling(Scaling.fit);
 		upgrade.addListener(new upgradeListener());
 
-		numberLabel = new Label(Integer.toString(numberOf), Data.ui.getSkin());
+		numberLabel = new Label(Long.toString(numberOf), Data.ui.getSkin());
 		valueLabel = new Label(Integer.toString(value), Data.ui.getSkin());
 
 		updateButtons();
@@ -188,19 +193,19 @@ public abstract class TableEntry {
 		this.name = name;
 	}
 
-	public int getValue() {
+	public long getValue() {
 		return value;
 	}
 
-	public void setValue(int value) {
+	public void setValue(long value) {
 		this.value = value;
 	}
 
-	public int getNumberOf() {
+	public long getNumberOf() {
 		return numberOf;
 	}
 
-	public void setNumberOf(int numberOf) {
+	public void setNumberOf(long numberOf) {
 		this.numberOf = numberOf;
 	}
 
@@ -289,7 +294,7 @@ public abstract class TableEntry {
 	}
 
 	public void setNumberLabelText() {
-		this.numberLabel.setText(Integer.toString(numberOf));
+		this.numberLabel.setText(Long.toString(numberOf));
 	}
 
 	public void setNumberLabelText(String text) {
@@ -301,10 +306,26 @@ public abstract class TableEntry {
 	}
 
 	public void setValueLabelText() {
-		this.valueLabel.setText(Integer.toString(value));
+		this.valueLabel.setText(Long.toString(value));
 	}
 
 	public void setValueLabelText(String text) {
 		this.valueLabel.setText(text);
+	}
+
+	public Texture getTexture() {
+		return texture;
+	}
+
+	public void setTexture(Texture texture) {
+		this.texture = texture;
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
 	}
 }

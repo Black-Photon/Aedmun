@@ -4,7 +4,6 @@ import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.objectType.table.entries.template.ResourcesEntry;
 import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntry;
-import com.blackphoton.planetclicker.resources.ResourceType;
 
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -12,8 +11,8 @@ import java.util.ResourceBundle;
 public class Multiplier extends ResourcesEntry{
 	final ArrayList<RequiredResource> initialCost = new ArrayList<RequiredResource>();
 
-	public Multiplier(String name, int value, Era requiredEra, ArrayList<RequiredResource> resourcesNeeded, TableEntry upgradeTo, ResourceBundle resources) {
-		super(name, value, requiredEra, resourcesNeeded, upgradeTo, resources);
+	public Multiplier(String name, int value, String location, Era requiredEra, ArrayList<RequiredResource> resourcesNeeded, TableEntry upgradeTo, ResourceBundle resources) {
+		super(name, value, location, requiredEra, resourcesNeeded, upgradeTo, resources);
 		if(getResourcesNeeded()!=null) {
 			for (int i = 0; i < getResourcesNeeded().size(); i++)
 				initialCost.add(new RequiredResource(getResourcesNeeded().get(i).getMaterial(), getResourcesNeeded().get(i).getNumberRequired()));
@@ -40,6 +39,6 @@ public class Multiplier extends ResourcesEntry{
 
 	@Override
 	public void setValueLabelText() {
-		this.valueLabel.setText("x"+Integer.toString(numberOf+1));
+		this.valueLabel.setText("x"+Long.toString(numberOf+1));
 	}
 }

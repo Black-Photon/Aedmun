@@ -10,8 +10,8 @@ import com.blackphoton.planetclicker.resources.ResourceType;
 import java.util.ArrayList;
 
 public class Timeout extends FoodEntry{
-	public Timeout(String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, final int timeLimit) {
-		super(name, value, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, null);
+	public Timeout(String name, int value, String location, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, final int timeLimit) {
+		super(name, value, location, requiredEra, upgradeTo, resourcesNeeded, resourcesNeededToUpgrade, null);
 		new Thread(){
 			@Override
 			public void run(){

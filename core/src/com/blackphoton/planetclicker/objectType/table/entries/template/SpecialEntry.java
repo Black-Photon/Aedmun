@@ -5,10 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.blackphoton.planetclicker.core.Data;
-import com.blackphoton.planetclicker.core.Mechanics;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
-import com.blackphoton.planetclicker.resources.ResourceMaterial;
 import com.blackphoton.planetclicker.resources.ResourceType;
 
 import java.util.ArrayList;
@@ -20,12 +18,12 @@ public class SpecialEntry extends TableEntry {
 
 	private boolean complete;
 
-	public SpecialEntry(String name, int value, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ResourceBundle resources) {
-		super(ResourceType.SPECIAL, name, value, requiredEra, upgradeTo,resourcesNeeded, null, resources);
+	public SpecialEntry(String name, int value, String location, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ResourceBundle resources) {
+		super(ResourceType.SPECIAL, name, value, location, requiredEra, upgradeTo,resourcesNeeded, null, resources);
 
 		int pop_req = (Integer) resources.getObject(resources.getKeys().nextElement());
 
-		this.resourcesNeeded.add(new RequiredResource(ResourceMaterial.POPULATION, pop_req));
+		this.resourcesNeeded.add(new RequiredResource(Data.main.POPULATION, pop_req));
 		setNumberLabelText();
 	}
 
