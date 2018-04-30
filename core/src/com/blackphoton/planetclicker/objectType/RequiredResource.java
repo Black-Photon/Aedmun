@@ -70,15 +70,15 @@ public class RequiredResource {
 	private String simplify(long i){
 		StringBuilder numberOfS = new StringBuilder("");
 		if(i>=1000000000){
-			numberOfS.append(Math.round((double) i/100000000d)/10);
+			numberOfS.append((double)Math.round((double) i/100000000d)/10d);
 			numberOfS.append("b");
 		}else
 		if(i>=1000000){
-			numberOfS.append(Math.round((double) i/100000d)/10);
+			numberOfS.append((double)Math.round((double) i/100000d)/10d);
 			numberOfS.append("m");
 		}else
 		if(i>=1000){
-			numberOfS.append(Math.round((double) i/100d)/10);
+			numberOfS.append((double)Math.round((double) i/100d)/10d);
 			numberOfS.append("k");
 		}
 		else numberOfS.append(i);
