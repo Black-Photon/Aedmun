@@ -51,7 +51,7 @@ public class Settings extends DisplayBox{
 
 		settingsGroup.setVisible(false);
 
-		aboutInfo = new Info("About", "Aedmun Version 0.2.1\nCreated by Black-Photon\nSoftware and Art Copyrighted to Joseph Keane April 2018\nDistributed under Apache Licence", settingsGroup);
+		aboutInfo = new Info("About", "Aedmun Version 0.3.0\nCreated by Black-Photon\nSoftware and Art Copyrighted to Joseph Keane April 2018\nDistributed under Apache Licence", settingsGroup);
 		resetConfirm = new ConfirmBox("Reset Data?", "The data will be lost forever, so be sure!", settingsGroup, new ClickListener(){
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
