@@ -3,7 +3,6 @@ package com.blackphoton.planetclicker.core;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.blackphoton.planetclicker.file.SavegameFile;
 import com.blackphoton.planetclicker.objectType.Era;
@@ -25,21 +24,27 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Class for game mechanics
+ */
 public class Mechanics {
-
-	private Era thisEra;
 	private Random random;
+	/**
+	 * Percentage of original size to shrink to when clicked
+	 */
 	private final float clickMultiplier = 0.95f;
-	private int numberOfIRThreads = 0;
+	/**
+	 * The Savegame object. Use to write/read to/from the main savegame
+	 */
 	private final SavegameFile file = new SavegameFile();
 
-	public void create(){
-		thisEra = Data.getEraList().get(0);
+	void create(){
 		random = new Random();
 
-
+		//Reads the savefile
 		file.readGame();
 
+		//Saves the game every 1 second
 		new Thread(){
 			@Override
 			public void run() {
@@ -54,6 +59,7 @@ public class Mechanics {
 			}
 		}.start();
 
+		//Let's you finish any special buildings that have had the initial resource cost covered (from savefiles)
 		for(TableEntry entry: Data.getSpecialTable().getEntries()){
 			if(entry.getNumberOf()>0) {
 				((SpecialEntry) entry).setCanBuild(true);
@@ -61,9 +67,8 @@ public class Mechanics {
 			}
 		}
 	}
-	public void update(){
-		thisEra = Data.getCurrentEra();
-
+	void update(){
+		//Calculated how much population can be supported by food and buildings by multiplying each entry by their value
 		long populationCount = Data.main.getPopulationCount();
 		Data.main.setBuildingCount(0);
 		for(TableEntry entry:Data.getBuildingTable().getEntries()){
@@ -76,54 +81,78 @@ public class Mechanics {
 		}
 		long foodCount = Data.main.getFoodCount();
 
+		//Algorithm for getting the next era (the one after the current one)
 		Era next = null;
-
 		boolean found = false;
 		for(Era era: Data.getEraList()){
 			if(found){
 				next = era;
 				break;
 			}
-			if(era.equals(thisEra)){
+			if(era.equals(Data.getCurrentEra())){
 				found = true;
 			}
 		}
+		if(next==null) throw new NullPointerException("Could not find the next era");
 
+		//Population should never go below 2
 		if(populationCount<2) Data.main.setPopulationCount(2);
+		populationCount = Data.main.getPopulationCount();
 
+		//Stops you getting too high a population before the era increments
 		if(populationCount>next.getPop_req()) Data.main.setPopulationCount(next.getPop_req());
+		populationCount = Data.main.getPopulationCount();
 
-		if(populationCount<next.getPop_req()) {
-			if (buildingCount > populationCount && foodCount > populationCount)
+		//Increases the population when you have enough food and buildings for more
+		if(populationCount<next.getPop_req())
+			if (buildingCount > populationCount && foodCount > populationCount) {
 				if (populationCount > 1000) {
 					int randomInt = (int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500);
 					Data.main.setPopulationCount(populationCount + randomInt);
+					populationCount = Data.main.getPopulationCount();
 				} else {
 					for (int i = 1; i < populationCount; i++) {
 						int randomInt = random.nextInt(1000);
 						if (randomInt == 42) {
 							Data.main.setPopulationCount(populationCount + 1);
+							populationCount = Data.main.getPopulationCount();
 						}
 					}
 				}
-		}
-		if ((buildingCount < populationCount || foodCount < populationCount) && populationCount > 2)
+				//If the procedure of increasing the population increases it to a point that it will need to decrease again next, make it the maximum possible.
+				//Eg. Population 9980, can support population 9990. Process of increasing population normally makes it become 10056 by chance (see ThreadLocalRandom.current().nextGaussian()).
+				//This makes it become 9990 exactly, so it doesn't go too high and instantly need to decrease towards 9990 again.
+				if (buildingCount < populationCount && foodCount < populationCount) Data.main.setPopulationCount(buildingCount<foodCount ? buildingCount:foodCount);
+			}
+
+		//Increases the population when you don't have enough food and buildings for your current population
+		if ((buildingCount < populationCount || foodCount < populationCount) && populationCount > 2) {
 			if (populationCount > 1000) {
 				int randomInt = (int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500);
 				Data.main.setPopulationCount(populationCount - randomInt);
+				populationCount = Data.main.getPopulationCount();
 			} else {
 				for (int i = 1; i < populationCount; i++) {
 					int randomInt = random.nextInt(1000);
 					if (randomInt == 888) {
 						Data.main.setPopulationCount(populationCount - 1);
+						populationCount = Data.main.getPopulationCount();
 					}
 				}
 			}
+			//If the procedure of decreasing the population decreases it to a point that it will need to increase again next, make it the maximum possible.
+			//Eg. Population 10000, can support population 9990. Process of decreasing population normally makes it become 9886 by chance (see ThreadLocalRandom.current().nextGaussian()).
+			//This makes it become 9990 exactly, so it doesn't go too low and instantly need to increase towards 9990 again.
+			if (buildingCount > populationCount && foodCount > populationCount) Data.main.setPopulationCount(buildingCount<foodCount ? buildingCount:foodCount);
+		}
 
 		Data.main.POPULATION.setCount(populationCount);
 	}
-	
-	public void createTables(){
+
+	/**
+	 * Creates data for all the 4 tables
+	 */
+	void createTables(){
 		Data.setTableInfo(
 			createBuildingsTable(),
 			createFoodTable(),
@@ -134,47 +163,47 @@ public class Mechanics {
 	private TableInfo createBuildingsTable(){
 		TableInfo buildingInfo = new TableInfo(ResourceType.BUILDINGS);
 
-		ArrayList capitalArray = new ArrayList();
+		ArrayList<RequiredResource> capitalArray = new ArrayList<RequiredResource>();
 		bundleResources(capitalArray, 0, 0, 0, 0, 0, 25000, 25000, 30000, 50);
 		BuildingEntry capital = (BuildingEntry) buildingInfo.addEntry("Capital City", 10000000, "capital.png", Data.getEraList().get(7), null, capitalArray, null, null);
 
-		ArrayList cityArray = new ArrayList();
+		ArrayList<RequiredResource> cityArray = new ArrayList<RequiredResource>();
 		bundleResources(cityArray, 0, 0, 0, 12000, 0, 10000, 10000, 10000);
-		ArrayList toCapitalArray = new ArrayList();
+		ArrayList<RequiredResource> toCapitalArray = new ArrayList<RequiredResource>();
 		bundleResources(toCapitalArray, 0, 0, 0, 0, 0, 15000, 15000, 20000, 50);
 		BuildingEntry city = (BuildingEntry) buildingInfo.addEntry("City", 5000000, "city.png", Data.getEraList().get(6), capital, cityArray, toCapitalArray, null);
 
-		ArrayList townArray = new ArrayList();
+		ArrayList<RequiredResource> townArray = new ArrayList<RequiredResource>();
 		bundleResources(townArray, 0, 4000, 0, 1000, 0, 1000, 1000);
-		ArrayList toCityArray = new ArrayList();
+		ArrayList<RequiredResource> toCityArray = new ArrayList<RequiredResource>();
 		bundleResources(toCityArray, 0, 0, 0, 10000, 0, 10000, 10000, 10000);
 		BuildingEntry town = (BuildingEntry) buildingInfo.addEntry("Town", 250000, "town.png", Data.getEraList().get(5), city, townArray, toCityArray, null);
 
-		ArrayList villageArray = new ArrayList();
+		ArrayList<RequiredResource> villageArray = new ArrayList<RequiredResource>();
 		bundleResources(villageArray, 1000, 1000, 0, 400, 0, 500);
-		ArrayList toTownArray = new ArrayList();
+		ArrayList<RequiredResource> toTownArray = new ArrayList<RequiredResource>();
 		bundleResources(toTownArray, 0, 3000, 0, 250, 0, 500, 1000);
 		BuildingEntry village = (BuildingEntry) buildingInfo.addEntry("Village", 20000, "village.png", Data.getEraList().get(4), town, villageArray, toTownArray, null);
 
-		ArrayList hamletArray = new ArrayList();
+		ArrayList<RequiredResource> hamletArray = new ArrayList<RequiredResource>();
 		bundleResources(hamletArray, 400, 250, 25, 0, 50);
-		ArrayList toVillageArray = new ArrayList();
+		ArrayList<RequiredResource> toVillageArray = new ArrayList<RequiredResource>();
 		bundleResources(toVillageArray, 500, 750, 0, 20, 0, 500);
 		BuildingEntry hamlet = (BuildingEntry) buildingInfo.addEntry("Hamlet", 200, "hamlet.png", Data.getEraList().get(3), village, hamletArray, toVillageArray, null);
 
-		ArrayList houseArray = new ArrayList();
+		ArrayList<RequiredResource> houseArray = new ArrayList<RequiredResource>();
 		bundleResources(houseArray, 80, 40, 10, 15);
-		ArrayList toHamletArray = new ArrayList();
+		ArrayList<RequiredResource> toHamletArray = new ArrayList<RequiredResource>();
 		bundleResources(toHamletArray, 300, 200, 15, 0, 50);
 		BuildingEntry house = (BuildingEntry) buildingInfo.addEntry("House", 50, "house.png", Data.getEraList().get(2), hamlet, houseArray, toHamletArray, null);
 
-		ArrayList shackArray = new ArrayList();
+		ArrayList<RequiredResource> shackArray = new ArrayList<RequiredResource>();
 		bundleResources(shackArray, 50, 25, 5);
-		ArrayList toHouseArray = new ArrayList();
+		ArrayList<RequiredResource> toHouseArray = new ArrayList<RequiredResource>();
 		bundleResources(toHouseArray, 25, 10,  5, 15);
 		buildingInfo.addEntry("Shack", 25, "shack.png", Data.getEraList().get(1), house, shackArray, toHouseArray, null);
 
-		ArrayList caveArray = new ArrayList();
+		ArrayList<RequiredResource> caveArray = new ArrayList<RequiredResource>();
 		bundleResources(caveArray, 0, 5);
 		buildingInfo.addEntry("Cave", 4, "cave.png", Data.getEraList().get(0), null, caveArray, null, null);
 
@@ -183,37 +212,37 @@ public class Mechanics {
 	private TableInfo createFoodTable(){
 		TableInfo foodInfo = new TableInfo(ResourceType.FOOD);
 
-		ArrayList hydroArray = new ArrayList();
+		ArrayList<RequiredResource> hydroArray = new ArrayList<RequiredResource>();
 		bundleResources(hydroArray, 0, 0, 0, 0, 0, 1000, 1000, 10000, 100);
-		FoodEntry hydro = (FoodEntry) foodInfo.addEntry("Hydroponics", 100000000, "hydroponics.png", Data.getEraList().get(7), null, hydroArray, null, null);
+		foodInfo.addEntry("Hydroponics", 100000000, "hydroponics.png", Data.getEraList().get(7), null, hydroArray, null, null);
 
-		ArrayList iFarmArray = new ArrayList();
+		ArrayList<RequiredResource> iFarmArray = new ArrayList<RequiredResource>();
 		bundleResources(iFarmArray, 0, 1000, 100, 100, 0, 0, 40);
 		FoodEntry iFarm = (FoodEntry) foodInfo.addEntry("Industrial Farm", 25000000, "industrial_farm.png", Data.getEraList().get(6), null, iFarmArray, null, null);
 
-		ArrayList lFarmArray = new ArrayList();
+		ArrayList<RequiredResource> lFarmArray = new ArrayList<RequiredResource>();
 		bundleResources(lFarmArray, 1000, 500, 0, 0, 250, 15);
-		ArrayList toIFarmArray = new ArrayList();
+		ArrayList<RequiredResource> toIFarmArray = new ArrayList<RequiredResource>();
 		bundleResources(toIFarmArray, 0, 500, 75, 75, 0, 0, 40);
 		FoodEntry lFarm = (FoodEntry) foodInfo.addEntry("Large Farm", 1000000, "large_farm.png", Data.getEraList().get(5), iFarm, lFarmArray, toIFarmArray, null);
 
-		ArrayList barnArray = new ArrayList();
+		ArrayList<RequiredResource> barnArray = new ArrayList<RequiredResource>();
 		bundleResources(barnArray, 250, 50, 10, 0, 25);
-		FoodEntry barn = (FoodEntry) foodInfo.addEntry("Barn", 10000, "barn.png", Data.getEraList().get(4), null, barnArray, null, null);
+		foodInfo.addEntry("Barn", 10000, "barn.png", Data.getEraList().get(4), null, barnArray, null, null);
 
-		ArrayList fishingArray = new ArrayList();
+		ArrayList<RequiredResource> fishingArray = new ArrayList<RequiredResource>();
 		bundleResources(fishingArray, 100, 0, 0, 10);
-		FoodEntry fishing = (FoodEntry) foodInfo.addEntry("Fishing", 250, "fishing.png", Data.getEraList().get(3), null, fishingArray, null, null);
+		foodInfo.addEntry("Fishing", 250, "fishing.png", Data.getEraList().get(3), null, fishingArray, null, null);
 
-		ArrayList fieldArray = new ArrayList();
+		ArrayList<RequiredResource> fieldArray = new ArrayList<RequiredResource>();
 		bundleResources(fieldArray, 50, 5);
-		ArrayList toLFarmArray = new ArrayList();
+		ArrayList<RequiredResource> toLFarmArray = new ArrayList<RequiredResource>();
 		bundleResources(toLFarmArray, 950, 500, 0, 0, 240, 15);
 		FoodEntry field = (FoodEntry) foodInfo.addEntry("Farm", 100, "farm.png", Data.getEraList().get(2), lFarm, fieldArray, toLFarmArray, null);
 
-		ArrayList sfieldArray = new ArrayList();
+		ArrayList<RequiredResource> sfieldArray = new ArrayList<RequiredResource>();
 		bundleResources(sfieldArray, 15, 1);
-		ArrayList toFieldArray = new ArrayList();
+		ArrayList<RequiredResource> toFieldArray = new ArrayList<RequiredResource>();
 		bundleResources(toFieldArray, 35, 3);
 		FoodEntry smallfield = (FoodEntry) foodInfo.addEntry("Small Farm", 20, "small_farm.png", Data.getEraList().get(1), field, sfieldArray, toFieldArray, null);
 
@@ -238,37 +267,37 @@ public class Mechanics {
 		ResourceBundle refine_r = new Resource_ResourceBundle(Data.main.STEEL, empty);
 		ResourceBundle compress_r = new Resource_ResourceBundle(Data.main.GEMS, empty);
 
-		ArrayList woodmill_l = new ArrayList();
+		ArrayList<RequiredResource> woodmill_l = new ArrayList<RequiredResource>();
 		bundleResources(woodmill_l, 100, 10);
 
-		ArrayList quarry_l = new ArrayList();
+		ArrayList<RequiredResource> quarry_l = new ArrayList<RequiredResource>();
 		bundleResources(quarry_l, 40, 100);
 
-		ArrayList cast_l = new ArrayList();
+		ArrayList<RequiredResource> cast_l = new ArrayList<RequiredResource>();
 		bundleResources(cast_l, 10, 100, 100, 5);
 
-		ArrayList forge_l = new ArrayList();
+		ArrayList<RequiredResource> forge_l = new ArrayList<RequiredResource>();
 		bundleResources(forge_l, 25, 150, 75, 100);
 
-		ArrayList mould_l = new ArrayList();
+		ArrayList<RequiredResource> mould_l = new ArrayList<RequiredResource>();
 		bundleResources(mould_l, 0, 200, 100, 0, 100, 25);
 
-		ArrayList oven_l = new ArrayList();
+		ArrayList<RequiredResource> oven_l = new ArrayList<RequiredResource>();
 		bundleResources(oven_l, 0, 500, 0, 150, 0, 125, 50);
 
-		ArrayList kiln_l = new ArrayList();
+		ArrayList<RequiredResource> kiln_l = new ArrayList<RequiredResource>();
 		bundleResources(kiln_l, 0, 1000, 250, 0, 0, 100, 0, 50);
 
-		ArrayList refine_l = new ArrayList();
+		ArrayList<RequiredResource> refine_l = new ArrayList<RequiredResource>();
 		bundleResources(refine_l, 0, 0, 600, 1000, 0, 0, 100, 10);
 
-		ArrayList compress_l = new ArrayList();
+		ArrayList<RequiredResource> compress_l = new ArrayList<RequiredResource>();
 		bundleResources(compress_l, 0, 0, 1500, 0, 0, 0,250, 1000, 10);
 
-		ArrayList clayNeeded = new ArrayList();
+		ArrayList<RequiredResource> clayNeeded = new ArrayList<RequiredResource>();
 		clayNeeded.add(new RequiredResource(Data.main.CLAY, 1));
 
-		ArrayList ironNeeded = new ArrayList();
+		ArrayList<RequiredResource> ironNeeded = new ArrayList<RequiredResource>();
 		ironNeeded.add(new RequiredResource(Data.main.IRON, 1));
 
 		final TableEntry quarry = resourcesInfo.addEntry(new Multiplier("Quarry Stone", 1, "quarry.png", Data.getEraList().get(1), quarry_l, null, quarry_r));
@@ -356,34 +385,49 @@ public class Mechanics {
 		return specialInfo;
 	}
 
-	private void bundleResources(ArrayList array, int wood) {
-		bundleResources(array, wood, 0);
-	}
-	private void bundleResources(ArrayList array, int wood, int stone) {
+	/**
+	 * Bundles the resources specified into an ArrayList of required resources.
+	 */ private void bundleResources(ArrayList<RequiredResource> array, int wood, int stone) {
 		bundleResources(array, wood, stone, 0);
 	}
-	private void bundleResources(ArrayList array, int wood, int stone, int bronze) {
+	/**
+	 * Bundles the resources specified into an ArrayList of required resources.
+	 */ private void bundleResources(ArrayList<RequiredResource> array, int wood, int stone, int bronze) {
 		bundleResources(array, wood, stone, bronze, 0);
 	}
-	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron) {
+	/**
+	 * Bundles the resources specified into an ArrayList of required resources.
+	 */ private void bundleResources(ArrayList<RequiredResource> array, int wood, int stone, int bronze, int iron) {
 		bundleResources(array, wood, stone, bronze, iron, 0);
 	}
-	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay) {
+	/**
+	 * Bundles the resources specified into an ArrayList of required resources.
+	 */ private void bundleResources(ArrayList<RequiredResource> array, int wood, int stone, int bronze, int iron, int clay) {
 		bundleResources(array, wood, stone, bronze, iron, clay, 0);
 	}
-	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay, int brick) {
+	/**
+	 * Bundles the resources specified into an ArrayList of required resources.
+	 */ private void bundleResources(ArrayList<RequiredResource> array, int wood, int stone, int bronze, int iron, int clay, int brick) {
 		bundleResources(array, wood, stone, bronze, iron, clay, brick, 0);
 	}
-	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete) {
+	/**
+	 * Bundles the resources specified into an ArrayList of required resources.
+	 */ private void bundleResources(ArrayList<RequiredResource> array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete) {
 		bundleResources(array, wood, stone, bronze, iron, clay, brick, concrete, 0);
 	}
-	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete, int steel) {
+	/**
+	 * Bundles the resources specified into an ArrayList of required resources.
+	 */ private void bundleResources(ArrayList<RequiredResource> array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete, int steel) {
 		bundleResources(array, wood, stone, bronze, iron, clay, brick, concrete, steel, 0);
 	}
-	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete, int steel, int gems){
+	/**
+	 * Bundles the resources specified into an ArrayList of required resources.
+	 */ private void bundleResources(ArrayList<RequiredResource> array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete, int steel, int gems){
 		bundleResources(array, wood, stone, bronze, iron, clay, brick, concrete, steel, gems, 0);
 	}
-	private void bundleResources(ArrayList array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete, int steel, int gems, int carbon){
+	/**
+	 * Bundles the resources specified into an ArrayList of required resources.
+	 */ private void bundleResources(ArrayList<RequiredResource> array, int wood, int stone, int bronze, int iron, int clay, int brick, int concrete, int steel, int gems, int carbon){
 		array.add(new RequiredResource(Data.main.WOOD, wood));
 		array.add(new RequiredResource(Data.main.STONE, stone));
 		array.add(new RequiredResource(Data.main.BRONZE, bronze));
@@ -397,14 +441,13 @@ public class Mechanics {
 	}
 
 	/**
-	 * For the planet ui stuff done when the planet is clicked
+	 * For the planet UI stuff done when the planet is clicked
 	 */
-	public boolean planetClicked(){
+	boolean planetClicked(){
 		Planet planet = Data.main.getPlanet();
 
 		planet.setMultiplier(clickMultiplier * planet.getMultiplier());
-		planet.setX(Gdx.graphics.getWidth()/2- planet.getWidth()/2);
-		planet.setY(Data.ui.planetY);
+		Data.ui.setPlanetLocation();
 
 		planet.setClicked(true);
 		planetClickedAction();
@@ -413,12 +456,11 @@ public class Mechanics {
 	/**
 	 * For the actions done when the planet is clicked
 	 */
-	public void planetClickedAction(){
-		updateNumberOf();
-
+	private void planetClickedAction(){
 		TableEntry entry = Data.getSelectedEntry();
 		if(entry==null) return; //Do nothing if none selected
 
+		//Adds resources to whatever's clicked
 		if(entry.isCreateClicked()){
 			if(hasResources(entry.getResourcesNeeded())){
 				entry.onClick();
@@ -432,9 +474,10 @@ public class Mechanics {
 
 				Data.ui.loadSideBar(Data.getSelectedEntry(), true);
 			}else{
-				printInsufficientResources();
+				Data.ui.printInsufficientResources();
 			}
 		}
+		//Upgrades the current entry to the next one specified
 		if(entry.isUpgradeClicked()){
 			if(hasResources(entry.getResourcesNeededToUpgrade())) {
 				if (entry.getNumberOf() > 0) {
@@ -452,22 +495,28 @@ public class Mechanics {
 					Data.ui.loadSideBar(Data.getSelectedEntry(), false);
 				}
 			}else{
-				printInsufficientResources();
+				Data.ui.printInsufficientResources();
 			}
 		}
 	}
-	public boolean planetUnclicked(){
+	/**
+	 * Done when the planet is unclicked, returning it to normal
+	 */
+	void planetUnclicked(){
 		Planet planet = Data.main.getPlanet();
 		planet.setMultiplier(planet.getMultiplier() / clickMultiplier);
 		planet.setClicked(false);
 		Data.ui.updateResources();
 
-		planet.setX(Gdx.graphics.getWidth()/2- planet.getWidth()/2);
-		planet.setY(Data.ui.planetY);
-		return true;
+		Data.ui.setPlanetLocation();
 	}
 
-	public boolean hasResources(ArrayList<RequiredResource> resources){
+	/**
+	 * Checks if the user has enough resources to purchase the building they're trying to
+	 * @param resources The list of resources to check if the user has
+	 * @return True if sufficient resources
+	 */
+	private boolean hasResources(ArrayList<RequiredResource> resources){
 		if(resources==null) return true;
 
 		for(RequiredResource resource: resources){
@@ -476,6 +525,10 @@ public class Mechanics {
 		return true;
 	}
 
+	/**
+	 * Takes away to given resources (as a result of purchasing something with them)
+	 * @param resources The resources to remove
+	 */
 	public void subtractResources(ArrayList<RequiredResource> resources){
 		if(resources==null) return;
 
@@ -484,61 +537,19 @@ public class Mechanics {
 		}
 	}
 
-	public void printInsufficientResources(){
-		final Image insufficientResources = Data.ui.getInsufficientResources();
-
-		insufficientResources.setColor(1f,1f,1f,1f);
-
-		new Thread(){
-			@Override
-			public void run() {
-				numberOfIRThreads++;
-				try {
-					sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				float alpha = insufficientResources.getColor().a;
-				while(alpha!=0){
-					if(numberOfIRThreads>1){
-						numberOfIRThreads--;
-						return;
-					}
-					alpha = insufficientResources.getColor().a;
-					insufficientResources.setColor(1f,1f,1f,alpha-0.001f);
-					try {
-						sleep(3);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				numberOfIRThreads--;
-				Thread.currentThread().interrupt();
-			}
-		}.start();
-
-	}
-
-	public void updateNumberOf(){
-		ArrayList<TableEntry> buildingEntries = Data.getBuildingTable().getEntries();
-		Data.main.setBuildingCount(
-				buildingEntries.get(0).getValue()*buildingEntries.get(0).getNumberOf() +
-						buildingEntries.get(1).getValue()*buildingEntries.get(1).getNumberOf() +
-						buildingEntries.get(2).getValue()*buildingEntries.get(2).getNumberOf()
-		);
-		ArrayList<TableEntry> foodEntries = Data.getFoodTable().getEntries();
-		Data.main.setBuildingCount(
-				foodEntries.get(0).getValue()*foodEntries.get(0).getNumberOf() +
-						foodEntries.get(1).getValue()*foodEntries.get(1).getNumberOf() +
-						foodEntries.get(2).getValue()*foodEntries.get(2).getNumberOf()
-		);
-	}
-
+	/**
+	 * Gives the player an amount of a specified resource
+	 * @param material The resource to add to the number of
+	 * @param amount The amount of that resource to add
+	 */
 	public void addResource(Resource material, long amount){
 		material.addCount(amount);
 	}
 
-	public void removeEntryAndUnclick(){
+	/**
+	 * Sets the entry to unclicked, removes the resource bar and set's the current entry to none
+	 */
+	void removeEntryAndUnclick(){
 		if(Data.getSelectedEntry()!=null) {
 			Data.getSelectedEntry().setCreateClicked(false);
 			Data.getSelectedEntry().setUpgradeClicked(false);
@@ -547,6 +558,7 @@ public class Mechanics {
 		Data.setSelectedEntry(null);
 	}
 
+	//Listeners for actors being clicked
 	public static class buildingListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -638,9 +650,7 @@ public class Mechanics {
 	public static class planetListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			if(Data.main.getPlanet().pointInsidePlanet(x+Data.main.getPlanet().getX(),y+Data.main.getPlanet().getY()))
-				return Data.mechanics.planetClicked();
-			return false;
+			return Data.main.getPlanet().pointInsidePlanet(x + Data.main.getPlanet().getX(), y + Data.main.getPlanet().getY()) && Data.mechanics.planetClicked();
 		}
 
 		@Override
@@ -648,7 +658,6 @@ public class Mechanics {
 			Data.mechanics.planetUnclicked();
 		}
 	}
-
 	public static class settingsListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -667,15 +676,11 @@ public class Mechanics {
 		}
 	}
 
-	public void dispose(){
+	void dispose(){
 
 	}
 
 	public SavegameFile getFile() {
 		return file;
-	}
-
-	public void setThisEra(Era thisEra) {
-		this.thisEra = thisEra;
 	}
 }

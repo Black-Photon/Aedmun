@@ -42,7 +42,7 @@ public class SpecialEntry extends TableEntry {
 					for(Era era: Data.getEraList()){
 						if(found){
 							Data.setCurrentEra(era);
-							Data.mechanics.setThisEra(Data.getCurrentEra());
+							Data.setCurrentEra(Data.getCurrentEra());
 							Data.ui.updateEra();
 							break;
 						}

@@ -4,11 +4,16 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 
+/**
+ * Main user input detector. Listeners for non-actor-specific events go here
+ */
 public class InputDetector implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
+		//If back on Android clicked
 		if(keycode == Input.Keys.BACK){
+			//Dismisses current settings menu if open
 			if(Data.ui.getSettings().getQuitConfirm().getInfoTable().isVisible()){
 				Data.ui.getSettings().getQuitConfirm().getInfoTable().setVisible(false);
 				Data.ui.getSettings().getSettingsGroup().setVisible(true);

@@ -95,8 +95,11 @@ public class UI {
 	private BitmapFont bitmapFont;
 	private float heightScale;
 	private InputMultiplexer multiplexer;
-	public float planetY;
 	protected Texture required_tex = new Texture("requires.png");
+	/**
+	 * Counts the number of insufficient resources threads to ensure too many threads aren't open when the user clicks multiple times
+	 */
+	private int numberOfIRThreads = 0;
 
 	private Settings settings;
 
@@ -328,14 +331,7 @@ public class UI {
 		era.setX(width/2-era.getWidth()*heightScale/2);
 		era.setY(height-pop_bar.getHeight()*heightScale-era.getHeight()*heightScale-10);
 
-		planet.setX(width/2-planet.getWidth()/2);
-		if(Data.main.isBuildingTableVisible()||Data.main.isFoodTableVisible()||Data.main.isResourcesTableVisible()||Data.main.isSpecialTableVisible()){
-			planetY = (era.getY()+buildings_background.getHeight()+(Gdx.graphics.getHeight()-2*padding)/rows)/2-planet.getHeight()/2;
-		}else{
-			planetY = (height/2-planet.getHeight()/2);
-		}
-		planet.setY(planetY);
-		planet.setBounds(planet.getX(), planet.getY(), planet.getWidth(), planet.getHeight());
+		setPlanetLocation();
 
 		insufficientResources.setScaling(Scaling.fit);
 
@@ -558,6 +554,19 @@ public class UI {
 		sun.setTouchable(touchable);
 	}
 
+	void setPlanetLocation(){
+		Planet planet = Data.main.getCurrentPlanet();
+		planet.setX(Gdx.graphics.getWidth()/2-planet.getWidth()/2);
+		float planetY;
+		if(Data.main.isBuildingTableVisible()||Data.main.isFoodTableVisible()||Data.main.isResourcesTableVisible()||Data.main.isSpecialTableVisible()){
+			planetY = (era.getY()+buildings_background.getHeight()+(Gdx.graphics.getHeight()-2*padding)/rows)/2-planet.getHeight()/2;
+		}else{
+			planetY = (Gdx.graphics.getHeight()/2-planet.getHeight()/2);
+		}
+		planet.setY(planetY);
+		planet.setBounds(planet.getX(), planet.getY(), planet.getWidth(), planet.getHeight());
+	}
+
 	public void refreshTable(){
 		switch (Data.getResourceType()){
 			case BUILDINGS:
@@ -732,6 +741,44 @@ public class UI {
 		batch.draw(space, Gdx.graphics.getWidth()-(int)scroll, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),0,0,4,4);
 		scroll+=scrollSpeed;
 		if(scroll>=Gdx.graphics.getWidth()) scroll-=Gdx.graphics.getWidth();
+	}
+
+	/**
+	 * Prints a message to tell the user they don't have enough resources, while managing the number of times the message is being displayed
+	 */
+	void printInsufficientResources(){
+		final Image insufficientResources = Data.ui.getInsufficientResources();
+
+		insufficientResources.setColor(1f,1f,1f,1f);
+
+		new Thread(){
+			@Override
+			public void run() {
+				numberOfIRThreads++;
+				try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				float alpha = insufficientResources.getColor().a;
+				while(alpha!=0){
+					if(numberOfIRThreads>1){
+						numberOfIRThreads--;
+						return;
+					}
+					alpha = insufficientResources.getColor().a;
+					insufficientResources.setColor(1f,1f,1f,alpha-0.001f);
+					try {
+						sleep(3);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				numberOfIRThreads--;
+				Thread.currentThread().interrupt();
+			}
+		}.start();
+
 	}
 
 	public void dispose(){
