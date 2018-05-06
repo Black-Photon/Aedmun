@@ -11,22 +11,62 @@ import java.util.ArrayList;
  * Holds data on various info about progress in the game
  */
 public class Data {
-	public static com.blackphoton.planetclicker.core.PlanetClicker main;
+	//Class Access Points
+	/**
+	 * The base LibGDX class that manages connections to UI and Mechanics. Objects that are neutral to both sections go here.
+	 */
+	public static PlanetClicker main;
+	/**
+	 * The UI class containing all methods and objects that relate to the User Interface and anything graphical related.
+	 */
+	public static UI ui;
+	/**
+	 * The Mechanics class has all methods and a couple of objects that relate to the functionality of the game, including listener responses.
+	 */
+	public static Mechanics mechanics;
 
+	//Era Variables
+	/**
+	 * List of Era's that are available in the game, in order of achieving. The next entry in the list MUST have a higher required population.
+	 */
 	private static ArrayList<Era> eraList;
+	/**
+	 * The 'active' era that is currently being used
+	 */
 	private static Era currentEra;
 
-	public static com.blackphoton.planetclicker.core.UI ui;
-	public static com.blackphoton.planetclicker.core.Mechanics mechanics;
-	private static ResourceType resourceType = ResourceType.NONE;
-
+	//Table Info
+	/**
+	 * Contains all the table entry information for the Building Table
+	 */
 	private static TableInfo buildingTable;
+	/**
+	 * Contains all the table entry information for the Food Table
+	 */
 	private static TableInfo foodTable;
+	/**
+	 * Contains all the table entry information for the Resources Table
+	 */
 	private static TableInfo resourcesTable;
+	/**
+	 * Contains all the table entry information for the Special Table
+	 */
 	private static TableInfo specialTable;
+	/**
+	 * Contains all the table entry information for the Currently Selected Table
+	 */
 	private static TableInfo currentTable;
 
+	//Other
+	/**
+	 * Contains the table entry info for the entry selected via clicking 'Create' or 'Upgrade'
+	 */
 	private static TableEntry selectedEntry;
+	/**
+	 * The resource type that is selected (Clicked on to open options to buy)
+	 * Eg. Buildings, Food, Resources, Special
+	 */
+	private static ResourceType resourceType = ResourceType.NONE;
 
 	/**
 	 * Sets all data to values to be used. Call once at start.
@@ -62,19 +102,12 @@ public class Data {
 	}
 
 	//---Getters and Setters---
-
 	public static ArrayList<Era> getEraList() {
 		return eraList;
 	}
-
-	public static void setEraList(ArrayList<Era> eraList) {
-		Data.eraList = eraList;
-	}
-
 	public static ResourceType getResourceType() {
 		return resourceType;
 	}
-
 	public static void setResourceType(ResourceType resourceType) {
 		Data.resourceType = resourceType;
 		switch (resourceType){
@@ -95,50 +128,39 @@ public class Data {
 				break;
 		}
 	}
-
 	public static void setTableInfo(TableInfo building, TableInfo food, TableInfo resources, TableInfo special){
 		buildingTable = building;
 		foodTable = food;
 		resourcesTable = resources;
 		specialTable = special;
 	}
-
 	public static TableInfo getBuildingTable() {
 		return buildingTable;
 	}
-
 	public static TableInfo getFoodTable() {
 		return foodTable;
 	}
-
 	public static TableInfo getResourcesTable() {
 		return resourcesTable;
 	}
-
 	public static TableInfo getSpecialTable() {
 		return specialTable;
 	}
-
 	public static Era getCurrentEra() {
 		return currentEra;
 	}
-
 	public static void setCurrentEra(Era currentEra) {
 		Data.currentEra = currentEra;
 	}
-
 	public static TableEntry getSelectedEntry() {
 		return selectedEntry;
 	}
-
 	public static void setSelectedEntry(TableEntry selectedEntry) {
 		Data.selectedEntry = selectedEntry;
 	}
-
 	public static TableInfo getCurrentTable() {
 		return currentTable;
 	}
-
 	public static void setCurrentTable(TableInfo currentTable) {
 		Data.currentTable = currentTable;
 	}
