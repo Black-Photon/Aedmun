@@ -91,7 +91,7 @@ public abstract class TableEntry {
 		if(createClicked){
 			create.setDrawable(new SpriteDrawable(new Sprite(createClicked_tex)));
 		}else
-		if(Data.main.getPopulationCount()>=requiredEra.getPop_req() && Data.getCurrentEra().getPop_req()>=requiredEra.getPop_req()){
+		if(Data.main.POPULATION.getCount()>=requiredEra.getPop_req() && Data.getCurrentEra().getPop_req()>=requiredEra.getPop_req()){
 			create.setDrawable(new SpriteDrawable(new Sprite(create_tex)));
 			canCreate = true;
 		}else{
@@ -109,7 +109,7 @@ public abstract class TableEntry {
 			upgrade.setDrawable(new SpriteDrawable(new Sprite(upgradeLocked_tex)));
 			canUpgrade = false;
 		}else
-		if(Data.main.getPopulationCount()>=upgradeTo.requiredEra.getPop_req() && Data.getCurrentEra().getPop_req()>=upgradeTo.requiredEra.getPop_req()){
+		if(Data.main.POPULATION.getCount()>=upgradeTo.requiredEra.getPop_req() && Data.getCurrentEra().getPop_req()>=upgradeTo.requiredEra.getPop_req()){
 			upgrade.setDrawable(new SpriteDrawable(new Sprite(upgrade_tex)));
 			canUpgrade = true;
 		}else{

@@ -10,20 +10,54 @@ import com.blackphoton.planetclicker.objectType.Resource;
 import com.blackphoton.planetclicker.resources.ResourceType;
 
 public class PlanetClicker extends ApplicationAdapter{
+	/**
+	 * Main batch to draw with
+	 */
 	private SpriteBatch batch;
+	/**
+	 * Main stage for clicking planet screen
+	 */
 	private Stage stage;
+	/**
+	 * Population support of buildings
+	 */
 	private long buildingCount;
+	/**
+	 * Population support of food
+	 */
 	private long foodCount;
-	private long populationCount;
-	private Planet planet;
+	/**
+	 * Whether the building purchase table is currently visible
+	 */
 	private boolean buildingTableVisible = false;
+	/**
+	 * Whether the food purchase table is currently visible
+	 */
 	private boolean foodTableVisible = false;
+	/**
+	 * Whether the resources purchase table is currently visible
+	 */
 	private boolean resourcesTableVisible = false;
+	/**
+	 * Whether the special purchase table is currently visible
+	 */
 	private boolean specialTableVisible = false;
 
+	/**
+	 * Earth texture
+	 */
 	private Texture tex_earth;
+	/**
+	 * Earth planet data
+	 */
 	private Planet earth;
+	/**
+	 * List of all loaded planets
+	 */
 	private Planet[] planets;
+	/**
+	 * Current Planet data
+	 */
 	private Planet currentPlanet;
 
 	public Resource WOOD;
@@ -40,6 +74,7 @@ public class PlanetClicker extends ApplicationAdapter{
 
 	@Override
 	public void create() {
+		//Creates all the resources
 		WOOD = new Resource("wood.png");
 		STONE = new Resource("stone.png");
 		BRONZE = new Resource("bronze_bar.png");
@@ -58,7 +93,6 @@ public class PlanetClicker extends ApplicationAdapter{
 
 		buildingCount = 0;
 		foodCount = 0;
-		populationCount = 2;
 
 		tex_earth = new Texture("earth.png");
 		earth = new Planet(tex_earth, 128, 128, "01e");
@@ -93,7 +127,9 @@ public class PlanetClicker extends ApplicationAdapter{
 	public void dispose() {
 		batch.dispose();
 		stage.dispose();
-		planet.dispose();
+		for(Planet planet:planets){
+			planet.dispose();
+		}
 		Data.ui.dispose();
 		Data.mechanics.dispose();
 	}
@@ -103,6 +139,10 @@ public class PlanetClicker extends ApplicationAdapter{
 		Data.ui.resize(width, height);
 	}
 
+	/**
+	 * Called before exiting
+	 * Turns off tables to avoid potential glitches
+	 */
 	public void exit(){
 		Data.setResourceType(ResourceType.NONE);
 		Data.ui.refreshBuildingTable();
@@ -113,115 +153,63 @@ public class PlanetClicker extends ApplicationAdapter{
 	}
 
 	//Getters and Setters
-
 	public long getBuildingCount() {
 		return buildingCount;
 	}
-
 	public void setBuildingCount(long buildingCount) {
 		this.buildingCount = buildingCount;
 	}
-
 	public long getFoodCount() {
 		return foodCount;
 	}
-
 	public void setFoodCount(long foodCount) {
 		this.foodCount = foodCount;
 	}
-
-	public void addBuildingCount(int buildingCount) {
-		this.buildingCount += buildingCount;
-	}
-
-	public void addFoodCount(int foodCount) {
-		this.foodCount += foodCount;
-	}
-
-	public long getPopulationCount() {
-		return populationCount;
-	}
-
-	public void setPopulationCount(long populationCount) {
-		this.populationCount = populationCount;
-	}
-
-	public Planet getPlanet() {
-		return planet;
-	}
-
-	public void setPlanet(Planet planet) {
-		this.planet = planet;
-	}
-
 	public Stage getStage() {
 		return stage;
 	}
-
 	public void setStage(Stage stage) {
 		this.stage = stage;
 	}
-
 	public boolean isBuildingTableVisible() {
 		return buildingTableVisible;
 	}
-
 	public void setBuildingTableVisible(boolean buildingTableVisible) {
 		this.buildingTableVisible = buildingTableVisible;
 	}
-
 	public boolean isFoodTableVisible() {
 		return foodTableVisible;
 	}
-
 	public void setFoodTableVisible(boolean foodTableVisible) {
 		this.foodTableVisible = foodTableVisible;
 	}
-
 	public boolean isResourcesTableVisible() {
 		return resourcesTableVisible;
 	}
-
 	public void setResourcesTableVisible(boolean resourcesTableVisible) {
 		this.resourcesTableVisible = resourcesTableVisible;
 	}
-
 	public boolean isSpecialTableVisible() {
 		return specialTableVisible;
 	}
-
 	public void setSpecialTableVisible(boolean specialTableVisible) {
 		this.specialTableVisible = specialTableVisible;
 	}
-
 	public Texture getTex_earth() {
 		return tex_earth;
 	}
-
-	public void setTex_earth(Texture tex_earth) {
-		this.tex_earth = tex_earth;
-	}
-
 	public Planet getEarth() {
 		return earth;
 	}
-
-	public void setEarth(Planet earth) {
-		this.earth = earth;
-	}
-
 	public Planet[] getPlanets() {
 		return planets;
 	}
-
 	public Planet getCurrentPlanet() {
 		return currentPlanet;
 	}
-
 	public void setCurrentPlanet(Planet currentPlanet) {
 		this.currentPlanet = currentPlanet;
 	}
-
 	public SpriteBatch getBatch() {
 		return batch;
 	}

@@ -58,7 +58,7 @@ public class Settings extends DisplayBox{
 				Data.mechanics.getFile().deleteGame();
 				settingsGroup.setVisible(true);
 				resetConfirm.getInfoTable().setVisible(false);
-				Data.ui.getPopulationLabel().setText("Population: "+Data.main.getPopulationCount());
+				Data.ui.getPopulationLabel().setText("Population: "+Data.main.POPULATION.getCount());
 				Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				Data.ui.updateEra();
 				return true;

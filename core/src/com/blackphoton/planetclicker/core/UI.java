@@ -57,8 +57,6 @@ public class UI {
 	private Image reqRes_bottom;
 
 	//Options
-	// - General
-	private Texture tableBackground_tex = new Texture("table.png");
 	private Texture tableTopBackground_tex = new Texture("table_top.png");
 	private Texture tableBottomBackground_tex = new Texture("table_bottom.png");
 	private Texture create_tex;
@@ -66,22 +64,11 @@ public class UI {
 	private Texture upgrade_tex;
 	private Texture upgrade_locked;
 
-	// - Building
-	private ScrollPane buildingScroll;
+	//Tables
 	private ScrollPane buildingTable;
-
-	// - Food
-	private ScrollPane foodScroll;
 	private ScrollPane foodTable;
-
-	// - Resources
-	private ScrollPane resourceScroll;
 	private ScrollPane resourcesTable;
-
-
-	// - Special
 	private ScrollPane specialTable;
-	private ScrollPane specialScroll;
 
 	//Other
 	private Image settingsImage;
@@ -94,8 +81,11 @@ public class UI {
 	private GlyphLayout glyphLayout;
 	private BitmapFont bitmapFont;
 	private float heightScale;
+	/**
+	 * Contains both the InputDetector input and Stage input
+	 */
 	private InputMultiplexer multiplexer;
-	protected Texture required_tex = new Texture("requires.png");
+	private Texture required_tex = new Texture("requires.png");
 	/**
 	 * Counts the number of insufficient resources threads to ensure too many threads aren't open when the user clicks multiple times
 	 */
@@ -103,7 +93,7 @@ public class UI {
 
 	private Settings settings;
 
-	public void createUI(){
+	void createUI(){
 		//General Declarations
 		glyphLayout = new GlyphLayout();
 		bitmapFont = new BitmapFont();
@@ -159,7 +149,7 @@ public class UI {
 		reqRes_top.setPosition(0,reqRes_bottom.getHeight()+reqRes.getHeight());
 
 		//Population
-		populationLabel = new Label("Population: "+ Data.main.getPopulationCount(), skin);
+		populationLabel = new Label("Population: "+ Data.main.POPULATION.getCount(), skin);
 		pop_bar_left = new Image(new Texture("pop_bar_left.png"));
 		pop_bar = new Image(new Texture("pop_bar.png"));
 		pop_bar_right = new Image(new Texture("pop_bar_right.png"));
@@ -175,9 +165,6 @@ public class UI {
 		pop_bar_right.setPosition(pop_bar_left.getWidth()+pop_bar.getWidth(),0);
 		glyphLayout.setText(bitmapFont, populationLabel.getText());
 		populationLabel.setPosition(pop_bar_left.getWidth()+pop_bar.getWidth()/2-glyphLayout.width/2,pop_bar.getHeight()/2-glyphLayout.height/2);
-
-		//Options
-		resourceScroll = new ScrollPane(null);
 
 		//Other
 		settings = new Settings();
@@ -203,18 +190,18 @@ public class UI {
 		planet.setTouchable(Touchable.enabled);
 		countLabel = new Label("", skin);
 
-		Data.main.setPlanet(planet);
+		Data.main.setCurrentPlanet(planet);
 
 		multiplexer = new InputMultiplexer(Data.main.getStage(), new InputDetector());
 		Gdx.input.setInputProcessor(multiplexer);
 
 		insufficientResources.setColor(1f,1f,1f,0f);
 	}
-	public void updateUI(){
+	void updateUI(){
 		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		populationLabel.setText("Population: "+Data.main.getPopulationCount());
+		populationLabel.setText("Population: "+Data.main.POPULATION.getCount());
 
 		if(Data.getSelectedEntry()!=null) {
 			if(Data.getSelectedEntry().getResourcesNeeded()!=null)
@@ -234,6 +221,9 @@ public class UI {
 		Data.main.getStage().getBatch().setColor(1,1,1,1);
 	}
 
+	/**
+	 * Updates the selected table
+	 */
 	public void updateResources(){
 		buildings_background.setDrawable(new SpriteDrawable(new Sprite(unclicked)));
 		food_background.setDrawable(new SpriteDrawable(new Sprite(unclicked)));
@@ -259,6 +249,9 @@ public class UI {
 		}
 	}
 
+	/**
+	 * Changes the era to the current era image
+	 */
 	public void updateEra(){
 		era.setDrawable(new SpriteDrawable(new Sprite(Data.getCurrentEra().getTexture())));
 	}
@@ -287,7 +280,7 @@ public class UI {
 		resources.setPosition(buildings_background.getWidth()+food_background.getWidth()+resources_background.getWidth()/2-resources.getWidth()/2, resources_background.getHeight()/2-resources.getHeight()/2);
 		special.setPosition(buildings_background.getWidth()+food_background.getWidth()+resources_background.getWidth()+special_background.getWidth()/2-special.getWidth()/2, special_background.getHeight()/2-special.getHeight()/2);
 
-		Planet planet = Data.main.getPlanet();
+		Planet planet = Data.main.getCurrentPlanet();
 
 		planet.setMultiplier(width / planet.getInitial_width() * 0.325f);
 		heightScale = ((float) height/480f); //480 = default height
@@ -353,19 +346,24 @@ public class UI {
 		if(Data.getSelectedEntry()!=null) loadSideBar(Data.getSelectedEntry(), Data.getSelectedEntry().isCreateClicked());
 	}
 
+	/**
+	 * Creates a side bar and displays it
+	 * @param entry the data
+	 * @param create create or upgrade (what part of data to use)
+	 */
 	public void loadSideBar(TableEntry entry, boolean create){
 		float multiplier = Gdx.graphics.getWidth()/640f;
 
-		if(entry==null || (create && (entry.getResourcesNeeded()==null || entry.getResourcesNeeded().size()==0)) || (!create && (entry.getResourcesNeededToUpgrade()==null || entry.getResourcesNeededToUpgrade().size()==0))){
-			if(reqResGroup!=null) reqResGroup.remove();
-			return;
-		}
 		if(reqResGroup!=null) reqResGroup.remove();
+
+		//Checks for null
+		if(entry==null || (create && (entry.getResourcesNeeded()==null || entry.getResourcesNeeded().size()==0)) || (!create && (entry.getResourcesNeededToUpgrade()==null || entry.getResourcesNeededToUpgrade().size()==0))) return;
+
 		reqResGroup = new Group();
 		reqResGroup.addActor(reqRes_top);
 		reqResGroup.addActor(reqRes);
 		reqResGroup.addActor(reqRes_bottom);
-		float totalHeight = 0;
+		float totalHeight = 0; //For some reason group.getHeight() doesn't work
 		ArrayList<RequiredResource> resources;
 
 		if(create)  resources = entry.getResourcesNeeded();
@@ -397,14 +395,32 @@ public class UI {
 		reqResGroup.setY(Gdx.graphics.getHeight() / 2 - (reqRes_bottom.getHeight()+reqRes.getHeight()+reqRes_top.getHeight())*multiplier/2);
 	}
 
+	/**
+	 * How far along the background has scrolled
+	 */
 	private float scroll = 0;
-	private float scrollSpeed = 0.2f;
+	/**
+	 * Rate at which the background scrolls in pixels per 60 seconds
+	 */
+	private final float scrollSpeed = 0.2f;
 
-	int rows = 4;
-	float padding = 3;
-	float rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
+	/**
+	 * Number of rows visible at once in the table
+	 */
+	private int rows = 4;
+	/**
+	 * Table padding
+	 */
+	private float padding = 3;
+	/**
+	 * The height of one table row
+	 */
+	private float rowHeight = (Gdx.graphics.getHeight()-2*padding)/rows/4; //4 because I want it to cover 1/4 of the screen
 
-	Drawable tableBottomBackground = new Drawable() {
+	/**
+	 * Draws the bottom of the table
+	 */
+	private Drawable tableBottomBackground = new Drawable() {
 		@Override
 		public void draw(Batch batch, float x, float y, float width, float height) {
 			padding = Gdx.graphics.getHeight()/100;
@@ -472,8 +488,10 @@ public class UI {
 
 		}
 	};
-
-	Drawable tableTopBackground = new Drawable() {
+	/**
+	 * Draws the top of the table
+	 */
+	private Drawable tableTopBackground = new Drawable() {
 		@Override
 		public void draw(Batch batch, float x, float y, float width, float height) {
 			padding = Gdx.graphics.getHeight()/100;
@@ -542,8 +560,12 @@ public class UI {
 		}
 	};
 
-	public void setEverythingTouchable(Touchable touchable){
-		Data.main.getPlanet().setTouchable(touchable);
+	/**
+	 * Set's all the main elements touchable or untouchable for pause features
+	 * @param touchable Whether yuou can touch all the elements
+	 */
+	void setEverythingTouchable(Touchable touchable){
+		Data.main.getCurrentPlanet().setTouchable(touchable);
 		resourceGroup.setTouchable(touchable);
 
 		if(buildingTable.isVisible()) buildingTable.setTouchable(touchable);
@@ -554,6 +576,9 @@ public class UI {
 		sun.setTouchable(touchable);
 	}
 
+	/**
+	 * Set's the location of the planet depending on whether a table is visable and in the centre of the screen
+	 */
 	void setPlanetLocation(){
 		Planet planet = Data.main.getCurrentPlanet();
 		planet.setX(Gdx.graphics.getWidth()/2-planet.getWidth()/2);
@@ -567,7 +592,10 @@ public class UI {
 		planet.setBounds(planet.getX(), planet.getY(), planet.getWidth(), planet.getHeight());
 	}
 
-	public void refreshTable(){
+	/**
+	 * Refresh's current table data
+	 */
+	void refreshTable(){
 		switch (Data.getResourceType()){
 			case BUILDINGS:
 				refreshBuildingTable();
@@ -584,7 +612,7 @@ public class UI {
 		}
 	}
 
-	public void refreshBuildingTable(){
+	void refreshBuildingTable(){
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		list.add(7);
 		list.add(6);
@@ -598,7 +626,7 @@ public class UI {
 		buildingTable = refreshTableX(Data.getBuildingTable(),"Holds", Data.main.isBuildingTableVisible(), list);
 	}
 
-	public void refreshFoodTable(){
+	void refreshFoodTable(){
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		list.add(7);
 		list.add(6);
@@ -612,7 +640,7 @@ public class UI {
 		foodTable = refreshTableX(Data.getFoodTable(),"Feeds", Data.main.isFoodTableVisible(), list);
 	}
 
-	public void refreshResourcesTable(){
+	void refreshResourcesTable(){
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		list.add(1);
 		list.add(0);
@@ -637,7 +665,7 @@ public class UI {
 		resourcesTable = refreshTableX(Data.getResourcesTable(),"Value", Data.main.isResourcesTableVisible(), list);
 	}
 
-	public void refreshSpecialTable(){
+	void refreshSpecialTable(){
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		list.add(0);
 		list.add(1);
@@ -652,12 +680,24 @@ public class UI {
 		specialTable = refreshTableX(Data.getSpecialTable(),"Clicks", Data.main.isSpecialTableVisible(), list);
 	}
 
-	public ScrollPane refreshTableX(TableInfo info, String secret, boolean isVisible, ArrayList<Integer> rowList){
+	/**
+	 * Refreshes the given table by recreating it and it's components
+	 * @param info Data to input to the table
+	 * @param secret The title of the value column
+	 * @param isVisible Whether the table should be visible or not
+	 * @param rowList The list of order of rows (What element should go where)
+	 * @return The scrollpane representing the finished table
+	 */
+	private ScrollPane refreshTableX(TableInfo info, String secret, boolean isVisible, ArrayList<Integer> rowList){
+		//Creates two tables: A title table and a main table
+		//For some reason I can't get the background to work if they're one, and the title table need always be visible - even when scrolling
+		//The Main table is put in a scroll pane which is put into the stage
+
 		rows = 4;
 		padding = Gdx.graphics.getHeight()/100;
 		rowHeight = (Gdx.graphics.getHeight())/rows/4; //4 because I want it to cover 1/4 of the screen
 
-		float smallUnit = Gdx.graphics.getWidth() * 1/7;
+		float smallUnit = Gdx.graphics.getWidth() / 7;
 		float largeUnit = Gdx.graphics.getWidth() * 1.25f/7;
 
 		Table scrollTable = new Table();
@@ -672,8 +712,7 @@ public class UI {
 		scrollTable.setSkin(skin);
 		scrollTable.row().height(rowHeight);
 		for(Integer i: rowList){
-			if(!i.equals(rowList.get(rowList.size()-1))) addRow(scrollTable, false, smallUnit, largeUnit, info, i, info.getEntries().get(i).getImage());
-			else addRow(scrollTable, true, smallUnit, largeUnit, info, i, info.getEntries().get(i).getImage());
+			addRow(scrollTable, smallUnit, largeUnit, info, i, info.getEntries().get(i).getImage());
 		}
 
 
@@ -695,13 +734,8 @@ public class UI {
 		scroller.setX(0);
 		scroller.setY(line.getY()+1);
 
-		if(isVisible){ //Believe me, I know it's weird, but somehow doesn't work without. Feel free to try, but don't blame me for breaking the project.
-			scroller.setVisible(true);
-			titleTable.setVisible(true);
-		} else {
-			scroller.setVisible(false);
-			titleTable.setVisible(false);
-		}
+		scroller.setVisible(isVisible);
+		titleTable.setVisible(isVisible);
 
 		Stage stage = Data.main.getStage();
 		stage.addActor(titleTable);
@@ -709,13 +743,23 @@ public class UI {
 		return scroller;
 	}
 
-	public void setAllTablesInvisible(){
+	/**
+	 * Set's all tables invisible
+	 */
+	void setAllTablesInvisible(){
 		Data.main.setBuildingTableVisible(false);
 		Data.main.setFoodTableVisible(false);
 		Data.main.setResourcesTableVisible(false);
 		Data.main.setSpecialTableVisible(false);
 	}
 
+	/**
+	 * Adds title row data to a table
+	 * @param table Table to add data to
+	 * @param valueName The title of the value column
+	 * @param smallUnit Small width column width
+	 * @param largeUnit Large width column width
+	 */
 	private void addTitleRow(Table table, String valueName, float smallUnit, float largeUnit){
 		table.add().width(smallUnit).center();
 		table.add("Name").width(largeUnit).center().fill();
@@ -726,17 +770,31 @@ public class UI {
 		table.row().height(rowHeight);
 	}
 
-	private void addRow(Table table, boolean lastRow, float smallUnit, float largeUnit, TableInfo info, int entry, Image picture){
+	/**
+	 * Adds a data row to a table
+	 * @param table Table to add data to
+	 * @param smallUnit Small width column width
+	 * @param largeUnit Large width column width
+	 * @param info Info to put in the row
+	 * @param entry Which entry of the info it is using
+	 * @param picture Image to go with the data
+	 */
+	private void addRow(Table table, float smallUnit, float largeUnit, TableInfo info, int entry, Image picture){
+		table.row().height(rowHeight);
+
 		table.add(picture).width(smallUnit).center();
 		table.add(info.getEntries().get(entry).getName()).width(largeUnit).center().fill();
 		table.add(info.getEntries().get(entry).getValueLabel()).width(largeUnit).center().fill();
 		table.add(info.getEntries().get(entry).getNumberLabel()).width(smallUnit).center().fill();
 		table.add(info.getEntries().get(entry).getCreate()).width(largeUnit).center();
 		table.add(info.getEntries().get(entry).getUpgrade()).width(largeUnit).center();
-		if(!lastRow) table.row().height(rowHeight);
 	}
 
-	public void drawBackground(Batch batch){
+	/**
+	 * Draws the background of the main game in it's current scroll location
+	 * @param batch Batch to draw to
+	 */
+	void drawBackground(Batch batch){
 		batch.draw(space, (int)-scroll, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),0,0,4,4);
 		batch.draw(space, Gdx.graphics.getWidth()-(int)scroll, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),0,0,4,4);
 		scroll+=scrollSpeed;
@@ -781,44 +839,35 @@ public class UI {
 
 	}
 
-	public void dispose(){
+	void dispose(){
 
 	}
 
 	//Getters and Setters
-
 	public Image getInsufficientResources() {
 		return insufficientResources;
 	}
-
 	public Skin getSkin() {
 		return skin;
 	}
-
 	public Texture getRequired_tex() {
 		return required_tex;
 	}
-
 	public void setRequired_tex(Texture required_tex) {
 		this.required_tex = required_tex;
 	}
-
 	public Settings getSettings() {
 		return settings;
 	}
-
 	public void setSettings(Settings settings) {
 		this.settings = settings;
 	}
-
 	public BitmapFont getBitmapFont() {
 		return bitmapFont;
 	}
-
 	public void setBitmapFont(BitmapFont bitmapFont) {
 		this.bitmapFont = bitmapFont;
 	}
-
 	public Label getPopulationLabel() {
 		return populationLabel;
 	}

@@ -69,7 +69,7 @@ public class Mechanics {
 	}
 	void update(){
 		//Calculated how much population can be supported by food and buildings by multiplying each entry by their value
-		long populationCount = Data.main.getPopulationCount();
+		long populationCount = Data.main.POPULATION.getCount();
 		Data.main.setBuildingCount(0);
 		for(TableEntry entry:Data.getBuildingTable().getEntries()){
 			Data.main.setBuildingCount(Data.main.getBuildingCount()+entry.getNumberOf()*entry.getValue());
@@ -96,54 +96,60 @@ public class Mechanics {
 		if(next==null) throw new NullPointerException("Could not find the next era");
 
 		//Population should never go below 2
-		if(populationCount<2) Data.main.setPopulationCount(2);
-		populationCount = Data.main.getPopulationCount();
+		if(populationCount<2) Data.main.POPULATION.setCount(2);
+		populationCount = Data.main.POPULATION.getCount();
 
 		//Stops you getting too high a population before the era increments
-		if(populationCount>next.getPop_req()) Data.main.setPopulationCount(next.getPop_req());
-		populationCount = Data.main.getPopulationCount();
+		if(populationCount>next.getPop_req()) Data.main.POPULATION.setCount(next.getPop_req());
+		populationCount = Data.main.POPULATION.getCount();
 
 		//Increases the population when you have enough food and buildings for more
 		if(populationCount<next.getPop_req())
 			if (buildingCount > populationCount && foodCount > populationCount) {
 				if (populationCount > 1000) {
-					int randomInt = (int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500);
-					Data.main.setPopulationCount(populationCount + randomInt);
-					populationCount = Data.main.getPopulationCount();
+					int randomInt = Math.abs((int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500));
+					Data.main.POPULATION.setCount(populationCount + randomInt);
+					populationCount = Data.main.POPULATION.getCount();
 				} else {
 					for (int i = 1; i < populationCount; i++) {
 						int randomInt = random.nextInt(1000);
 						if (randomInt == 42) {
-							Data.main.setPopulationCount(populationCount + 1);
-							populationCount = Data.main.getPopulationCount();
+							Data.main.POPULATION.setCount(populationCount + 1);
+							populationCount = Data.main.POPULATION.getCount();
 						}
 					}
 				}
 				//If the procedure of increasing the population increases it to a point that it will need to decrease again next, make it the maximum possible.
 				//Eg. Population 9980, can support population 9990. Process of increasing population normally makes it become 10056 by chance (see ThreadLocalRandom.current().nextGaussian()).
 				//This makes it become 9990 exactly, so it doesn't go too high and instantly need to decrease towards 9990 again.
-				if (buildingCount < populationCount && foodCount < populationCount) Data.main.setPopulationCount(buildingCount<foodCount ? buildingCount:foodCount);
+				if (buildingCount < populationCount || foodCount < populationCount){
+					Data.main.POPULATION.setCount(buildingCount<foodCount ? buildingCount:foodCount);
+					populationCount = Data.main.POPULATION.getCount();
+				}
 			}
 
 		//Increases the population when you don't have enough food and buildings for your current population
 		if ((buildingCount < populationCount || foodCount < populationCount) && populationCount > 2) {
 			if (populationCount > 1000) {
-				int randomInt = (int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500);
-				Data.main.setPopulationCount(populationCount - randomInt);
-				populationCount = Data.main.getPopulationCount();
+				int randomInt = Math.abs((int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500));
+				Data.main.POPULATION.setCount(populationCount - randomInt);
+				populationCount = Data.main.POPULATION.getCount();
 			} else {
 				for (int i = 1; i < populationCount; i++) {
 					int randomInt = random.nextInt(1000);
 					if (randomInt == 888) {
-						Data.main.setPopulationCount(populationCount - 1);
-						populationCount = Data.main.getPopulationCount();
+						Data.main.POPULATION.setCount(populationCount - 1);
+						populationCount = Data.main.POPULATION.getCount();
 					}
 				}
 			}
 			//If the procedure of decreasing the population decreases it to a point that it will need to increase again next, make it the maximum possible.
 			//Eg. Population 10000, can support population 9990. Process of decreasing population normally makes it become 9886 by chance (see ThreadLocalRandom.current().nextGaussian()).
 			//This makes it become 9990 exactly, so it doesn't go too low and instantly need to increase towards 9990 again.
-			if (buildingCount > populationCount && foodCount > populationCount) Data.main.setPopulationCount(buildingCount<foodCount ? buildingCount:foodCount);
+			if (buildingCount > populationCount || foodCount > populationCount) {
+				Data.main.POPULATION.setCount(buildingCount<foodCount ? buildingCount:foodCount);
+				populationCount = Data.main.POPULATION.getCount();
+			}
 		}
 
 		Data.main.POPULATION.setCount(populationCount);
@@ -444,7 +450,7 @@ public class Mechanics {
 	 * For the planet UI stuff done when the planet is clicked
 	 */
 	boolean planetClicked(){
-		Planet planet = Data.main.getPlanet();
+		Planet planet = Data.main.getCurrentPlanet();
 
 		planet.setMultiplier(clickMultiplier * planet.getMultiplier());
 		Data.ui.setPlanetLocation();
@@ -503,7 +509,7 @@ public class Mechanics {
 	 * Done when the planet is unclicked, returning it to normal
 	 */
 	void planetUnclicked(){
-		Planet planet = Data.main.getPlanet();
+		Planet planet = Data.main.getCurrentPlanet();
 		planet.setMultiplier(planet.getMultiplier() / clickMultiplier);
 		planet.setClicked(false);
 		Data.ui.updateResources();
@@ -533,6 +539,7 @@ public class Mechanics {
 		if(resources==null) return;
 
 		for(RequiredResource resource: resources){
+			if(resource.getMaterial().equals(Data.main.POPULATION)) return;
 			resource.getMaterial().addCount(-resource.getNumberRequired());
 		}
 	}
@@ -650,7 +657,7 @@ public class Mechanics {
 	public static class planetListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			return Data.main.getPlanet().pointInsidePlanet(x + Data.main.getPlanet().getX(), y + Data.main.getPlanet().getY()) && Data.mechanics.planetClicked();
+			return Data.main.getCurrentPlanet().pointInsidePlanet(x + Data.main.getCurrentPlanet().getX(), y + Data.main.getCurrentPlanet().getY()) && Data.mechanics.planetClicked();
 		}
 
 		@Override

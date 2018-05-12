@@ -23,7 +23,6 @@ public class Timeout extends FoodEntry{
 					}
 					if(numberOf>0){
 						subFromEntry();
-						Data.mechanics.updateNumberOf();
 					}
 				}
 			}

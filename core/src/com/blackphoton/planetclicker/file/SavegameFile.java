@@ -14,7 +14,7 @@ public class SavegameFile extends File {
 	private String everything;
 
 	public void saveGame(){
-		handle.writeString("Population" + ":" + Data.main.getPopulationCount() + "\n", false);
+		handle.writeString("Population" + ":" + Data.main.POPULATION.getCount() + "\n", false);
 		handle.writeString(";\n", true);
 
 		handle.writeString("Era" + ":" + Data.getCurrentEra().getName() + "\n", true);
@@ -48,7 +48,7 @@ public class SavegameFile extends File {
 		String saveEntry = readWord();
 		if(!verifyEntry(stringEntry(saveEntry), "Population")) return;
 		long numberOf = numberEntry(saveEntry);
-		Data.main.setPopulationCount(numberOf);
+		Data.main.POPULATION.setCount(numberOf);
 
 		readWord(); //Dismiss ;
 
@@ -78,7 +78,7 @@ public class SavegameFile extends File {
 	public void deleteGame(){
 		handle.delete();
 
-		Data.main.setPopulationCount(2);
+		Data.main.POPULATION.setCount(2);
 		for(Era era: Data.getEraList()){
 			Data.setCurrentEra(Data.getEraList().get(0));
 		}
