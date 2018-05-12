@@ -23,6 +23,9 @@ import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntr
 
 import java.util.ArrayList;
 
+/**
+ * The main User Interface class. All textures and graphics go here
+ */
 public class UI {
 
 	//Bottom Bar
@@ -90,6 +93,10 @@ public class UI {
 	 * Counts the number of insufficient resources threads to ensure too many threads aren't open when the user clicks multiple times
 	 */
 	private int numberOfIRThreads = 0;
+	/**
+	 * Earth texture
+	 */
+	private Texture tex_earth;
 
 	private Settings settings;
 
@@ -184,13 +191,13 @@ public class UI {
 
 		updateEra();
 
-		Planet planet = Data.main.getCurrentPlanet();
+		Planet planet = Data.getCurrentPlanet();
 		planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
 		planet.addListener(new Mechanics.planetListener());
 		planet.setTouchable(Touchable.enabled);
 		countLabel = new Label("", skin);
 
-		Data.main.setCurrentPlanet(planet);
+		Data.setCurrentPlanet(planet);
 
 		multiplexer = new InputMultiplexer(Data.main.getStage(), new InputDetector());
 		Gdx.input.setInputProcessor(multiplexer);
@@ -280,7 +287,7 @@ public class UI {
 		resources.setPosition(buildings_background.getWidth()+food_background.getWidth()+resources_background.getWidth()/2-resources.getWidth()/2, resources_background.getHeight()/2-resources.getHeight()/2);
 		special.setPosition(buildings_background.getWidth()+food_background.getWidth()+resources_background.getWidth()+special_background.getWidth()/2-special.getWidth()/2, special_background.getHeight()/2-special.getHeight()/2);
 
-		Planet planet = Data.main.getCurrentPlanet();
+		Planet planet = Data.getCurrentPlanet();
 
 		planet.setMultiplier(width / planet.getInitial_width() * 0.325f);
 		heightScale = ((float) height/480f); //480 = default height
@@ -565,7 +572,7 @@ public class UI {
 	 * @param touchable Whether yuou can touch all the elements
 	 */
 	void setEverythingTouchable(Touchable touchable){
-		Data.main.getCurrentPlanet().setTouchable(touchable);
+		Data.getCurrentPlanet().setTouchable(touchable);
 		resourceGroup.setTouchable(touchable);
 
 		if(buildingTable.isVisible()) buildingTable.setTouchable(touchable);
@@ -580,10 +587,10 @@ public class UI {
 	 * Set's the location of the planet depending on whether a table is visable and in the centre of the screen
 	 */
 	void setPlanetLocation(){
-		Planet planet = Data.main.getCurrentPlanet();
+		Planet planet = Data.getCurrentPlanet();
 		planet.setX(Gdx.graphics.getWidth()/2-planet.getWidth()/2);
 		float planetY;
-		if(Data.main.isBuildingTableVisible()||Data.main.isFoodTableVisible()||Data.main.isResourcesTableVisible()||Data.main.isSpecialTableVisible()){
+		if(Data.isBuildingTableVisible()||Data.isFoodTableVisible()||Data.isResourcesTableVisible()||Data.isSpecialTableVisible()){
 			planetY = (era.getY()+buildings_background.getHeight()+(Gdx.graphics.getHeight()-2*padding)/rows)/2-planet.getHeight()/2;
 		}else{
 			planetY = (Gdx.graphics.getHeight()/2-planet.getHeight()/2);
@@ -623,7 +630,7 @@ public class UI {
 		list.add(1);
 		list.add(0);
 
-		buildingTable = refreshTableX(Data.getBuildingTable(),"Holds", Data.main.isBuildingTableVisible(), list);
+		buildingTable = refreshTableX(Data.getBuildingTable(),"Holds", Data.isBuildingTableVisible(), list);
 	}
 
 	void refreshFoodTable(){
@@ -637,7 +644,7 @@ public class UI {
 		list.add(1);
 		list.add(0);
 
-		foodTable = refreshTableX(Data.getFoodTable(),"Feeds", Data.main.isFoodTableVisible(), list);
+		foodTable = refreshTableX(Data.getFoodTable(),"Feeds", Data.isFoodTableVisible(), list);
 	}
 
 	void refreshResourcesTable(){
@@ -662,7 +669,7 @@ public class UI {
 		list.add(16);
 		list.add(18);
 
-		resourcesTable = refreshTableX(Data.getResourcesTable(),"Value", Data.main.isResourcesTableVisible(), list);
+		resourcesTable = refreshTableX(Data.getResourcesTable(),"Value", Data.isResourcesTableVisible(), list);
 	}
 
 	void refreshSpecialTable(){
@@ -677,7 +684,7 @@ public class UI {
 		list.add(7);
 		list.add(8);
 
-		specialTable = refreshTableX(Data.getSpecialTable(),"Clicks", Data.main.isSpecialTableVisible(), list);
+		specialTable = refreshTableX(Data.getSpecialTable(),"Clicks", Data.isSpecialTableVisible(), list);
 	}
 
 	/**
@@ -747,10 +754,10 @@ public class UI {
 	 * Set's all tables invisible
 	 */
 	void setAllTablesInvisible(){
-		Data.main.setBuildingTableVisible(false);
-		Data.main.setFoodTableVisible(false);
-		Data.main.setResourcesTableVisible(false);
-		Data.main.setSpecialTableVisible(false);
+		Data.setBuildingTableVisible(false);
+		Data.setFoodTableVisible(false);
+		Data.setResourcesTableVisible(false);
+		Data.setSpecialTableVisible(false);
 	}
 
 	/**
@@ -870,5 +877,11 @@ public class UI {
 	}
 	public Label getPopulationLabel() {
 		return populationLabel;
+	}
+	public Texture getTex_earth() {
+		return tex_earth;
+	}
+	public void setTex_earth(Texture tex_earth) {
+		this.tex_earth = tex_earth;
 	}
 }

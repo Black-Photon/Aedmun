@@ -6,13 +6,22 @@ import com.blackphoton.planetclicker.objectType.table.entries.resources.Absolute
 import com.blackphoton.planetclicker.objectType.table.entries.template.ResourcesEntry;
 import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntry;
 
+/**
+ * Manages the save file
+ */
 public class SavegameFile extends File {
 	public SavegameFile() {
 		super("save.txt");
 	}
 
+	/**
+	 * String of everything read
+	 */
 	private String everything;
 
+	/**
+	 * Saves the game to the save-file
+	 */
 	public void saveGame(){
 		handle.writeString("Population" + ":" + Data.main.POPULATION.getCount() + "\n", false);
 		handle.writeString(";\n", true);
@@ -40,6 +49,9 @@ public class SavegameFile extends File {
 		}
 		handle.writeString(";\n", true);
 	}
+	/**
+	 * Reads and interprets the save-file
+	 */
 	public void readGame(){
 		if(!handle.exists())return;
 
@@ -75,6 +87,9 @@ public class SavegameFile extends File {
 			processEntry(entry);
 		}
 	}
+	/**
+	 * Resets data to 0 in save-file and reads the new empty data
+	 */
 	public void deleteGame(){
 		handle.delete();
 
@@ -99,19 +114,41 @@ public class SavegameFile extends File {
 		readGame();
 	}
 
+	/**
+	 * Reads the word using {@link File#nextEntry(String)}, set's the everything string and returns the entry
+	 * @return The next entry from the 'everything' variable
+	 */
 	private String readWord(){
 		String[] array = nextEntry(everything);
 		everything = array[1];
 		return array[0];
 	}
+	/**
+	 * Returns the right side of a string in the form "a:b" as a long variable<br/>
+	 * Eg. "Population:1000" returns 1000L
+	 * @param entry Entry to return the part of
+	 * @return The number to the right of the entry
+	 */
 	private long numberEntry(String entry){
 		return Long.parseLong(stringEntryRight(entry));
 	}
+	/**
+	 * Ensures the entry name is the same as the name read from the save
+	 * @param saveEntry Name read
+	 * @param name True name of the entry
+	 * @return True if both the same
+	 */
 	private boolean verifyEntry(String saveEntry, String name){
 		if(saveEntry==null) return false;
 		if(name==null) return false;
 		return (saveEntry.equals(name));
 	}
+	/**
+	 * Return all data on the left side of a string in the form "a:b"<br/>
+	 * Eg. "Population:1000" returns "Population"
+	 * @param entry Entry to get the data
+	 * @return a for a string in the form "a:b"
+	 */
 	private String stringEntry(String entry){
 		StringBuilder sb = new StringBuilder();
 		for(char c: entry.toCharArray()) {
@@ -121,6 +158,12 @@ public class SavegameFile extends File {
 		}
 		return null;
 	}
+	/**
+	 * Return all data on the right side of a string in the form "a:b"<br/>
+	 * Eg. "Population:1000" returns "1000"
+	 * @param entry Entry to get the data
+	 * @return b for a string in the form "a:b"
+	 */
 	private String stringEntryRight(String entry){
 		StringBuilder sb = new StringBuilder();
 		boolean found = false;
@@ -134,6 +177,11 @@ public class SavegameFile extends File {
 		}
 		return sb.toString();
 	}
+	/**
+	 * Reads the next entry from the save, and saves the data to the entry variable
+	 * Ignores ";"'s
+	 * @param entry Entry to save data to
+	 */
 	private void processEntry(TableEntry entry) {
 		String saveEntry = readWord();
 		if (saveEntry.equals(";")) {
@@ -150,6 +198,10 @@ public class SavegameFile extends File {
 			entry.setNumberOf((int) numberOf);
 		entry.setNumberLabelText();
 	}
+	/**
+	 * Set's the number of an entry to 0 to reset it
+	 * @param entry Entry to set to 0
+	 */
 	private void resetEntry(TableEntry entry){
 		if(entry instanceof ResourcesEntry){
 			if(entry instanceof Absolute){

@@ -70,16 +70,16 @@ public class Mechanics {
 	void update(){
 		//Calculated how much population can be supported by food and buildings by multiplying each entry by their value
 		long populationCount = Data.main.POPULATION.getCount();
-		Data.main.setBuildingCount(0);
+		Data.setBuildingCount(0);
 		for(TableEntry entry:Data.getBuildingTable().getEntries()){
-			Data.main.setBuildingCount(Data.main.getBuildingCount()+entry.getNumberOf()*entry.getValue());
+			Data.setBuildingCount(Data.getBuildingCount()+entry.getNumberOf()*entry.getValue());
 		}
-		long buildingCount = Data.main.getBuildingCount();
-		Data.main.setFoodCount(0);
+		long buildingCount = Data.getBuildingCount();
+		Data.setFoodCount(0);
 		for(TableEntry entry:Data.getFoodTable().getEntries()){
-			Data.main.setFoodCount(Data.main.getFoodCount()+entry.getNumberOf()*entry.getValue());
+			Data.setFoodCount(Data.getFoodCount()+entry.getNumberOf()*entry.getValue());
 		}
-		long foodCount = Data.main.getFoodCount();
+		long foodCount = Data.getFoodCount();
 
 		//Algorithm for getting the next era (the one after the current one)
 		Era next = null;
@@ -450,7 +450,7 @@ public class Mechanics {
 	 * For the planet UI stuff done when the planet is clicked
 	 */
 	boolean planetClicked(){
-		Planet planet = Data.main.getCurrentPlanet();
+		Planet planet = Data.getCurrentPlanet();
 
 		planet.setMultiplier(clickMultiplier * planet.getMultiplier());
 		Data.ui.setPlanetLocation();
@@ -509,7 +509,7 @@ public class Mechanics {
 	 * Done when the planet is unclicked, returning it to normal
 	 */
 	void planetUnclicked(){
-		Planet planet = Data.main.getCurrentPlanet();
+		Planet planet = Data.getCurrentPlanet();
 		planet.setMultiplier(planet.getMultiplier() / clickMultiplier);
 		planet.setClicked(false);
 		Data.ui.updateResources();
@@ -577,11 +577,11 @@ public class Mechanics {
 			Data.ui.refreshTable();
 			if(Data.getResourceType()==ResourceType.BUILDINGS){
 				Data.setResourceType(ResourceType.NONE);
-				Data.main.setBuildingTableVisible(false);
+				Data.setBuildingTableVisible(false);
 				Data.ui.refreshBuildingTable();
 			} else {
 				Data.setResourceType(ResourceType.BUILDINGS);
-				Data.main.setBuildingTableVisible(true);
+				Data.setBuildingTableVisible(true);
 			}
 			Data.ui.updateResources();
 			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -599,11 +599,11 @@ public class Mechanics {
 			Data.ui.refreshTable();
 			if(Data.getResourceType()==ResourceType.FOOD){
 				Data.setResourceType(ResourceType.NONE);
-				Data.main.setFoodTableVisible(false);
+				Data.setFoodTableVisible(false);
 				Data.ui.refreshFoodTable();
 			} else {
 				Data.setResourceType(ResourceType.FOOD);
-				Data.main.setFoodTableVisible(true);
+				Data.setFoodTableVisible(true);
 			}
 			Data.ui.updateResources();
 			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -621,11 +621,11 @@ public class Mechanics {
 			Data.ui.refreshTable();
 			if(Data.getResourceType()==ResourceType.RESOURCES){
 				Data.setResourceType(ResourceType.NONE);
-				Data.main.setResourcesTableVisible(false);
+				Data.setResourcesTableVisible(false);
 				Data.ui.refreshResourcesTable();
 			} else {
 				Data.setResourceType(ResourceType.RESOURCES);
-				Data.main.setResourcesTableVisible(true);
+				Data.setResourcesTableVisible(true);
 			}
 			Data.ui.updateResources();
 			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -643,11 +643,11 @@ public class Mechanics {
 			Data.ui.refreshTable();
 			if(Data.getResourceType()==ResourceType.SPECIAL){
 				Data.setResourceType(ResourceType.NONE);
-				Data.main.setSpecialTableVisible(false);
+				Data.setSpecialTableVisible(false);
 				Data.ui.refreshBuildingTable();
 			} else {
 				Data.setResourceType(ResourceType.SPECIAL);
-				Data.main.setSpecialTableVisible(true);
+				Data.setSpecialTableVisible(true);
 			}
 			Data.ui.updateResources();
 			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -657,7 +657,7 @@ public class Mechanics {
 	public static class planetListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			return Data.main.getCurrentPlanet().pointInsidePlanet(x + Data.main.getCurrentPlanet().getX(), y + Data.main.getCurrentPlanet().getY()) && Data.mechanics.planetClicked();
+			return Data.getCurrentPlanet().pointInsidePlanet(x + Data.getCurrentPlanet().getX(), y + Data.getCurrentPlanet().getY()) && Data.mechanics.planetClicked();
 		}
 
 		@Override

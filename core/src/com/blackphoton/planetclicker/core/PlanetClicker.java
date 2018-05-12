@@ -9,6 +9,9 @@ import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.Resource;
 import com.blackphoton.planetclicker.resources.ResourceType;
 
+/**
+ * Main class extending ApplicationAdapter for game-wide events that aren't necessarily more mechanics, data or UI. Also has variables that must be non-static
+ */
 public class PlanetClicker extends ApplicationAdapter{
 	/**
 	 * Main batch to draw with
@@ -18,48 +21,8 @@ public class PlanetClicker extends ApplicationAdapter{
 	 * Main stage for clicking planet screen
 	 */
 	private Stage stage;
-	/**
-	 * Population support of buildings
-	 */
-	private long buildingCount;
-	/**
-	 * Population support of food
-	 */
-	private long foodCount;
-	/**
-	 * Whether the building purchase table is currently visible
-	 */
-	private boolean buildingTableVisible = false;
-	/**
-	 * Whether the food purchase table is currently visible
-	 */
-	private boolean foodTableVisible = false;
-	/**
-	 * Whether the resources purchase table is currently visible
-	 */
-	private boolean resourcesTableVisible = false;
-	/**
-	 * Whether the special purchase table is currently visible
-	 */
-	private boolean specialTableVisible = false;
 
-	/**
-	 * Earth texture
-	 */
-	private Texture tex_earth;
-	/**
-	 * Earth planet data
-	 */
-	private Planet earth;
-	/**
-	 * List of all loaded planets
-	 */
-	private Planet[] planets;
-	/**
-	 * Current Planet data
-	 */
-	private Planet currentPlanet;
-
+	//Resources
 	public Resource WOOD;
 	public Resource STONE;
 	public Resource BRONZE;
@@ -91,14 +54,6 @@ public class PlanetClicker extends ApplicationAdapter{
 		Data.setData(this);
 		Data.mechanics.createTables();
 
-		buildingCount = 0;
-		foodCount = 0;
-
-		tex_earth = new Texture("earth.png");
-		earth = new Planet(tex_earth, 128, 128, "01e");
-		planets = new Planet[]{earth};
-		currentPlanet = planets[0];
-
 		Gdx.input.setCatchBackKey(true);
 
 		batch = new SpriteBatch();
@@ -127,7 +82,7 @@ public class PlanetClicker extends ApplicationAdapter{
 	public void dispose() {
 		batch.dispose();
 		stage.dispose();
-		for(Planet planet:planets){
+		for(Planet planet:Data.getPlanets()){
 			planet.dispose();
 		}
 		Data.ui.dispose();
@@ -153,64 +108,13 @@ public class PlanetClicker extends ApplicationAdapter{
 	}
 
 	//Getters and Setters
-	public long getBuildingCount() {
-		return buildingCount;
-	}
-	public void setBuildingCount(long buildingCount) {
-		this.buildingCount = buildingCount;
-	}
-	public long getFoodCount() {
-		return foodCount;
-	}
-	public void setFoodCount(long foodCount) {
-		this.foodCount = foodCount;
+	public SpriteBatch getBatch() {
+		return batch;
 	}
 	public Stage getStage() {
 		return stage;
 	}
 	public void setStage(Stage stage) {
 		this.stage = stage;
-	}
-	public boolean isBuildingTableVisible() {
-		return buildingTableVisible;
-	}
-	public void setBuildingTableVisible(boolean buildingTableVisible) {
-		this.buildingTableVisible = buildingTableVisible;
-	}
-	public boolean isFoodTableVisible() {
-		return foodTableVisible;
-	}
-	public void setFoodTableVisible(boolean foodTableVisible) {
-		this.foodTableVisible = foodTableVisible;
-	}
-	public boolean isResourcesTableVisible() {
-		return resourcesTableVisible;
-	}
-	public void setResourcesTableVisible(boolean resourcesTableVisible) {
-		this.resourcesTableVisible = resourcesTableVisible;
-	}
-	public boolean isSpecialTableVisible() {
-		return specialTableVisible;
-	}
-	public void setSpecialTableVisible(boolean specialTableVisible) {
-		this.specialTableVisible = specialTableVisible;
-	}
-	public Texture getTex_earth() {
-		return tex_earth;
-	}
-	public Planet getEarth() {
-		return earth;
-	}
-	public Planet[] getPlanets() {
-		return planets;
-	}
-	public Planet getCurrentPlanet() {
-		return currentPlanet;
-	}
-	public void setCurrentPlanet(Planet currentPlanet) {
-		this.currentPlanet = currentPlanet;
-	}
-	public SpriteBatch getBatch() {
-		return batch;
 	}
 }

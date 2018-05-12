@@ -1,5 +1,9 @@
 package com.blackphoton.planetclicker.core;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.blackphoton.planetclicker.objectType.Planet;
+import com.blackphoton.planetclicker.objectType.Resource;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
 import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntry;
 import com.blackphoton.planetclicker.resources.ResourceType;
@@ -68,10 +72,56 @@ public class Data {
 	 */
 	private static ResourceType resourceType = ResourceType.NONE;
 
+	//Counts
+	/**
+	 * Population support of buildings
+	 */
+	private static long buildingCount;
+	/**
+	 * Population support of food
+	 */
+	private static long foodCount;
+
+	//Table visibility
+	/**
+	 * Whether the building purchase table is currently visible
+	 */
+	private static boolean buildingTableVisible = false;
+	/**
+	 * Whether the food purchase table is currently visible
+	 */
+	private static boolean foodTableVisible = false;
+	/**
+	 * Whether the resources purchase table is currently visible
+	 */
+	private static boolean resourcesTableVisible = false;
+	/**
+	 * Whether the special purchase table is currently visible
+	 */
+	private static boolean specialTableVisible = false;
+
+	//Planets
+	/**
+	 * Earth planet data
+	 */
+	private static Planet earth;
+	/**
+	 * List of all loaded planets
+	 */
+	private static Planet[] planets;
+	/**
+	 * Current Planet data
+	 */
+	private static Planet currentPlanet;
+
 	/**
 	 * Sets all data to values to be used. Call once at start.
 	 */
 	public static void setData(PlanetClicker planetClicker){
+		ui = new UI();
+		mechanics = new Mechanics();
+		main = planetClicker;
+
 		eraList = new ArrayList<Era>();
 		Era cavemen = new Era("Cavemen", 2L, "cavemen.png");
 		Era bronze = new Era("Bronze", 400L, "bronze.png");
@@ -94,9 +144,13 @@ public class Data {
 		eraList.add(future);
 		eraList.add(endgame);
 
-		ui = new UI();
-		mechanics = new Mechanics();
-		main = planetClicker;
+		buildingCount = 0;
+		foodCount = 0;
+
+		Data.ui.setTex_earth(new Texture("earth.png"));
+		earth = new Planet(Data.ui.getTex_earth(), 128, 128, "01e");
+		planets = new Planet[]{earth};
+		currentPlanet = planets[0];
 
 		currentEra = cavemen;
 	}
@@ -163,5 +217,53 @@ public class Data {
 	}
 	public static void setCurrentTable(TableInfo currentTable) {
 		Data.currentTable = currentTable;
+	}
+	public static long getBuildingCount() {
+		return buildingCount;
+	}
+	public static void setBuildingCount(long buildingCount) {
+		Data.buildingCount = buildingCount;
+	}
+	public static long getFoodCount() {
+		return foodCount;
+	}
+	public static void setFoodCount(long foodCount) {
+		Data.foodCount = foodCount;
+	}
+	public static boolean isBuildingTableVisible() {
+		return buildingTableVisible;
+	}
+	public static void setBuildingTableVisible(boolean buildingTableVisible) {
+		Data.buildingTableVisible = buildingTableVisible;
+	}
+	public static boolean isFoodTableVisible() {
+		return foodTableVisible;
+	}
+	public static void setFoodTableVisible(boolean foodTableVisible) {
+		Data.foodTableVisible = foodTableVisible;
+	}
+	public static boolean isResourcesTableVisible() {
+		return resourcesTableVisible;
+	}
+	public static void setResourcesTableVisible(boolean resourcesTableVisible) {
+		Data.resourcesTableVisible = resourcesTableVisible;
+	}
+	public static boolean isSpecialTableVisible() {
+		return specialTableVisible;
+	}
+	public static void setSpecialTableVisible(boolean specialTableVisible) {
+		Data.specialTableVisible = specialTableVisible;
+	}
+	public static Planet getEarth() {
+		return earth;
+	}
+	public static Planet[] getPlanets() {
+		return planets;
+	}
+	public static Planet getCurrentPlanet() {
+		return currentPlanet;
+	}
+	public static void setCurrentPlanet(Planet currentPlanet) {
+		Data.currentPlanet = currentPlanet;
 	}
 }
