@@ -9,6 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.blackphoton.planetclicker.core.Data;
 
+/**
+ * Class for creating a UI box that contains a large quantity of text and a back button
+ */
 public class Info extends DisplayBox{
 	private Label title;
 	private Label info;
@@ -16,6 +19,11 @@ public class Info extends DisplayBox{
 	private Table infoTable;
 	private Actor parent;
 
+	/**
+	 * @param title Title of the box
+	 * @param info Text to include in the box. Auto-wraps.
+	 * @param parent Parent actor opened from. When the box is opened the parent becomes invisible, and when closed the parent becomes invisible. Null if no parent.
+	 */
 	public Info(String title, String info, Actor parent) {
 		this.title = new Label(title, Data.ui.getSkin());
 		this.info = new Label(info, Data.ui.getSkin());
@@ -54,8 +62,11 @@ public class Info extends DisplayBox{
 		infoTable.setVisible(false);
 	}
 
+	/**
+	 * Makes the box visible and the parent invisible
+	 */
 	public void show(){
-		parent.setVisible(false);
+		if(parent!=null) parent.setVisible(false);
 		infoTable.setVisible(true);
 	}
 
@@ -66,49 +77,35 @@ public class Info extends DisplayBox{
 	public class backListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			parent.setVisible(true);
+			if(parent!=null) parent.setVisible(true);
 			infoTable.setVisible(false);
 			return true;
 		}
 	}
 
+	//Getters and Setters
 	public Label getTitle() {
 		return title;
 	}
-
 	public void setTitle(Label title) {
 		this.title = title;
 	}
-
 	public Label getInfo() {
 		return info;
 	}
-
 	public void setInfo(Label info) {
 		this.info = info;
 	}
-
 	public TextButton getBack() {
 		return back;
 	}
-
 	public void setBack(TextButton back) {
 		this.back = back;
 	}
-
 	public Table getInfoTable() {
 		return infoTable;
 	}
-
 	public void setInfoTable(Table infoTable) {
 		this.infoTable = infoTable;
-	}
-
-	public Actor getParent() {
-		return parent;
-	}
-
-	public void setParent(Actor parent) {
-		this.parent = parent;
 	}
 }

@@ -12,14 +12,31 @@ import com.blackphoton.planetclicker.resources.ResourceType;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * Table Entry for Special buildings
+ */
 public class SpecialEntry extends TableEntry {
 
+	/**
+	 * Can you build the structure. This is true when you have spend the initial resources.
+	 */
 	private boolean canBuild = false;
-
+	/**
+	 * Has the special been completed
+	 */
 	private boolean complete;
 
+	/**
+	 * @param name Name of resource
+	 * @param value Value of 1 resource
+	 * @param location Image location
+	 * @param requiredEra Era needed to purchase
+	 * @param upgradeTo Entry to turn into when upgraded
+	 * @param resourcesNeeded Resources needed to buy
+	 * @param resources Resource Bundle containing the population requirement
+	 */
 	public SpecialEntry(String name, int value, String location, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ResourceBundle resources) {
-		super(ResourceType.SPECIAL, name, value, location, requiredEra, upgradeTo,resourcesNeeded, null, resources);
+		super(ResourceType.SPECIAL, name, value, location, requiredEra, upgradeTo,resourcesNeeded, null);
 
 		int pop_req = (Integer) resources.getObject(resources.getKeys().nextElement());
 
@@ -27,9 +44,13 @@ public class SpecialEntry extends TableEntry {
 		setNumberLabelText();
 	}
 
+	/**
+	 * Adds to entry, and depending on state of the entry, removes resources, moves towards 100% or set's complete, setting the era.
+	 */
 	@Override
 	public void onClick(){
 		if (isCanBuild()){
+			//Do nothing at 100%
 			if(getPercent()==100) return;
 
 			addToEntry();
@@ -37,6 +58,8 @@ public class SpecialEntry extends TableEntry {
 
 			if(getPercent()==100){
 				if(!isComplete()){
+					//Set complete and update era
+
 					setComplete(true);
 					boolean found = false;
 					for(Era era: Data.getEraList()){
@@ -54,28 +77,22 @@ public class SpecialEntry extends TableEntry {
 
 			return;
 		}else{
+			//Build, take resources, make it free and reload sidebar.
 			setCanBuild(true);
 			Data.mechanics.subtractResources(getResourcesNeeded());
 			setResourcesNeeded(null);
 			Data.ui.loadSideBar(Data.getSelectedEntry(), true);
 
-			addToEntry();
+			addToEntry(); //Creates an initial one to make saving the game a LOT easier
 		}
 	}
 
-	public int getPercent(){
+	/**
+	 * Get's the percentage complete
+	 * @return Percentage complete
+	 */
+	private int getPercent(){
 		return Math.round(((float) numberOf)/ ((float) value)*100);
-	}
-
-	@Override
-	public Label getNumberLabel() {
-		return numberLabel;
-	}
-
-	@Override
-	public void setNumberLabelText() {
-		this.numberLabel.setText(Integer.toString(getPercent())+"%");
-		if(getPercent()==100) numberLabel.setColor(Color.GREEN);
 	}
 
 	@Override
@@ -100,23 +117,28 @@ public class SpecialEntry extends TableEntry {
 		canUpgrade = false;
 	}
 
-	@Override
-	public void setNumberLabelText(String text) {
+	//Setters and Getters
+	@Override public Label getNumberLabel() {
+		return numberLabel;
+	}
+	/**
+	 * Updates the Number Label text automagically, so it shows the current %
+	 */ @Override public void setNumberLabelText() {
+		this.numberLabel.setText(Integer.toString(getPercent()) + "%");
+		if (getPercent() == 100) numberLabel.setColor(Color.GREEN);
+	}
+	@Override public void setNumberLabelText(String text) {
 		this.numberLabel.setText(text);
 	}
-
 	public boolean isCanBuild() {
 		return canBuild;
 	}
-
 	public void setCanBuild(boolean canBuild) {
 		this.canBuild = canBuild;
 	}
-
 	public boolean isComplete() {
 		return complete;
 	}
-
 	public void setComplete(boolean complete) {
 		this.complete = complete;
 	}

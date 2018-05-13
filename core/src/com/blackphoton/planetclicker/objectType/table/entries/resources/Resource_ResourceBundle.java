@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 
+/**
+ * ResourceBundle for default Resource properties
+ */
 public class Resource_ResourceBundle extends ResourceBundle {
 	Resource material;
 	TableEntry entry;

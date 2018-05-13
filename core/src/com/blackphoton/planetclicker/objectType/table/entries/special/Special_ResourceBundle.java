@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 
+/**
+ * ResourceBundle for default Special properties
+ */
 public class Special_ResourceBundle extends ResourceBundle{
 	private int era;
 	private ArrayList keyList;

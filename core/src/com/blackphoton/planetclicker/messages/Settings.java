@@ -7,18 +7,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.blackphoton.planetclicker.core.Data;
 
+/**
+ * Creates the settings UI interface
+ */
 public class Settings extends DisplayBox{
 	private Table settingsGroup;
 	private Label title;
 	private TextButton about;
 	private TextButton reset;
 	private TextButton quit;
-	Info aboutInfo;
-	ConfirmBox resetConfirm;
-	ConfirmBox quitConfirm;
+	private Info aboutInfo;
+	private ConfirmBox resetConfirm;
+	private ConfirmBox quitConfirm;
 
 	public Settings() {
-		super();
 		Skin skin = Data.ui.getSkin();
 
 		final float padding = 5.0f;
@@ -51,10 +53,12 @@ public class Settings extends DisplayBox{
 
 		settingsGroup.setVisible(false);
 
+		//Creates the 3 main boxes - For about, reset and quit
 		aboutInfo = new Info("About", "Aedmun Version 0.3.0\nCreated by Black-Photon\nSoftware and Art Copyrighted to Joseph Keane April 2018\nDistributed under Apache Licence", settingsGroup);
 		resetConfirm = new ConfirmBox("Reset Data?", "The data will be lost forever, so be sure!", settingsGroup, new ClickListener(){
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				//Delete game, return to settings and reset the population counter
 				Data.mechanics.getFile().deleteGame();
 				settingsGroup.setVisible(true);
 				resetConfirm.getInfoTable().setVisible(false);
@@ -99,23 +103,16 @@ public class Settings extends DisplayBox{
 		}
 	}
 
-
+	//Getters and Setters
 	public Table getSettingsGroup() {
 		return settingsGroup;
 	}
-
-	public void setSettingsGroup(Table settingsGroup) {
-		this.settingsGroup = settingsGroup;
-	}
-
 	public Info getAboutInfo() {
 		return aboutInfo;
 	}
-
 	public ConfirmBox getResetConfirm() {
 		return resetConfirm;
 	}
-
 	public ConfirmBox getQuitConfirm() {
 		return quitConfirm;
 	}

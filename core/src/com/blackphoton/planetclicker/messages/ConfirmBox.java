@@ -9,6 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.blackphoton.planetclicker.core.Data;
 
+/**
+ * A menu-box for the user to confirm they indeed want to do something
+ */
 public class ConfirmBox extends DisplayBox {
 	private Label title;
 	private Label info;
@@ -17,6 +20,12 @@ public class ConfirmBox extends DisplayBox {
 	private Table infoTable;
 	private Actor parent;
 
+	/**
+	 * @param title Title of the Confirm Box
+	 * @param info Info to display under the title
+	 * @param parent Parent actor opened from. When the box is opened the parent becomes invisible, and when closed the parent becomes invisible. Null if no parent.
+	 * @param ifYes Event to do when the user confirms. The box closes if not confirmed.
+	 */
 	public ConfirmBox(String title, String info, Actor parent, ClickListener ifYes) {
 		this.title = new Label(title, Data.ui.getSkin());
 		this.info = new Label(info, Data.ui.getSkin());
@@ -61,8 +70,11 @@ public class ConfirmBox extends DisplayBox {
 		infoTable.setVisible(false);
 	}
 
+	/**
+	 * Makes the box visible and the parent invisible
+	 */
 	public void show(){
-		parent.setVisible(false);
+		if(parent!=null) parent.setVisible(false);
 		infoTable.setVisible(true);
 	}
 
@@ -73,41 +85,29 @@ public class ConfirmBox extends DisplayBox {
 	public class noListener extends ClickListener {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			parent.setVisible(true);
+			if(parent!=null) parent.setVisible(true);
 			infoTable.setVisible(false);
 			return true;
 		}
 	}
 
+	//Getters and Setters
 	public Label getTitle() {
 		return title;
 	}
-
 	public void setTitle(Label title) {
 		this.title = title;
 	}
-
 	public Label getInfo() {
 		return info;
 	}
-
 	public void setInfo(Label info) {
 		this.info = info;
 	}
-
 	public Table getInfoTable() {
 		return infoTable;
 	}
-
 	public void setInfoTable(Table infoTable) {
 		this.infoTable = infoTable;
-	}
-
-	public Actor getParent() {
-		return parent;
-	}
-
-	public void setParent(Actor parent) {
-		this.parent = parent;
 	}
 }

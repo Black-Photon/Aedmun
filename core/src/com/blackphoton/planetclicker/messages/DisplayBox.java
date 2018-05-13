@@ -6,7 +6,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-public abstract class DisplayBox {
+/**
+ * Superclass for display boxes displaying user interface, including things like buttons and text.
+ * Contains all the relevant textures and positioning
+ */
+abstract class DisplayBox {
 	protected Texture setting_background;
 	protected Texture setting_side;
 	protected Texture setting_top;

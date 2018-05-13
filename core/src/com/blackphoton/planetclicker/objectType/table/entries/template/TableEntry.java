@@ -16,6 +16,9 @@ import com.blackphoton.planetclicker.resources.ResourceType;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * Abstract class for Table entries
+ */
 public abstract class TableEntry {
 	protected ResourceType type;
 	protected String name;
@@ -44,10 +47,19 @@ public abstract class TableEntry {
 	protected Texture texture;
 	protected Image image;
 
-	public TableEntry(ResourceType type, String name, int value, String location, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade, ResourceBundle resources){
+	/**
+	 * @param type Type of resource
+	 * @param name Name of resource
+	 * @param value Value of 1 resource
+	 * @param location Image location
+	 * @param requiredEra Era needed to purchase
+	 * @param upgradeTo Entry to turn into when upgraded
+	 * @param resourcesNeeded Resources needed to buy
+	 * @param resourcesNeededToUpgrade Resources needed to upgrade
+	 */
+	public TableEntry(ResourceType type, String name, int value, String location, Era requiredEra, TableEntry upgradeTo, ArrayList<RequiredResource> resourcesNeeded, ArrayList<RequiredResource> resourcesNeededToUpgrade){
 		this.type = type;
 		numberOf = 0;
-		this.resources = resources;
 		this.upgradeTo = upgradeTo;
 		this.requiredEra = requiredEra;
 		this.name = name;
@@ -85,6 +97,9 @@ public abstract class TableEntry {
 		numberOf--;
 	}
 
+	/**
+	 * Redraws the entry, updating the Era, Create and Upgrade, as well as permissions.
+	 */
 	public void updateButtons(){
 		if(name==null) return;
 
@@ -118,11 +133,17 @@ public abstract class TableEntry {
 		}
 	}
 
+	/**
+	 * Adds one and removes resources
+	 */
 	public void onClick(){
 		addToEntry();
 		Data.mechanics.subtractResources(getResourcesNeeded());
 	}
 
+	/**
+	 * Set's create and upgrade to be not clicked
+	 */
 	public void unclick(){
 		createClicked = false;
 		upgradeClicked = false;
@@ -177,154 +198,118 @@ public abstract class TableEntry {
 		}
 	}
 
+	//Getters and Setters
 	public ResourceType getType() {
 		return type;
 	}
-
 	public void setType(ResourceType type) {
 		this.type = type;
 	}
-
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public long getValue() {
 		return value;
 	}
-
 	public void setValue(long value) {
 		this.value = value;
 	}
-
 	public long getNumberOf() {
 		return numberOf;
 	}
-
 	public void setNumberOf(long numberOf) {
 		this.numberOf = numberOf;
 	}
-
 	public Image getCreate() {
 		return create;
 	}
-
 	public void setCreate(Image create) {
 		this.create = create;
 	}
-
 	public Image getUpgrade() {
 		return upgrade;
 	}
-
 	public void setUpgrade(Image upgrade) {
 		this.upgrade = upgrade;
 	}
-
 	public boolean isCanCreate() {
 		return canCreate;
 	}
-
 	public void setCanCreate(boolean canCreate) {
 		this.canCreate = canCreate;
 	}
-
 	public boolean isCanUpgrade() {
 		return canUpgrade;
 	}
-
 	public void setCanUpgrade(boolean canUpgrade) {
 		this.canUpgrade = canUpgrade;
 	}
-
 	public TableEntry getUpgradeTo() {
 		return upgradeTo;
 	}
-
 	public void setUpgradeTo(TableEntry upgradeTo) {
 		this.upgradeTo = upgradeTo;
 	}
-
 	public boolean isCreateClicked() {
 		return createClicked;
 	}
-
 	public void setCreateClicked(boolean createClicked) {
 		this.createClicked = createClicked;
 	}
-
 	public boolean isUpgradeClicked() {
 		return upgradeClicked;
 	}
-
 	public void setUpgradeClicked(boolean upgradeClicked) {
 		this.upgradeClicked = upgradeClicked;
 	}
-
 	public boolean isUpgradable() {
 		return upgradable;
 	}
-
 	public void setUpgradable(boolean upgradable) {
 		this.upgradable = upgradable;
 	}
-
 	public ArrayList<RequiredResource> getResourcesNeeded() {
 		return resourcesNeeded;
 	}
-
 	public void setResourcesNeeded(ArrayList<RequiredResource> resourcesNeeded) {
 		this.resourcesNeeded = resourcesNeeded;
 	}
-
 	public ArrayList<RequiredResource> getResourcesNeededToUpgrade() {
 		return resourcesNeededToUpgrade;
 	}
-
 	public void setResourcesNeededToUpgrade(ArrayList<RequiredResource> resourcesNeededToUpgrade) {
 		this.resourcesNeededToUpgrade = resourcesNeededToUpgrade;
 	}
-
 	public Label getNumberLabel() {
 		return numberLabel;
 	}
-
 	public void setNumberLabelText() {
 		this.numberLabel.setText(Long.toString(numberOf));
 	}
-
 	public void setNumberLabelText(String text) {
 		this.numberLabel.setText(text);
 	}
-
 	public Label getValueLabel() {
 		return valueLabel;
 	}
-
 	public void setValueLabelText() {
 		this.valueLabel.setText(Long.toString(value));
 	}
-
 	public void setValueLabelText(String text) {
 		this.valueLabel.setText(text);
 	}
-
 	public Texture getTexture() {
 		return texture;
 	}
-
 	public void setTexture(Texture texture) {
 		this.texture = texture;
 	}
-
 	public Image getImage() {
 		return image;
 	}
-
 	public void setImage(Image image) {
 		this.image = image;
 	}
