@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.blackphoton.planetclicker.resources.NotSymmetricalException;
 
+/**
+ * Holds data about a planet as well as managing the planets image
+ */
 public class Planet extends Actor {
 	private Texture texture;
 	private int initial_width;
@@ -22,71 +25,17 @@ public class Planet extends Actor {
 	 */
 	private float multiplier = 1;
 
+	/**
+	 * @param texture Planet Texture
+	 * @param initial_width Initial planet width (used as a constant independent of scaling)
+	 * @param initial_height Initial planet height (used as a constant independent of scaling)
+	 * @param id Unique identifier for this planet, to distinguish from others
+	 */
 	public Planet(Texture texture, int initial_width, int initial_height, String id){
 		this.texture = texture;
 		this.initial_height = initial_height;
 		this.initial_width = initial_width;
 		this.id = id;
-	}
-	public Texture getTexture() {
-		return texture;
-	}
-	public void setTexture(Texture texture) {
-		this.texture = texture;
-	}
-	public float getWidth(){
-		return initial_width* multiplier;
-	}
-	public float getHeight(){
-		return initial_height* multiplier;
-	}
-
-	public int getInitial_width() {
-		return initial_width;
-	}
-
-	public int getInitial_height() {
-		return initial_height;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setMultiplier(float multiplier){
-		this.multiplier=multiplier;
-	}
-
-	public float getMultiplier() {
-		return multiplier;
-	}
-
-	public void dispose(){
-		texture.dispose();
-	}
-
-	public float getX() {
-		return x;
-	}
-
-	public void setX(float x) {
-		this.x = x;
-	}
-
-	public float getY() {
-		return y;
-	}
-
-	public void setY(float y) {
-		this.y = y;
-	}
-
-	public boolean isClicked() {
-		return clicked;
-	}
-
-	public void setClicked(boolean clicked) {
-		this.clicked = clicked;
 	}
 
 	/**
@@ -109,5 +58,56 @@ public class Planet extends Actor {
 	@Override
 	public void draw(Batch batch, float alpha){
 		batch.draw(getTexture(), getX(), getY(), getWidth(), getHeight());
+	}
+
+	public void dispose(){
+		texture.dispose();
+	}
+
+	//Getters and Setters
+	public Texture getTexture() {
+		return texture;
+	}
+	public void setTexture(Texture texture) {
+		this.texture = texture;
+	}
+	public float getWidth(){
+		return initial_width* multiplier;
+	}
+	public float getHeight(){
+		return initial_height* multiplier;
+	}
+	public int getInitial_width() {
+		return initial_width;
+	}
+	public int getInitial_height() {
+		return initial_height;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setMultiplier(float multiplier){
+		this.multiplier=multiplier;
+	}
+	public float getMultiplier() {
+		return multiplier;
+	}
+	public float getX() {
+		return x;
+	}
+	public void setX(float x) {
+		this.x = x;
+	}
+	public float getY() {
+		return y;
+	}
+	public void setY(float y) {
+		this.y = y;
+	}
+	public boolean isClicked() {
+		return clicked;
+	}
+	public void setClicked(boolean clicked) {
+		this.clicked = clicked;
 	}
 }

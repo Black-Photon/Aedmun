@@ -114,6 +114,9 @@ public class Data {
 	 */
 	private static Planet currentPlanet;
 
+	//Version
+	public static final String VERSION = "Alpha 0.3.1";
+
 	/**
 	 * Sets all data to values to be used. Call once at start.
 	 */
