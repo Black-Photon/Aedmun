@@ -84,6 +84,7 @@ public class UI {
 	private GlyphLayout glyphLayout;
 	private BitmapFont bitmapFont;
 	private float heightScale;
+	private float uiScale;
 	/**
 	 * Contains both the InputDetector input and Stage input
 	 */
@@ -99,6 +100,7 @@ public class UI {
 	private Texture tex_earth;
 
 	private Settings settings;
+	private TextButton tutorialMax;
 
 	void createUI(){
 		//General Declarations
@@ -190,6 +192,9 @@ public class UI {
 		era = new Image(new Texture("cavemen.png"));
 
 		updateEra();
+
+		tutorialMax = new TextButton(" + ", skin);
+		tutorialMax.addListener(new Mechanics.maximizeListener());
 
 		Planet planet = Data.getCurrentPlanet();
 		planet.setMultiplier(Gdx.graphics.getWidth() / planet.getInitial_width() * 0.325f);
@@ -307,6 +312,7 @@ public class UI {
 		stage.addActor(era);
 		stage.addActor(planet);
 		stage.addActor(insufficientResources);
+		stage.addActor(tutorialMax);
 		Data.main.setStage(stage);
 
 		multiplexer = new InputMultiplexer(stage, new InputDetector());
@@ -345,15 +351,33 @@ public class UI {
 		refreshResourcesTable();
 		refreshSpecialTable();
 
-		settings.resize(width, height, heightScale, stage);
-		settings.getAboutInfo().resize(width, height, heightScale, stage);
-		settings.getResetConfirm().resize(width, height, heightScale, stage);
-		settings.getQuitConfirm().resize(width, height, heightScale, stage);
-		settings.getTutorialErrorInfo().resize(width, height, heightScale, stage);
-		Data.mechanics.getTest().resize(width, height, heightScale, stage);
-		Data.mechanics.getCollection().resize(width, height, heightScale, stage);
+		float UIMultiplier = 4f;
+		float hScale = ((float) height/480f); //480 = default height
+		hScale = (float) Math.pow(UIMultiplier, hScale-1); //Magic. Oooooohh
+		float wScale = ((float) width/360f); //360 = default height
+		wScale = (float) Math.pow(UIMultiplier, wScale-1); //Moar Magic. Oooooohh
+		float lowScale = (hScale>wScale ? wScale : hScale);
+		UIMultiplier = 1.4f;
+		hScale = ((float) height/480f); //480 = default height
+		hScale = (float) Math.pow(UIMultiplier, hScale-1); //Magic. Oooooohh
+		wScale = ((float) width/360f); //360 = default height
+		wScale = (float) Math.pow(UIMultiplier, wScale-1); //Moar Magic. Oooooohh
+		float highScale = (hScale>wScale ? wScale : hScale);
+
+		uiScale = lowScale<1 ? lowScale:highScale;
+
+		settings.resize(width, height, uiScale, stage);
+		settings.getAboutInfo().resize(width, height, uiScale, stage);
+		settings.getResetConfirm().resize(width, height, uiScale, stage);
+		settings.getQuitConfirm().resize(width, height, uiScale, stage);
+		settings.getTutorialErrorInfo().resize(width, height, uiScale, stage);
+		Data.mechanics.getTest().resize(width, height, uiScale, stage);
+		Data.mechanics.getCollection().resize(width, height, uiScale, stage);
 
 		if(Data.getSelectedEntry()!=null) loadSideBar(Data.getSelectedEntry(), Data.getSelectedEntry().isCreateClicked());
+
+		tutorialMax.setBounds(20, resources_tex.getHeight()+20, height/20, height/20);
+		if(Data.isTutorialRunning() && Data.isTutorialMinimized()) tutorialMax.setVisible(true); else tutorialMax.setVisible(false);
 	}
 
 	/**
@@ -851,6 +875,10 @@ public class UI {
 
 	void dispose(){
 
+	}
+
+	public void setMaximizeVisible(boolean visible){
+		tutorialMax.setVisible(visible);
 	}
 
 	//Getters and Setters

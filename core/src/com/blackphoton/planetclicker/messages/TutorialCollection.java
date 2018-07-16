@@ -41,4 +41,7 @@ public class TutorialCollection {
 			messageIndex++;
 		}
 	}
+	public TutorialInfo getCurrentMessage(){
+		return messages.get(messageIndex-1);
+	}
 }

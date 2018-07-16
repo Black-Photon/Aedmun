@@ -76,8 +76,7 @@ public class Mechanics {
 		page10 = new TutorialInfo("Tutorial", "Well done! If you wait and your food doesn't run out, you should see the population increase to 4. Build more houses and collect more food to let more people live.", "OK", null, 10);
 		page11 = new TutorialInfo("Tutorial", "When you reach a population of 400, you'll be able to move onto the next by building a monument in the last tab. These have a high population, resource and click requirement, but will unlock higher populations and the abilities the new era offers.", "OK", null, 11);
 		page12 = new TutorialInfo("Tutorial", "Have fun playing!", "OK", null, 12);
-		collection = new TutorialCollection(page1, page2, page3, page4, page5, page6, page7, page8, page9, page10, page11, page12);
-		collection.setData();
+		createTutorial();
 
 		if(file.exists()) {
 			//Reads the savefile
@@ -748,6 +747,14 @@ public class Mechanics {
 			return true;
 		}
 	}
+	public static class maximizeListener extends ClickListener {
+		@Override
+		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			Data.mechanics.collection.getCurrentMessage().maximize();
+
+			return true;
+		}
+	}
 
 	void dispose(){
 
@@ -761,6 +768,11 @@ public class Mechanics {
 		Data.setTutorial(false);
 		System.out.println("Starting Tutorial");
 		test.show();
+	}
+
+	public void createTutorial(){
+		collection = new TutorialCollection(page1, page2, page3, page4, page5, page6, page7, page8, page9, page10, page11, page12);
+		collection.setData();
 	}
 
 	public static class tutorialStart extends ClickListener {

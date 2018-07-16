@@ -79,6 +79,10 @@ public class Data {
 	 * Whether the tutorial is currently running
 	 */
 	private static boolean tutorialRunning = false;
+	/**
+	 * Whether the tutorial is currently minimized
+	 */
+	private static boolean tutorialMinimized = false;
 
 	//Counts
 	/**
@@ -288,5 +292,11 @@ public class Data {
 	}
 	public static void setTutorialRunning(boolean tutorialRunning) {
 		Data.tutorialRunning = tutorialRunning;
+	}
+	public static boolean isTutorialMinimized() {
+		return tutorialMinimized;
+	}
+	public static void setTutorialMinimized(boolean tutorialMinimized) {
+		Data.tutorialMinimized = tutorialMinimized;
 	}
 }

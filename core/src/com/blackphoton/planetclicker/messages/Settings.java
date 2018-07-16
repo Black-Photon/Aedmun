@@ -77,6 +77,7 @@ public class Settings extends DisplayBox{
 
 				Data.ui.setEverythingTouchable(Touchable.enabled);
 
+				Data.mechanics.createTutorial();
 				Data.setTutorial(true);
 				return true;
 			}
