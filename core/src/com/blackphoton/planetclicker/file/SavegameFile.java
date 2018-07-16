@@ -5,6 +5,9 @@ import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.table.entries.resources.Absolute;
 import com.blackphoton.planetclicker.objectType.table.entries.template.ResourcesEntry;
 import com.blackphoton.planetclicker.objectType.table.entries.template.TableEntry;
+import com.blackphoton.planetclicker.resources.FileDoesNotExistException;
+
+import java.nio.file.NoSuchFileException;
 
 /**
  * Manages the save file
@@ -50,10 +53,38 @@ public class SavegameFile extends File {
 		handle.writeString(";\n", true);
 	}
 	/**
+	 * Resets data to 0 in save-file and reads the new empty data
+	 */
+	public void deleteGame(){
+		if(!exists()) throw new FileDoesNotExistException();
+
+		handle.delete();
+
+		Data.main.POPULATION.setCount(2);
+		for(Era era: Data.getEraList()){
+			Data.setCurrentEra(Data.getEraList().get(0));
+		}
+		for(TableEntry entry: Data.getBuildingTable().getEntries()) {
+			resetEntry(entry);
+		}
+		for(TableEntry entry: Data.getFoodTable().getEntries()) {
+			resetEntry(entry);
+		}
+		for(TableEntry entry: Data.getResourcesTable().getEntries()) {
+			resetEntry(entry);
+		}
+		for(TableEntry entry: Data.getSpecialTable().getEntries()) {
+			resetEntry(entry);
+		}
+
+		saveGame();
+		readGame();
+	}
+	/**
 	 * Reads and interprets the save-file
 	 */
 	public void readGame(){
-		if(!handle.exists())return;
+		if(!exists()) throw new FileDoesNotExistException();
 
 		everything = handle.readString();
 
@@ -88,30 +119,10 @@ public class SavegameFile extends File {
 		}
 	}
 	/**
-	 * Resets data to 0 in save-file and reads the new empty data
+	 * Checks if the file exists
 	 */
-	public void deleteGame(){
-		handle.delete();
-
-		Data.main.POPULATION.setCount(2);
-		for(Era era: Data.getEraList()){
-			Data.setCurrentEra(Data.getEraList().get(0));
-		}
-		for(TableEntry entry: Data.getBuildingTable().getEntries()) {
-			resetEntry(entry);
-		}
-		for(TableEntry entry: Data.getFoodTable().getEntries()) {
-			resetEntry(entry);
-		}
-		for(TableEntry entry: Data.getResourcesTable().getEntries()) {
-			resetEntry(entry);
-		}
-		for(TableEntry entry: Data.getSpecialTable().getEntries()) {
-			resetEntry(entry);
-		}
-
-		saveGame();
-		readGame();
+	public boolean exists() {
+		return handle.exists();
 	}
 
 	/**

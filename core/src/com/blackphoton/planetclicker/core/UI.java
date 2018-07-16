@@ -349,6 +349,9 @@ public class UI {
 		settings.getAboutInfo().resize(width, height, heightScale, stage);
 		settings.getResetConfirm().resize(width, height, heightScale, stage);
 		settings.getQuitConfirm().resize(width, height, heightScale, stage);
+		settings.getTutorialErrorInfo().resize(width, height, heightScale, stage);
+		Data.mechanics.getTest().resize(width, height, heightScale, stage);
+		Data.mechanics.getCollection().resize(width, height, heightScale, stage);
 
 		if(Data.getSelectedEntry()!=null) loadSideBar(Data.getSelectedEntry(), Data.getSelectedEntry().isCreateClicked());
 	}
@@ -571,7 +574,7 @@ public class UI {
 	 * Set's all the main elements touchable or untouchable for pause features
 	 * @param touchable Whether yuou can touch all the elements
 	 */
-	void setEverythingTouchable(Touchable touchable){
+	public void setEverythingTouchable(Touchable touchable){
 		Data.getCurrentPlanet().setTouchable(touchable);
 		resourceGroup.setTouchable(touchable);
 

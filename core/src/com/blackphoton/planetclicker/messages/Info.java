@@ -13,11 +13,11 @@ import com.blackphoton.planetclicker.core.Data;
  * Class for creating a UI box that contains a large quantity of text and a back button
  */
 public class Info extends DisplayBox{
-	private Label title;
-	private Label info;
-	private TextButton back;
-	private Table infoTable;
-	private Actor parent;
+	protected Label title;
+	protected Label info;
+	protected TextButton back;
+	protected Table infoTable;
+	protected Actor parent;
 
 	/**
 	 * @param title Title of the box
@@ -25,9 +25,18 @@ public class Info extends DisplayBox{
 	 * @param parent Parent actor opened from. When the box is opened the parent becomes invisible, and when closed the parent becomes invisible. Null if no parent.
 	 */
 	public Info(String title, String info, Actor parent) {
+		this(title, info, "Back", parent);
+	}
+	/**
+	 * @param title Title of the box
+	 * @param info Text to include in the box. Auto-wraps.
+	 * @param info Text to have on the button.
+	 * @param parent Parent actor opened from. When the box is opened the parent becomes invisible, and when closed the parent becomes invisible. Null if no parent.
+	 */
+	public Info(String title, String info, String button, Actor parent) {
 		this.title = new Label(title, Data.ui.getSkin());
 		this.info = new Label(info, Data.ui.getSkin());
-		back = new TextButton("Back", Data.ui.getSkin());
+		back = new TextButton(button, Data.ui.getSkin());
 		infoTable = new Table();
 		infoTable.setSkin(Data.ui.getSkin());
 		this.parent = parent;

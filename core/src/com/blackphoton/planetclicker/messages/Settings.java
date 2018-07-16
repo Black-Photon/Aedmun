@@ -3,9 +3,11 @@ package com.blackphoton.planetclicker.messages;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.blackphoton.planetclicker.core.Data;
+import com.blackphoton.planetclicker.core.Mechanics;
 
 /**
  * Creates the settings UI interface
@@ -19,6 +21,7 @@ public class Settings extends DisplayBox{
 	private Info aboutInfo;
 	private ConfirmBox resetConfirm;
 	private ConfirmBox quitConfirm;
+	private Info tutorialErrorInfo;
 
 	public Settings() {
 		Skin skin = Data.ui.getSkin();
@@ -53,18 +56,28 @@ public class Settings extends DisplayBox{
 
 		settingsGroup.setVisible(false);
 
+		tutorialErrorInfo = new Info("Error", "Please finish tutorial first", settingsGroup);
+
 		//Creates the 3 main boxes - For about, reset and quit
 		aboutInfo = new Info("About", "Aedmun Version "+Data.VERSION+"\nCreated by Black-Photon\nSoftware and Art Copyrighted to Joseph Keane April 2018\nDistributed under Apache Licence", settingsGroup);
 		resetConfirm = new ConfirmBox("Reset Data?", "The data will be lost forever, so be sure!", settingsGroup, new ClickListener(){
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				if(Data.isTutorialRunning()){
+					tutorialErrorInfo.show();
+					return true;
+				}
+
 				//Delete game, return to settings and reset the population counter
 				Data.mechanics.getFile().deleteGame();
-				settingsGroup.setVisible(true);
 				resetConfirm.getInfoTable().setVisible(false);
 				Data.ui.getPopulationLabel().setText("Population: "+Data.main.POPULATION.getCount());
 				Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				Data.ui.updateEra();
+
+				Data.ui.setEverythingTouchable(Touchable.enabled);
+
+				Data.setTutorial(true);
 				return true;
 			}
 		});
@@ -115,5 +128,8 @@ public class Settings extends DisplayBox{
 	}
 	public ConfirmBox getQuitConfirm() {
 		return quitConfirm;
+	}
+	public Info getTutorialErrorInfo() {
+		return tutorialErrorInfo;
 	}
 }

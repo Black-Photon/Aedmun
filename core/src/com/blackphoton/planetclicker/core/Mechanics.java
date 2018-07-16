@@ -5,11 +5,17 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.blackphoton.planetclicker.file.SavegameFile;
+import com.blackphoton.planetclicker.messages.ConfirmBox;
+import com.blackphoton.planetclicker.messages.Info;
+import com.blackphoton.planetclicker.messages.TutorialCollection;
+import com.blackphoton.planetclicker.messages.TutorialInfo;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.Planet;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.objectType.Resource;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
+import com.blackphoton.planetclicker.objectType.table.entries.building.Cave;
+import com.blackphoton.planetclicker.objectType.table.entries.food.Hunt;
 import com.blackphoton.planetclicker.objectType.table.entries.food.Timeout;
 import com.blackphoton.planetclicker.objectType.table.entries.resources.Absolute;
 import com.blackphoton.planetclicker.objectType.table.entries.resources.Gems;
@@ -38,11 +44,48 @@ public class Mechanics {
 	 */
 	private final SavegameFile file = new SavegameFile();
 
+	private ConfirmBox test;
+	private TutorialInfo page1;
+	private TutorialInfo page2;
+	private TutorialInfo page3;
+	private TutorialInfo page4;
+	private TutorialInfo page5;
+	private TutorialInfo page6;
+	private TutorialInfo page7;
+	private TutorialInfo page8;
+	private TutorialInfo page9;
+	private TutorialInfo page10;
+	private TutorialInfo page11;
+	private TutorialInfo page12;
+	private TutorialCollection collection;
+
 	void create(){
 		random = new Random();
 
-		//Reads the savefile
-		file.readGame();
+		//Tutorial pages
+		test = new ConfirmBox("Tutorial", "Would you like to view the tutorial?", null, new tutorialStart());
+		page1 = new TutorialInfo("Tutorial", "Welcome to Aedmun! The aim of the game is to get as high a population as possible. To do this, you need to give the planet enough buildings and food to live.", "Ok", null,1);
+		page2 = new TutorialInfo("Tutorial", "Click on the apple to open the food menu.", null, 2);
+		page3 = new TutorialInfo("Tutorial", "Now you can see all the options, click create to  choose 'Hunt Food'", null, 3);
+		page4 = new TutorialInfo("Tutorial", "Great! Click the planet to hunt food.", null, 4);
+		page5 = new TutorialInfo("Tutorial", "Well done! Some structures such as this work differently. Hunt food, for example, goes down over time as food is eaten. Later you can get farms which are permanent. 50 food should be enough for now.", null, 5);
+		page6 = new TutorialInfo("Tutorial", "Now let's click on the house to see what buildings we can make.", null, 6);
+		page7 = new TutorialInfo("Tutorial", "This building needs resources to make. You can see them on the right hand side. Resources have their own tab.", null, 7);
+		page8 = new TutorialInfo("Tutorial", "Resources and hunted food are free, but everything else costs resources. Collect enough stone for a house.", null, 8);
+		page9 = new TutorialInfo("Tutorial", "Great! Now you can buy a house in the buildings tab.", null, 9);
+		page10 = new TutorialInfo("Tutorial", "Well done! If you wait and your food doesn't run out, you should see the population increase to 4. Build more houses and collect more food to let more people live.", "OK", null, 10);
+		page11 = new TutorialInfo("Tutorial", "When you reach a population of 400, you'll be able to move onto the next by building a monument in the last tab. These have a high population, resource and click requirement, but will unlock higher populations and the abilities the new era offers.", "OK", null, 11);
+		page12 = new TutorialInfo("Tutorial", "Have fun playing!", "OK", null, 12);
+		collection = new TutorialCollection(page1, page2, page3, page4, page5, page6, page7, page8, page9, page10, page11, page12);
+		collection.setData();
+
+		if(file.exists()) {
+			//Reads the savefile
+			file.readGame();
+		}else {
+			//Start Tutorial
+			Data.setTutorial(true);
+		}
 
 		//Saves the game every 1 second
 		new Thread(){
@@ -80,6 +123,19 @@ public class Mechanics {
 			Data.setFoodCount(Data.getFoodCount()+entry.getNumberOf()*entry.getValue());
 		}
 		long foodCount = Data.getFoodCount();
+
+		if(Data.isTutorialRunning() && foodCount>0){
+			Data.mechanics.getCollection().objectiveComplete(4);
+		}
+		if(Data.isTutorialRunning() && foodCount>=500){
+			Data.mechanics.getCollection().objectiveComplete(5);
+		}
+		if(Data.isTutorialRunning() && Data.main.STONE.getCount()>=5){
+			Data.mechanics.getCollection().objectiveComplete(8);
+		}
+		if(Data.isTutorialRunning() && buildingCount>=4){
+			Data.mechanics.getCollection().objectiveComplete(9);
+		}
 
 		//Algorithm for getting the next era (the one after the current one)
 		Era next = null;
@@ -153,6 +209,8 @@ public class Mechanics {
 		}
 
 		Data.main.POPULATION.setCount(populationCount);
+
+		if(Data.isTutorial()) tutorial();
 	}
 
 	/**
@@ -211,7 +269,7 @@ public class Mechanics {
 
 		ArrayList<RequiredResource> caveArray = new ArrayList<RequiredResource>();
 		bundleResources(caveArray, 0, 5);
-		buildingInfo.addEntry("Cave", 4, "cave.png", Data.getEraList().get(0), null, caveArray, null, null);
+		buildingInfo.addEntry(new Cave("Cave", 4, "cave.png", Data.getEraList().get(0), null, caveArray, null));
 
 		return buildingInfo;
 	}
@@ -253,7 +311,7 @@ public class Mechanics {
 		FoodEntry smallfield = (FoodEntry) foodInfo.addEntry("Small Farm", 20, "small_farm.png", Data.getEraList().get(1), field, sfieldArray, toFieldArray, null);
 
 
-		foodInfo.addEntry(new Timeout("Hunt Food", 10, "hunt.png", Data.getEraList().get(0), smallfield, null, null, 3000)).setUpgradable(false);
+		foodInfo.addEntry(new Hunt("Hunt Food", 10, "hunt.png", Data.getEraList().get(0), smallfield, null, null, 3000)).setUpgradable(false);
 
 		return foodInfo;
 	}
@@ -593,6 +651,10 @@ public class Mechanics {
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			if(Data.getCurrentTable()!=null) Data.getCurrentTable().unclickAll();
 
+			if(Data.isTutorialRunning()){
+				Data.mechanics.getCollection().objectiveComplete(2);
+			}
+
 			Data.mechanics.removeEntryAndUnclick();
 
 			Data.ui.setAllTablesInvisible();
@@ -616,6 +678,10 @@ public class Mechanics {
 			if(Data.getCurrentTable()!=null) Data.getCurrentTable().unclickAll();
 
 			Data.mechanics.removeEntryAndUnclick();
+
+			if(Data.isTutorialRunning()){
+				Data.mechanics.getCollection().objectiveComplete(7);
+			}
 
 			Data.ui.setAllTablesInvisible();
 			Data.ui.refreshTable();
@@ -689,5 +755,32 @@ public class Mechanics {
 
 	public SavegameFile getFile() {
 		return file;
+	}
+
+	void tutorial(){
+		Data.setTutorial(false);
+		System.out.println("Starting Tutorial");
+		test.show();
+	}
+
+	public static class tutorialStart extends ClickListener {
+		@Override
+		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			Data.setTutorialRunning(true);
+			Data.mechanics.test.getInfoTable().setVisible(false);
+			Data.mechanics.collection.getMessages().get(0).show();
+
+			return true;
+		}
+	}
+
+	public ConfirmBox getTest() {
+		return test;
+	}
+	public void setTest(ConfirmBox test) {
+		this.test = test;
+	}
+	public TutorialCollection getCollection() {
+		return collection;
 	}
 }

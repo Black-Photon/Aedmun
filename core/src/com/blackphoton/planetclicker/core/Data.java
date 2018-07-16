@@ -71,6 +71,14 @@ public class Data {
 	 * Eg. Buildings, Food, Resources, Special
 	 */
 	private static ResourceType resourceType = ResourceType.NONE;
+	/**
+	 * Whether the tutorial should be activated
+	 */
+	private static boolean tutorial = false;
+	/**
+	 * Whether the tutorial is currently running
+	 */
+	private static boolean tutorialRunning = false;
 
 	//Counts
 	/**
@@ -268,5 +276,17 @@ public class Data {
 	}
 	public static void setCurrentPlanet(Planet currentPlanet) {
 		Data.currentPlanet = currentPlanet;
+	}
+	public static boolean isTutorial() {
+		return tutorial;
+	}
+	public static void setTutorial(boolean tutorial) {
+		Data.tutorial = tutorial;
+	}
+	public static boolean isTutorialRunning() {
+		return tutorialRunning;
+	}
+	public static void setTutorialRunning(boolean tutorialRunning) {
+		Data.tutorialRunning = tutorialRunning;
 	}
 }
