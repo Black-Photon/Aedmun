@@ -26,6 +26,8 @@ public class SavegameFile extends File {
 	 * Saves the game to the save-file
 	 */
 	public void saveGame(){
+		System.out.println("Saving");
+
 		handle.writeString("Population" + ":" + Data.main.POPULATION.getCount() + "\n", false);
 		handle.writeString(";\n", true);
 
@@ -58,6 +60,8 @@ public class SavegameFile extends File {
 	public void deleteGame(){
 		if(!exists()) throw new FileDoesNotExistException();
 
+		System.out.println("Deleting game");
+
 		handle.delete();
 
 		Data.main.POPULATION.setCount(2);
@@ -85,6 +89,8 @@ public class SavegameFile extends File {
 	 */
 	public void readGame(){
 		if(!exists()) throw new FileDoesNotExistException();
+
+		System.out.println("Loading game");
 
 		everything = handle.readString();
 

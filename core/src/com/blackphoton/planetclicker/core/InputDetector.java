@@ -28,6 +28,7 @@ public class InputDetector implements InputProcessor {
 				Data.ui.setEverythingTouchable(Touchable.enabled);
 				return true;
 			}else {
+				Data.mechanics.getSaveThread().interrupt();
 				Data.main.exit();
 			}
 		}

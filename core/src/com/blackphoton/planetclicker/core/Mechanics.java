@@ -16,7 +16,6 @@ import com.blackphoton.planetclicker.objectType.Resource;
 import com.blackphoton.planetclicker.objectType.table.TableInfo;
 import com.blackphoton.planetclicker.objectType.table.entries.building.Cave;
 import com.blackphoton.planetclicker.objectType.table.entries.food.Hunt;
-import com.blackphoton.planetclicker.objectType.table.entries.food.Timeout;
 import com.blackphoton.planetclicker.objectType.table.entries.resources.Absolute;
 import com.blackphoton.planetclicker.objectType.table.entries.resources.Gems;
 import com.blackphoton.planetclicker.objectType.table.entries.resources.Multiplier;
@@ -59,6 +58,11 @@ public class Mechanics {
 	private TutorialInfo page12;
 	private TutorialCollection collection;
 
+	/**
+	 * The thread that saves every second
+	 */
+	private Thread saveThread;
+
 	void create(){
 		random = new Random();
 
@@ -87,19 +91,20 @@ public class Mechanics {
 		}
 
 		//Saves the game every 1 second
-		new Thread(){
+		saveThread = (new Thread(){
 			@Override
 			public void run() {
-				while (!Thread.currentThread().isInterrupted()) {
+				while (!this.isInterrupted()) {
 					try{
 						file.saveGame();
 						sleep(1000);
 					}catch (InterruptedException e){
-						e.printStackTrace();
+						break;
 					}
 				}
 			}
-		}.start();
+		});
+		saveThread.start();
 
 		//Let's you finish any special buildings that have had the initial resource cost covered (from savefiles)
 		for(TableEntry entry: Data.getSpecialTable().getEntries()){
@@ -794,5 +799,11 @@ public class Mechanics {
 	}
 	public TutorialCollection getCollection() {
 		return collection;
+	}
+	public Thread getSaveThread() {
+		return saveThread;
+	}
+	public void setSaveThread(Thread saveThread) {
+		this.saveThread = saveThread;
 	}
 }
