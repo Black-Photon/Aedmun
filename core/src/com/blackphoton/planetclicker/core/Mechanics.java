@@ -56,6 +56,7 @@ public class Mechanics {
 	private TutorialInfo page10;
 	private TutorialInfo page11;
 	private TutorialInfo page12;
+	private TutorialInfo page13;
 	private TutorialCollection collection;
 
 	/**
@@ -72,14 +73,15 @@ public class Mechanics {
 		page2 = new TutorialInfo("Tutorial", "Click on the apple to open the food menu.", null, 2);
 		page3 = new TutorialInfo("Tutorial", "Now you can see all the options, click create to  choose 'Hunt Food'", null, 3);
 		page4 = new TutorialInfo("Tutorial", "Great! Click the planet to hunt food.", null, 4);
-		page5 = new TutorialInfo("Tutorial", "Well done! Some structures such as this work differently. Hunt food, for example, goes down over time as food is eaten. Later you can get farms which are permanent. 50 food should be enough for now.", null, 5);
+		page5 = new TutorialInfo("Tutorial", "Well done! Some structures such as this work differently. Hunt food, for example, goes down over time as food is eaten. Later you can get farms which are permanent. 50 food should be enough for now. Simply click the planet while create is selected.", null, 5);
 		page6 = new TutorialInfo("Tutorial", "Now let's click on the house to see what buildings we can make.", null, 6);
 		page7 = new TutorialInfo("Tutorial", "This building needs resources to make. You can see them on the right hand side. Resources have their own tab.", null, 7);
 		page8 = new TutorialInfo("Tutorial", "Resources and hunted food are free, but everything else costs resources. Collect enough stone for a house.", null, 8);
 		page9 = new TutorialInfo("Tutorial", "Great! Now you can buy a house in the buildings tab.", null, 9);
 		page10 = new TutorialInfo("Tutorial", "Well done! If you wait and your food doesn't run out, you should see the population increase to 4. Build more houses and collect more food to let more people live.", "OK", null, 10);
 		page11 = new TutorialInfo("Tutorial", "When you reach a population of 400, you'll be able to move onto the next by building a monument in the last tab. These have a high population, resource and click requirement, but will unlock higher populations and the abilities the new era offers.", "OK", null, 11);
-		page12 = new TutorialInfo("Tutorial", "Have fun playing!", "OK", null, 12);
+		page12 = new TutorialInfo("Tutorial", "When you reach the next era, you'll  be able to increase your resources aquired per click using structures such as quarries.", "OK", null, 12);
+		page13 = new TutorialInfo("Tutorial", "Have fun playing!", "OK", null, 13);
 		createTutorial();
 
 		if(file.exists()) {
@@ -232,43 +234,43 @@ public class Mechanics {
 		TableInfo buildingInfo = new TableInfo(ResourceType.BUILDINGS);
 
 		ArrayList<RequiredResource> capitalArray = new ArrayList<RequiredResource>();
-		bundleResources(capitalArray, 0, 0, 0, 0, 0, 25000, 25000, 30000, 50);
+		bundleResources(capitalArray, 0, 0, 0, 0, 0, 25000, 25000, 30000, 5);
 		BuildingEntry capital = (BuildingEntry) buildingInfo.addEntry("Capital City", 10000000, "capital.png", Data.getEraList().get(7), null, capitalArray, null, null);
 
 		ArrayList<RequiredResource> cityArray = new ArrayList<RequiredResource>();
-		bundleResources(cityArray, 0, 0, 0, 12000, 0, 10000, 10000, 10000);
+		bundleResources(cityArray, 0, 0, 0, 12000, 0, 10000, 10000, 10);
 		ArrayList<RequiredResource> toCapitalArray = new ArrayList<RequiredResource>();
 		bundleResources(toCapitalArray, 0, 0, 0, 0, 0, 15000, 15000, 20000, 50);
 		BuildingEntry city = (BuildingEntry) buildingInfo.addEntry("City", 5000000, "city.png", Data.getEraList().get(6), capital, cityArray, toCapitalArray, null);
 
 		ArrayList<RequiredResource> townArray = new ArrayList<RequiredResource>();
-		bundleResources(townArray, 0, 4000, 0, 1000, 0, 1000, 1000);
+		bundleResources(townArray, 0, 4000, 0, 1000, 0, 1000, 10);
 		ArrayList<RequiredResource> toCityArray = new ArrayList<RequiredResource>();
 		bundleResources(toCityArray, 0, 0, 0, 10000, 0, 10000, 10000, 10000);
 		BuildingEntry town = (BuildingEntry) buildingInfo.addEntry("Town", 250000, "town.png", Data.getEraList().get(5), city, townArray, toCityArray, null);
 
 		ArrayList<RequiredResource> villageArray = new ArrayList<RequiredResource>();
-		bundleResources(villageArray, 1000, 1000, 0, 400, 0, 500);
+		bundleResources(villageArray, 1000, 1000, 0, 400, 0, 10);
 		ArrayList<RequiredResource> toTownArray = new ArrayList<RequiredResource>();
 		bundleResources(toTownArray, 0, 3000, 0, 250, 0, 500, 1000);
 		BuildingEntry village = (BuildingEntry) buildingInfo.addEntry("Village", 20000, "village.png", Data.getEraList().get(4), town, villageArray, toTownArray, null);
 
 		ArrayList<RequiredResource> hamletArray = new ArrayList<RequiredResource>();
-		bundleResources(hamletArray, 400, 250, 25, 0, 50);
+		bundleResources(hamletArray, 400, 250, 25, 0, 10);
 		ArrayList<RequiredResource> toVillageArray = new ArrayList<RequiredResource>();
 		bundleResources(toVillageArray, 500, 750, 0, 20, 0, 500);
 		BuildingEntry hamlet = (BuildingEntry) buildingInfo.addEntry("Hamlet", 200, "hamlet.png", Data.getEraList().get(3), village, hamletArray, toVillageArray, null);
 
 		ArrayList<RequiredResource> houseArray = new ArrayList<RequiredResource>();
-		bundleResources(houseArray, 80, 40, 10, 15);
+		bundleResources(houseArray, 80, 40, 10, 5);
 		ArrayList<RequiredResource> toHamletArray = new ArrayList<RequiredResource>();
 		bundleResources(toHamletArray, 300, 200, 15, 0, 50);
 		BuildingEntry house = (BuildingEntry) buildingInfo.addEntry("House", 50, "house.png", Data.getEraList().get(2), hamlet, houseArray, toHamletArray, null);
 
 		ArrayList<RequiredResource> shackArray = new ArrayList<RequiredResource>();
-		bundleResources(shackArray, 50, 25, 5);
+		bundleResources(shackArray, 10, 75, 5);
 		ArrayList<RequiredResource> toHouseArray = new ArrayList<RequiredResource>();
-		bundleResources(toHouseArray, 25, 10,  5, 15);
+		bundleResources(toHouseArray, 10, 25,  5, 15);
 		buildingInfo.addEntry("Shack", 25, "shack.png", Data.getEraList().get(1), house, shackArray, toHouseArray, null);
 
 		ArrayList<RequiredResource> caveArray = new ArrayList<RequiredResource>();
@@ -281,11 +283,11 @@ public class Mechanics {
 		TableInfo foodInfo = new TableInfo(ResourceType.FOOD);
 
 		ArrayList<RequiredResource> hydroArray = new ArrayList<RequiredResource>();
-		bundleResources(hydroArray, 0, 0, 0, 0, 0, 1000, 1000, 10000, 100);
+		bundleResources(hydroArray, 0, 0, 0, 0, 0, 1000, 1000, 10000, 10);
 		foodInfo.addEntry("Hydroponics", 100000000, "hydroponics.png", Data.getEraList().get(7), null, hydroArray, null, null);
 
 		ArrayList<RequiredResource> iFarmArray = new ArrayList<RequiredResource>();
-		bundleResources(iFarmArray, 0, 1000, 100, 100, 0, 0, 40);
+		bundleResources(iFarmArray, 0, 1000, 100, 100, 0, 0, 4);
 		FoodEntry iFarm = (FoodEntry) foodInfo.addEntry("Industrial Farm", 25000000, "industrial_farm.png", Data.getEraList().get(6), null, iFarmArray, null, null);
 
 		ArrayList<RequiredResource> lFarmArray = new ArrayList<RequiredResource>();
@@ -295,7 +297,7 @@ public class Mechanics {
 		FoodEntry lFarm = (FoodEntry) foodInfo.addEntry("Large Farm", 1000000, "large_farm.png", Data.getEraList().get(5), iFarm, lFarmArray, toIFarmArray, null);
 
 		ArrayList<RequiredResource> barnArray = new ArrayList<RequiredResource>();
-		bundleResources(barnArray, 250, 50, 10, 0, 25);
+		bundleResources(barnArray, 250, 50, 10, 0, 5);
 		foodInfo.addEntry("Barn", 10000, "barn.png", Data.getEraList().get(4), null, barnArray, null, null);
 
 		ArrayList<RequiredResource> fishingArray = new ArrayList<RequiredResource>();
@@ -309,7 +311,7 @@ public class Mechanics {
 		FoodEntry field = (FoodEntry) foodInfo.addEntry("Farm", 100, "farm.png", Data.getEraList().get(2), lFarm, fieldArray, toLFarmArray, null);
 
 		ArrayList<RequiredResource> sfieldArray = new ArrayList<RequiredResource>();
-		bundleResources(sfieldArray, 15, 1);
+		bundleResources(sfieldArray, 10, 25);
 		ArrayList<RequiredResource> toFieldArray = new ArrayList<RequiredResource>();
 		bundleResources(toFieldArray, 35, 3);
 		FoodEntry smallfield = (FoodEntry) foodInfo.addEntry("Small Farm", 20, "small_farm.png", Data.getEraList().get(1), field, sfieldArray, toFieldArray, null);
@@ -416,39 +418,39 @@ public class Mechanics {
 
 		ArrayList<RequiredResource> stone = new ArrayList<RequiredResource>();
 		bundleResources(stone, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0);
-		specialInfo.addEntry("Stonehenge", 50, "stonehenge.png", Data.getEraList().get(0), null, stone, null, new Special_ResourceBundle(1));
+		specialInfo.addEntry("Stonehenge", 10, "stonehenge.png", Data.getEraList().get(0), null, stone, null, new Special_ResourceBundle(1));
 
 		ArrayList<RequiredResource> pyram = new ArrayList<RequiredResource>();
-		bundleResources(pyram, 0, 1000, 350, 0, 0, 0, 0, 0, 0, 0);
-		specialInfo.addEntry("Pyramids", 100, "pyramid.png", Data.getEraList().get(1), null, pyram, null, new Special_ResourceBundle(2));
+		bundleResources(pyram, 0, 1000, 150, 0, 0, 0, 0, 0, 0, 0);
+		specialInfo.addEntry("Pyramids", 25, "pyramid.png", Data.getEraList().get(1), null, pyram, null, new Special_ResourceBundle(2));
 
 		ArrayList<RequiredResource> wall = new ArrayList<RequiredResource>();
 		bundleResources(wall, 0, 1500, 50, 1000, 0, 0, 0, 0, 0, 0);
-		specialInfo.addEntry("Great Wall", 250, "great_wall.png", Data.getEraList().get(2), null, wall, null, new Special_ResourceBundle(3));
+		specialInfo.addEntry("Great Wall", 50, "great_wall.png", Data.getEraList().get(2), null, wall, null, new Special_ResourceBundle(3));
 
 		ArrayList<RequiredResource> colosseum = new ArrayList<RequiredResource>();
 		bundleResources(colosseum, 0, 1500, 0, 500, 1000, 0, 0, 0, 0, 0);
-		specialInfo.addEntry("Colosseum", 750, "colosseum.png", Data.getEraList().get(3), null, colosseum, null, new Special_ResourceBundle(4));
+		specialInfo.addEntry("Colosseum", 100, "colosseum.png", Data.getEraList().get(3), null, colosseum, null, new Special_ResourceBundle(4));
 
 		ArrayList<RequiredResource> pisa = new ArrayList<RequiredResource>();
 		bundleResources(pisa, 0, 200, 0, 1000, 0, 1500, 0, 0, 0, 0);
-		specialInfo.addEntry("Leaning Tower", 1000, "tower_of_pisa.png", Data.getEraList().get(4), null, pisa, null, new Special_ResourceBundle(5));
+		specialInfo.addEntry("Leaning Tower", 150, "tower_of_pisa.png", Data.getEraList().get(4), null, pisa, null, new Special_ResourceBundle(5));
 
 		ArrayList<RequiredResource> taj = new ArrayList<RequiredResource>();
 		bundleResources(taj, 0, 500, 500, 0, 0, 0, 1500, 0, 0, 0);
-		specialInfo.addEntry("Taj Mahal", 1200, "taj_mahal.png", Data.getEraList().get(5), null, taj, null, new Special_ResourceBundle(6));
+		specialInfo.addEntry("Taj Mahal", 250, "taj_mahal.png", Data.getEraList().get(5), null, taj, null, new Special_ResourceBundle(6));
 
 		ArrayList<RequiredResource> eiffel = new ArrayList<RequiredResource>();
 		bundleResources(eiffel, 0, 0, 150, 1000, 0, 0, 0, 2500, 0, 0);
-		specialInfo.addEntry("Eiffel Tower", 1500, "eiffel_tower.png", Data.getEraList().get(6), null, eiffel, null, new Special_ResourceBundle(7));
+		specialInfo.addEntry("Eiffel Tower", 400, "eiffel_tower.png", Data.getEraList().get(6), null, eiffel, null, new Special_ResourceBundle(7));
 
 		ArrayList<RequiredResource> liberty = new ArrayList<RequiredResource>();
 		bundleResources(liberty, 0, 0, 0, 0, 0, 0, 1000, 5000, 150, 0);
-		specialInfo.addEntry("Statue of Liberty", 2000, "statue_liberty.png", Data.getEraList().get(7), null, liberty, null, new Special_ResourceBundle(8));
+		specialInfo.addEntry("Statue of Liberty", 500, "statue_liberty.png", Data.getEraList().get(7), null, liberty, null, new Special_ResourceBundle(8));
 
 		ArrayList<RequiredResource> space = new ArrayList<RequiredResource>();
 		bundleResources(space, 0, 0, 0, 0, 0, 0, 0, 2500, 500, 5000);
-		specialInfo.addEntry("Space Island", 2500, "space_island.png", Data.getEraList().get(8), null, space, null, new Special_ResourceBundle(9));
+		specialInfo.addEntry("Space Island", 750, "space_island.png", Data.getEraList().get(8), null, space, null, new Special_ResourceBundle(9));
 
 		return specialInfo;
 	}
@@ -776,7 +778,7 @@ public class Mechanics {
 	}
 
 	public void createTutorial(){
-		collection = new TutorialCollection(page1, page2, page3, page4, page5, page6, page7, page8, page9, page10, page11, page12);
+		collection = new TutorialCollection(page1, page2, page3, page4, page5, page6, page7, page8, page9, page10, page11, page12, page13);
 		collection.setData();
 	}
 
