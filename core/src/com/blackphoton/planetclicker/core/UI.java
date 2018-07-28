@@ -374,6 +374,11 @@ public class UI {
 		Data.mechanics.getTest().resize(width, height, uiScale, stage);
 		Data.mechanics.getCollection().resize(width, height, uiScale, stage);
 
+		Data.getBuildingTable().resize(uiScale*2/3);
+		Data.getFoodTable().resize(uiScale*2/3);
+		Data.getResourcesTable().resize(uiScale*2/3);
+		Data.getSpecialTable().resize(uiScale*2/3);
+
 		if(Data.getSelectedEntry()!=null) loadSideBar(Data.getSelectedEntry(), Data.getSelectedEntry().isCreateClicked());
 
 		tutorialMax.setBounds(20, resources_tex.getHeight()+20, height/20, height/20);
@@ -738,7 +743,7 @@ public class UI {
 
 		Table titleTable = new Table();
 		titleTable.setSkin(skin);
-		addTitleRow(titleTable, secret, smallUnit, largeUnit);
+		addTitleRow(titleTable, secret, smallUnit, largeUnit, info);
 		titleTable.pad(0, 0,0,0);
 
 		info.updateButtons();
@@ -794,11 +799,13 @@ public class UI {
 	 * @param smallUnit Small width column width
 	 * @param largeUnit Large width column width
 	 */
-	private void addTitleRow(Table table, String valueName, float smallUnit, float largeUnit){
+	private void addTitleRow(Table table, String valueName, float smallUnit, float largeUnit, TableInfo info){
+		info.setValueLabelText(valueName);
+
 		table.add().width(smallUnit).center();
-		table.add("Name").width(largeUnit).center().fill();
-		table.add(valueName).width(largeUnit).center().fill();
-		table.add("No.").width(smallUnit).center().fill();
+		table.add(info.getNameLabel()).width(largeUnit).center().fill();
+		table.add(info.getValueLabel()).width(largeUnit).center().fill();
+		table.add(info.getNumberLabel()).width(smallUnit).center().fill();
 		table.add().width(largeUnit).center();
 		table.add().width(largeUnit).center();
 		table.row().height(rowHeight);
@@ -817,7 +824,7 @@ public class UI {
 		table.row().height(rowHeight);
 
 		table.add(picture).width(smallUnit).center();
-		table.add(info.getEntries().get(entry).getName()).width(largeUnit).center().fill();
+		table.add(info.getEntries().get(entry).getNameLabel()).width(largeUnit).center().fill();
 		table.add(info.getEntries().get(entry).getValueLabel()).width(largeUnit).center().fill();
 		table.add(info.getEntries().get(entry).getNumberLabel()).width(smallUnit).center().fill();
 		table.add(info.getEntries().get(entry).getCreate()).width(largeUnit).center();

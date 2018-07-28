@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Scaling;
@@ -42,6 +43,7 @@ public abstract class TableEntry {
 	protected boolean upgradable = true;
 	protected ArrayList<RequiredResource> resourcesNeeded;
 	protected ArrayList<RequiredResource> resourcesNeededToUpgrade;
+	protected Label nameLabel;
 	protected Label numberLabel;
 	protected Label valueLabel;
 	protected Texture texture;
@@ -77,6 +79,7 @@ public abstract class TableEntry {
 		upgrade.setScaling(Scaling.fit);
 		upgrade.addListener(new upgradeListener());
 
+		nameLabel  = new Label(name, Data.ui.getSkin());
 		numberLabel = new Label(Long.toString(numberOf), Data.ui.getSkin());
 		valueLabel = new Label(Integer.toString(value), Data.ui.getSkin());
 
@@ -198,6 +201,12 @@ public abstract class TableEntry {
 		}
 	}
 
+	public void resize(float scale){
+		nameLabel.setFontScale(scale);
+		numberLabel.setFontScale(scale);
+		valueLabel.setFontScale(scale);
+	}
+
 	//Getters and Setters
 	public ResourceType getType() {
 		return type;
@@ -312,5 +321,11 @@ public abstract class TableEntry {
 	}
 	public void setImage(Image image) {
 		this.image = image;
+	}
+	public Label getNameLabel() {
+		return nameLabel;
+	}
+	public void setNameLabel(Label nameLabel) {
+		this.nameLabel = nameLabel;
 	}
 }

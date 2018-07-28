@@ -1,5 +1,7 @@
 package com.blackphoton.planetclicker.objectType.table;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.blackphoton.planetclicker.core.Data;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.objectType.table.entries.template.*;
@@ -14,6 +16,9 @@ import java.util.ResourceBundle;
 public class TableInfo {
 	private ResourceType type;
 	private ArrayList<TableEntry> entries;
+	private Label nameLabel;
+	private Label numberLabel;
+	private Label valueLabel;
 
 	/**
 	 * @param type Type of data stored
@@ -21,6 +26,10 @@ public class TableInfo {
 	public TableInfo(ResourceType type){
 		this.type = type;
 		entries = new ArrayList<TableEntry>();
+
+		nameLabel = new Label("Name", Data.ui.getSkin());
+		numberLabel = new Label("No.", Data.ui.getSkin());
+		valueLabel = new Label("Value", Data.ui.getSkin());
 	}
 
 	/**
@@ -84,6 +93,15 @@ public class TableInfo {
 		}
 	}
 
+	public void resize(float scale){
+		for(TableEntry entry : entries){
+			entry.resize(scale);
+		}
+		nameLabel.setFontScale(scale);
+		numberLabel.setFontScale(scale);
+		valueLabel.setFontScale(scale);
+	}
+
 	//Getters and Setters
 	public ResourceType getType() {
 		return type;
@@ -93,5 +111,23 @@ public class TableInfo {
 	}
 	public ArrayList<TableEntry> getEntries() {
 		return entries;
+	}
+	public Label getNameLabel() {
+		return nameLabel;
+	}
+	public void setNameLabelText(String nameLabel) {
+		this.nameLabel.setText(nameLabel);
+	}
+	public Label getNumberLabel() {
+		return numberLabel;
+	}
+	public void setNumberLabelText(String numberLabel) {
+		this.numberLabel.setText(numberLabel);
+	}
+	public Label getValueLabel() {
+		return valueLabel;
+	}
+	public void setValueLabelText(String valueLabel) {
+		this.valueLabel.setText(valueLabel);
 	}
 }
