@@ -9,9 +9,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Scaling;
@@ -101,6 +103,9 @@ public class UI {
 
 	private Settings settings;
 	private TextButton tutorialMax;
+
+	private Texture spaceTeaser;
+	private Image spaceTeaserImage;
 
 	void createUI(){
 		//General Declarations
@@ -193,6 +198,18 @@ public class UI {
 
 		updateEra();
 
+		sun.addListener(new Mechanics.sunListener());
+
+		spaceTeaser = new Texture("space_teaser.png");
+		spaceTeaserImage = new Image(spaceTeaser);
+		spaceTeaserImage.addListener(new ClickListener(){
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+				Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+				return true;
+			}
+		});
+
 		tutorialMax = new TextButton(" + ", skin);
 		tutorialMax.addListener(new Mechanics.maximizeListener());
 
@@ -280,12 +297,27 @@ public class UI {
 		food_background.setWidth(width/4);
 		resources_background.setWidth(width/4);
 		special_background.setWidth(width/4);
+		float backgroundHeightMod = 0.1f;
+		buildings_background.setHeight(height*backgroundHeightMod);
+		food_background.setHeight(height*backgroundHeightMod);
+		resources_background.setHeight(height*backgroundHeightMod);
+		special_background.setHeight(height*backgroundHeightMod);
+
 
 		line.setPosition(0, buildings_background.getHeight()+1);
 		buildings_background.setPosition(0,0);
 		food_background.setPosition(buildings_background.getWidth(), 0);
 		resources_background.setPosition(buildings_background.getWidth()+food_background.getWidth(),0);
 		special_background.setPosition(buildings_background.getWidth()+food_background.getWidth()+resources_background.getWidth(), 0);
+
+		buildings.setHeight(height*backgroundHeightMod);
+		food.setHeight(height*backgroundHeightMod);
+		resources.setHeight(height*backgroundHeightMod);
+		special.setHeight(height*backgroundHeightMod);
+		buildings.setWidth(height*backgroundHeightMod);
+		food.setWidth(height*backgroundHeightMod);
+		resources.setWidth(height*backgroundHeightMod);
+		special.setWidth(height*backgroundHeightMod);
 
 		buildings.setPosition(buildings_background.getWidth()/2-buildings.getWidth()/2, buildings_background.getHeight()/2-buildings.getHeight()/2);
 		food.setPosition(buildings_background.getWidth()+food_background.getWidth()/2-food.getWidth()/2, food_background.getHeight()/2-food.getHeight()/2);
@@ -374,10 +406,12 @@ public class UI {
 		Data.mechanics.getTest().resize(width, height, uiScale, stage);
 		Data.mechanics.getCollection().resize(width, height, uiScale, stage);
 
-		Data.getBuildingTable().resize(uiScale*2/3);
-		Data.getFoodTable().resize(uiScale*2/3);
-		Data.getResourcesTable().resize(uiScale*2/3);
-		Data.getSpecialTable().resize(uiScale*2/3);
+		uiScale=uiScale*3/4;
+
+		Data.getBuildingTable().resize(uiScale);
+		Data.getFoodTable().resize(uiScale);
+		Data.getResourcesTable().resize(uiScale);
+		Data.getSpecialTable().resize(uiScale);
 
 		if(Data.getSelectedEntry()!=null) loadSideBar(Data.getSelectedEntry(), Data.getSelectedEntry().isCreateClicked());
 
@@ -921,5 +955,11 @@ public class UI {
 	}
 	public void setTex_earth(Texture tex_earth) {
 		this.tex_earth = tex_earth;
+	}
+	public Image getSpaceTeaserImage() {
+		return spaceTeaserImage;
+	}
+	public Texture getSpaceTeaser() {
+		return spaceTeaser;
 	}
 }

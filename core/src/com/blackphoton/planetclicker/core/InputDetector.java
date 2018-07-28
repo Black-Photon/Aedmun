@@ -1,5 +1,6 @@
 package com.blackphoton.planetclicker.core;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -31,6 +32,7 @@ public class InputDetector implements InputProcessor {
 				Data.mechanics.getSaveThread().interrupt();
 				Data.main.exit();
 			}
+			Data.ui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		}
 		return false;
 	}

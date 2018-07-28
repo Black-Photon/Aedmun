@@ -2,8 +2,11 @@ package com.blackphoton.planetclicker.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.file.SavegameFile;
 import com.blackphoton.planetclicker.messages.ConfirmBox;
 import com.blackphoton.planetclicker.messages.Info;
@@ -23,7 +26,9 @@ import com.blackphoton.planetclicker.objectType.table.entries.resources.Resource
 import com.blackphoton.planetclicker.objectType.table.entries.special.Special_ResourceBundle;
 import com.blackphoton.planetclicker.objectType.table.entries.template.*;
 import com.blackphoton.planetclicker.resources.ResourceType;
+import javafx.scene.layout.StackPane;
 
+import javax.swing.text.Style;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -758,6 +763,32 @@ public class Mechanics {
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			Data.mechanics.collection.getCurrentMessage().maximize();
+
+			return true;
+		}
+	}
+	public static class sunListener extends ClickListener {
+		@Override
+		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			Data.main.getStage().dispose();
+			Stage stage = new Stage();
+			stage.addActor(Data.ui.getSpaceTeaserImage());
+			Data.main.setStage(stage);
+			Data.ui.getSpaceTeaserImage().setScaling(Scaling.fit);
+
+			Gdx.input.setInputProcessor(stage);
+
+			float heightRatio = (float)Data.ui.getSpaceTeaser().getHeight()/Gdx.graphics.getHeight();
+			float widthRatio = (float)Data.ui.getSpaceTeaser().getWidth()/Gdx.graphics.getWidth();
+
+			if(heightRatio>widthRatio){
+				Data.ui.getSpaceTeaserImage().setHeight(Gdx.graphics.getHeight());
+			}else{
+				Data.ui.getSpaceTeaserImage().setWidth(Gdx.graphics.getWidth());
+			}
+
+			Data.ui.getSpaceTeaserImage().setX(Gdx.graphics.getWidth()/2-Data.ui.getSpaceTeaserImage().getWidth()/2);
+			Data.ui.getSpaceTeaserImage().setY(Gdx.graphics.getHeight()/2-Data.ui.getSpaceTeaserImage().getHeight()/2);
 
 			return true;
 		}
