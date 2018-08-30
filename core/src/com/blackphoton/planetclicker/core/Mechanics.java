@@ -103,7 +103,7 @@ public class Mechanics {
 			public void run() {
 				while (!this.isInterrupted()) {
 					try{
-						if (Data.main.POPULATION.getCount()!=0)
+						if (Data.main.POPULATION.getCount()!=0 && !Data.isPaused())
 							file.saveGame();
 						sleep(1000);
 					}catch (InterruptedException e){
@@ -751,8 +751,10 @@ public class Mechanics {
 			Touchable touchable;
 			if(!Data.ui.getSettings().getSettingsGroup().isVisible()) {
 				touchable = Touchable.enabled;
+				Data.setPaused(false);
 			}else {
 				touchable = Touchable.disabled;
+				Data.setPaused(true);
 			}
 
 			Data.ui.setEverythingTouchable(touchable);

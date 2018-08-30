@@ -1,5 +1,6 @@
 package com.blackphoton.planetclicker.objectType.table.entries.food;
 
+import com.blackphoton.planetclicker.core.Data;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.objectType.table.entries.template.FoodEntry;
@@ -33,7 +34,7 @@ public class Timeout extends FoodEntry{
 						e.printStackTrace();
 					}
 					if(numberOf>0){
-						subFromEntry();
+						if(!Data.isPaused()) subFromEntry();
 					}
 				}
 			}

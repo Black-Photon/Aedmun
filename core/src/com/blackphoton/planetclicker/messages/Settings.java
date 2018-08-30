@@ -79,6 +79,7 @@ public class Settings extends DisplayBox{
 
 				Data.mechanics.createTutorial();
 				Data.setTutorial(true);
+				Data.setPaused(false);
 				return true;
 			}
 		});
@@ -86,6 +87,7 @@ public class Settings extends DisplayBox{
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				Data.main.exit();
+				Data.setPaused(false);
 				return true;
 			}
 		});
@@ -106,6 +108,7 @@ public class Settings extends DisplayBox{
 		@Override
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			resetConfirm.show();
+			Data.setPaused(false);
 			return true;
 		}
 	}

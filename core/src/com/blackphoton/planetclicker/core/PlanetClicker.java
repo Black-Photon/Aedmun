@@ -79,6 +79,18 @@ public class PlanetClicker extends ApplicationAdapter{
 	}
 
 	@Override
+	public void pause() {
+		Data.setPaused(true);
+		super.pause();
+	}
+
+	@Override
+	public void resume() {
+		Data.setPaused(false);
+		super.resume();
+	}
+
+	@Override
 	public void dispose() {
 		batch.dispose();
 		stage.dispose();

@@ -23,7 +23,7 @@ public class Hunt extends Timeout {
 						e.printStackTrace();
 					}
 					if(Data.isTutorialRunning() && isCreateClicked()){
-						Data.mechanics.getCollection().objectiveComplete(3);
+						Data.mechanics.getCollection().objectiveComplete(3); //Kept in case tutorial re-run
 					}
 				}
 			}

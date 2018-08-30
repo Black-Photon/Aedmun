@@ -83,6 +83,10 @@ public class Data {
 	 * Whether the tutorial is currently minimized
 	 */
 	private static boolean tutorialMinimized = false;
+	/**
+	 * Is game paused
+	 */
+	private static boolean paused = false;
 
 	//Counts
 	/**
@@ -298,5 +302,13 @@ public class Data {
 	}
 	public static void setTutorialMinimized(boolean tutorialMinimized) {
 		Data.tutorialMinimized = tutorialMinimized;
+	}
+	public static boolean isPaused() {
+		return paused;
+	}
+	public static void setPaused(boolean paused) {
+		Data.paused = paused;
+		if(paused) System.out.println("Pausing");
+		else System.out.println("Unpausing");
 	}
 }
