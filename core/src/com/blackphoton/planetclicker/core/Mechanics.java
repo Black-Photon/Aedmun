@@ -103,7 +103,8 @@ public class Mechanics {
 			public void run() {
 				while (!this.isInterrupted()) {
 					try{
-						file.saveGame();
+						if (Data.main.POPULATION.getCount()!=0)
+							file.saveGame();
 						sleep(1000);
 					}catch (InterruptedException e){
 						break;
