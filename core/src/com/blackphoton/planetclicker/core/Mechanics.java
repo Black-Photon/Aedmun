@@ -268,19 +268,19 @@ public class Mechanics {
 		BuildingEntry hamlet = (BuildingEntry) buildingInfo.addEntry("Hamlet", 200, "hamlet.png", Data.getEraList().get(3), village, hamletArray, toVillageArray, null);
 
 		ArrayList<RequiredResource> houseArray = new ArrayList<RequiredResource>();
-		bundleResources(houseArray, 80, 40, 10, 5);
+		bundleResources(houseArray, 5, 15, 3, 1);
 		ArrayList<RequiredResource> toHamletArray = new ArrayList<RequiredResource>();
 		bundleResources(toHamletArray, 300, 200, 15, 0, 50);
 		BuildingEntry house = (BuildingEntry) buildingInfo.addEntry("House", 50, "house.png", Data.getEraList().get(2), hamlet, houseArray, toHamletArray, null);
 
 		ArrayList<RequiredResource> shackArray = new ArrayList<RequiredResource>();
-		bundleResources(shackArray, 10, 75, 5);
+		bundleResources(shackArray, 2, 10, 1);
 		ArrayList<RequiredResource> toHouseArray = new ArrayList<RequiredResource>();
 		bundleResources(toHouseArray, 10, 25,  5, 15);
 		buildingInfo.addEntry("Shack", 25, "shack.png", Data.getEraList().get(1), house, shackArray, toHouseArray, null);
 
 		ArrayList<RequiredResource> caveArray = new ArrayList<RequiredResource>();
-		bundleResources(caveArray, 0, 5);
+		bundleResources(caveArray, 0, 2);
 		buildingInfo.addEntry(new Cave("Cave", 4, "cave.png", Data.getEraList().get(0), null, caveArray, null));
 
 		return buildingInfo;
@@ -311,13 +311,13 @@ public class Mechanics {
 		foodInfo.addEntry("Fishing", 250, "fishing.png", Data.getEraList().get(3), null, fishingArray, null, null);
 
 		ArrayList<RequiredResource> fieldArray = new ArrayList<RequiredResource>();
-		bundleResources(fieldArray, 50, 5);
+		bundleResources(fieldArray, 10, 5);
 		ArrayList<RequiredResource> toLFarmArray = new ArrayList<RequiredResource>();
 		bundleResources(toLFarmArray, 950, 500, 0, 0, 240, 15);
 		FoodEntry field = (FoodEntry) foodInfo.addEntry("Farm", 100, "farm.png", Data.getEraList().get(2), lFarm, fieldArray, toLFarmArray, null);
 
 		ArrayList<RequiredResource> sfieldArray = new ArrayList<RequiredResource>();
-		bundleResources(sfieldArray, 10, 25);
+		bundleResources(sfieldArray, 2, 5);
 		ArrayList<RequiredResource> toFieldArray = new ArrayList<RequiredResource>();
 		bundleResources(toFieldArray, 35, 3);
 		FoodEntry smallfield = (FoodEntry) foodInfo.addEntry("Small Farm", 20, "small_farm.png", Data.getEraList().get(1), field, sfieldArray, toFieldArray, null);
@@ -344,10 +344,10 @@ public class Mechanics {
 		ResourceBundle compress_r = new Resource_ResourceBundle(Data.main.GEMS, empty);
 
 		ArrayList<RequiredResource> woodmill_l = new ArrayList<RequiredResource>();
-		bundleResources(woodmill_l, 100, 10);
+		bundleResources(woodmill_l, 50, 50, 0, 20);
 
 		ArrayList<RequiredResource> quarry_l = new ArrayList<RequiredResource>();
-		bundleResources(quarry_l, 40, 100);
+		bundleResources(quarry_l, 20, 50);
 
 		ArrayList<RequiredResource> cast_l = new ArrayList<RequiredResource>();
 		bundleResources(cast_l, 10, 100, 100, 5);
@@ -423,15 +423,15 @@ public class Mechanics {
 		TableInfo specialInfo = new TableInfo(ResourceType.SPECIAL);
 
 		ArrayList<RequiredResource> stone = new ArrayList<RequiredResource>();
-		bundleResources(stone, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0);
+		bundleResources(stone, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0);
 		specialInfo.addEntry("Stonehenge", 10, "stonehenge.png", Data.getEraList().get(0), null, stone, null, new Special_ResourceBundle(1));
 
 		ArrayList<RequiredResource> pyram = new ArrayList<RequiredResource>();
-		bundleResources(pyram, 0, 1000, 150, 0, 0, 0, 0, 0, 0, 0);
+		bundleResources(pyram, 0, 500, 50, 0, 0, 0, 0, 0, 0, 0);
 		specialInfo.addEntry("Pyramids", 25, "pyramid.png", Data.getEraList().get(1), null, pyram, null, new Special_ResourceBundle(2));
 
 		ArrayList<RequiredResource> wall = new ArrayList<RequiredResource>();
-		bundleResources(wall, 0, 1500, 50, 1000, 0, 0, 0, 0, 0, 0);
+		bundleResources(wall, 0, 1500, 100, 50, 0, 0, 0, 0, 0, 0);
 		specialInfo.addEntry("Great Wall", 50, "great_wall.png", Data.getEraList().get(2), null, wall, null, new Special_ResourceBundle(3));
 
 		ArrayList<RequiredResource> colosseum = new ArrayList<RequiredResource>();
