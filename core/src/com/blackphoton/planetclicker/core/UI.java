@@ -391,9 +391,9 @@ public class UI {
 		float lowScale = (hScale>wScale ? wScale : hScale);
 		UIMultiplier = 1.4f;
 		hScale = ((float) height/480f); //480 = default height
-		hScale = (float) Math.pow(UIMultiplier, hScale-1); //Magic. Oooooohh
+		hScale = (float) Math.pow(UIMultiplier, hScale-1); //Don't ask
 		wScale = ((float) width/360f); //360 = default height
-		wScale = (float) Math.pow(UIMultiplier, wScale-1); //Moar Magic. Oooooohh
+		wScale = (float) Math.pow(UIMultiplier, wScale-1); //"Magic is just science we don't yet understand" - Hammer Guy
 		float highScale = (hScale>wScale ? wScale : hScale);
 
 		uiScale = lowScale<1 ? lowScale:highScale;
@@ -447,6 +447,14 @@ public class UI {
 			if(resource.getNumberRequired()!=0) {
 				Label numberNeeded = resource.getResourceNumber();
 				glyphLayout = new GlyphLayout(bitmapFont, numberNeeded.getText());
+
+				if(glyphLayout.width>image.getWidth()){
+					numberNeeded.setFontScale(image.getWidth()/glyphLayout.width);
+					glyphLayout = new GlyphLayout(bitmapFont, numberNeeded.getText());
+					glyphLayout.width = image.getWidth();
+				}else{
+					numberNeeded.setFontScale(1);
+				}
 
 				image.setPosition(reqRes.getWidth() / 2 - image.getWidth() / 2, totalHeight + reqRes_bottom.getHeight() * 3 / 4);
 				numberNeeded.setPosition(reqRes.getWidth() / 2 - glyphLayout.width / 2, totalHeight + reqRes_bottom.getHeight() * 3 / 4 - glyphLayout.height);
