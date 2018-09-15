@@ -262,10 +262,10 @@ public class Mechanics {
 		BuildingEntry village = (BuildingEntry) buildingInfo.addEntry("Village", 20000, "village.png", Data.getEraList().get(4), town, villageArray, toTownArray, null);
 
 		ArrayList<RequiredResource> hamletArray = new ArrayList<RequiredResource>();
-		bundleResources(hamletArray, 400, 250, 25, 0, 10);
+		bundleResources(hamletArray, 25, 100, 10, 0, 2);
 		ArrayList<RequiredResource> toVillageArray = new ArrayList<RequiredResource>();
 		bundleResources(toVillageArray, 500, 750, 0, 20, 0, 500);
-		BuildingEntry hamlet = (BuildingEntry) buildingInfo.addEntry("Hamlet", 200, "hamlet.png", Data.getEraList().get(3), village, hamletArray, toVillageArray, null);
+		BuildingEntry hamlet = (BuildingEntry) buildingInfo.addEntry("Hamlet", 2000, "hamlet.png", Data.getEraList().get(3), village, hamletArray, toVillageArray, null);
 
 		ArrayList<RequiredResource> houseArray = new ArrayList<RequiredResource>();
 		bundleResources(houseArray, 5, 15, 3, 1);
@@ -308,7 +308,7 @@ public class Mechanics {
 
 		ArrayList<RequiredResource> fishingArray = new ArrayList<RequiredResource>();
 		bundleResources(fishingArray, 100, 0, 0, 10);
-		foodInfo.addEntry("Fishing", 250, "fishing.png", Data.getEraList().get(3), null, fishingArray, null, null);
+		foodInfo.addEntry("Fishing", 2500, "fishing.png", Data.getEraList().get(3), null, fishingArray, null, null);
 
 		ArrayList<RequiredResource> fieldArray = new ArrayList<RequiredResource>();
 		bundleResources(fieldArray, 10, 5);
@@ -435,7 +435,7 @@ public class Mechanics {
 		specialInfo.addEntry("Great Wall", 50, "great_wall.png", Data.getEraList().get(2), null, wall, null, new Special_ResourceBundle(3));
 
 		ArrayList<RequiredResource> colosseum = new ArrayList<RequiredResource>();
-		bundleResources(colosseum, 0, 1500, 0, 500, 1000, 0, 0, 0, 0, 0);
+		bundleResources(colosseum, 0, 1500, 0, 500, 100, 0, 0, 0, 0, 0);
 		specialInfo.addEntry("Colosseum", 100, "colosseum.png", Data.getEraList().get(3), null, colosseum, null, new Special_ResourceBundle(4));
 
 		ArrayList<RequiredResource> pisa = new ArrayList<RequiredResource>();
