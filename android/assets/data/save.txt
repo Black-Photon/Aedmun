@@ -9,7 +9,7 @@ Village:0
 Hamlet:0
 House:0
 Shack:0
-Cave:3
+Cave:0
 ;
 Hydroponics:0
 Industrial Farm:0
@@ -21,7 +21,7 @@ Small Farm:0
 Hunt Food:0
 ;
 Quarry Stone:0
-Mine Stone:1
+Mine Stone:55
 Woodmill:0
 Gather Wood:0
 Cast Bronze:0

@@ -173,7 +173,7 @@ public class Mechanics {
 		if(populationCount<next.getPop_req())
 			if (buildingCount > populationCount && foodCount > populationCount) {
 				if (populationCount > 1000) {
-					int randomInt = Math.abs((int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500));
+					int randomInt = Math.abs((int) ((random.nextGaussian() / 2 + 0.5) * populationCount / 500));
 					Data.main.POPULATION.setCount(populationCount + randomInt);
 					populationCount = Data.main.POPULATION.getCount();
 				} else {
@@ -197,7 +197,7 @@ public class Mechanics {
 		//Increases the population when you don't have enough food and buildings for your current population
 		if ((buildingCount < populationCount || foodCount < populationCount) && populationCount > 2) {
 			if (populationCount > 1000) {
-				int randomInt = Math.abs((int) ((ThreadLocalRandom.current().nextGaussian() / 2 + 0.5) * populationCount / 500));
+				int randomInt = Math.abs((int) ((random.nextGaussian() / 2 + 0.5) * populationCount / 500));
 				Data.main.POPULATION.setCount(populationCount - randomInt);
 				populationCount = Data.main.POPULATION.getCount();
 			} else {
@@ -217,6 +217,9 @@ public class Mechanics {
 				populationCount = Data.main.POPULATION.getCount();
 			}
 		}
+
+		// Ensures population never goes over limit
+		if(populationCount>next.getPop_req()) populationCount = next.getPop_req();
 
 		Data.main.POPULATION.setCount(populationCount);
 
