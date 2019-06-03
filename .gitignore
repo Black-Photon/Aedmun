@@ -123,3 +123,20 @@ Thumbs.db
 !/ios-moe/xcode/*.xcodeproj/xcshareddata
 !/ios-moe/xcode/*.xcodeproj/project.pbxproj
 /ios-moe/xcode/native/
+
+## Other
+settings.gradle
+gradlew.bat
+gradlew
+gradle.properties
+build.gradle
+ios/
+html/
+gradle/
+desktop/
+core/build.gradle
+android/res
+android/src
+android/AndroidManifest.xml
+android/build.gradle
+android/project.properties

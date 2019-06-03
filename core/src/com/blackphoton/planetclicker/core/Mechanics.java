@@ -26,9 +26,7 @@ import com.blackphoton.planetclicker.objectType.table.entries.resources.Resource
 import com.blackphoton.planetclicker.objectType.table.entries.special.Special_ResourceBundle;
 import com.blackphoton.planetclicker.objectType.table.entries.template.*;
 import com.blackphoton.planetclicker.resources.ResourceType;
-import javafx.scene.layout.StackPane;
 
-import javax.swing.text.Style;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;

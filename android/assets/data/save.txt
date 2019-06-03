@@ -1,0 +1,52 @@
+Population:2
+;
+Era:Cavemen
+;
+Capital City:0
+City:0
+Town:0
+Village:0
+Hamlet:0
+House:0
+Shack:0
+Cave:3
+;
+Hydroponics:0
+Industrial Farm:0
+Large Farm:0
+Barn:0
+Fishing:0
+Farm:0
+Small Farm:0
+Hunt Food:0
+;
+Quarry Stone:0
+Mine Stone:1
+Woodmill:0
+Gather Wood:0
+Cast Bronze:0
+Smelt Bronze:0
+Forge Iron:0
+Mine Iron:0
+Mould Clay:0
+Collect Clay:0
+Cook Brick:0
+Create Brick:0
+Fire Concrete:0
+Mix Concrete:0
+Refine Steel:0
+Smelt Steel:0
+Compress Gem:0
+Mine Gems:0
+Carbon:0
+;
+Stonehenge:0
+Pyramids:0
+Great Wall:0
+Colosseum:0
+Leaning Tower:0
+Taj Mahal:0
+Eiffel Tower:0
+Statue of Liberty:0
+Space Island:0
+;
