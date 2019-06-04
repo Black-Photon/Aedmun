@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.core.Data;
+import com.blackphoton.planetclicker.core.PlanetClicker;
 import com.blackphoton.planetclicker.objectType.Era;
 import com.blackphoton.planetclicker.objectType.RequiredResource;
 import com.blackphoton.planetclicker.resources.ResourceType;
@@ -296,7 +297,7 @@ public abstract class TableEntry {
 		return numberLabel;
 	}
 	public void setNumberLabelText() {
-		this.numberLabel.setText(Long.toString(numberOf));
+		this.numberLabel.setText(PlanetClicker.simplify(numberOf));
 	}
 	public void setNumberLabelText(String text) {
 		this.numberLabel.setText(text);
@@ -305,7 +306,7 @@ public abstract class TableEntry {
 		return valueLabel;
 	}
 	public void setValueLabelText() {
-		this.valueLabel.setText(Long.toString(value));
+		this.valueLabel.setText(PlanetClicker.simplify(value));
 	}
 	public void setValueLabelText(String text) {
 		this.valueLabel.setText(text);

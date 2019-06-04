@@ -129,4 +129,28 @@ public class PlanetClicker extends ApplicationAdapter{
 	public void setStage(Stage stage) {
 		this.stage = stage;
 	}
+
+	/**
+	 * Converts a long into a simple string form:<br/>
+	 * Eg. 10->"10", 1000->"1.0k", 100000->"100.0k", 1000000000->"1.0b"
+	 * @param i Long to simplify
+	 * @return the string under the above algorithm
+	 */
+	public static String simplify(long i){
+		StringBuilder numberOfS = new StringBuilder("");
+		if(i>=1000000000){
+			numberOfS.append((double)Math.round((double) i/100000000d)/10d);
+			numberOfS.append("b");
+		}else
+		if(i>=1000000){
+			numberOfS.append((double)Math.round((double) i/100000d)/10d);
+			numberOfS.append("m");
+		}else
+		if(i>=1000){
+			numberOfS.append((double)Math.round((double) i/100d)/10d);
+			numberOfS.append("k");
+		}
+		else numberOfS.append(i);
+		return numberOfS.toString();
+	}
 }

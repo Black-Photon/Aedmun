@@ -231,7 +231,7 @@ public class UI {
 		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		populationLabel.setText("Population: "+getPopulationString(Data.main.POPULATION.getCount()));
+		populationLabel.setText("Population: "+getLongAsString(Data.main.POPULATION.getCount()));
 
 		if(Data.getSelectedEntry()!=null) {
 			if(Data.getSelectedEntry().getResourcesNeeded()!=null)
@@ -420,18 +420,18 @@ public class UI {
 		if(Data.isTutorialRunning() && Data.isTutorialMinimized()) tutorialMax.setVisible(true); else tutorialMax.setVisible(false);
 	}
 
-	private String getPopulationString(long pop) {
-		if(pop > 1000000000000L) {
-			double val = ((double) pop) / 1000000000000.0;
+	private String getLongAsString(long l) {
+		if(l > 1000000000000L) {
+			double val = ((double) l) / 1000000000000.0;
 			return String.format(Locale.UK, "%.2f tri", val);
-		} else if(pop > 1000000000L) {
-			double val = ((double) pop) / 1000000000.0;
+		} else if(l > 1000000000L) {
+			double val = ((double) l) / 1000000000.0;
 			return String.format(Locale.UK, "%.2f bil", val);
-		} else if(pop > 1000000L) {
-			double val = ((double) pop) / 1000000.0;
+		} else if(l > 1000000L) {
+			double val = ((double) l) / 1000000.0;
 			return String.format(Locale.UK, "%.2f mil", val);
 		} else {
-			String s = Long.toString(pop);
+			String s = Long.toString(l);
 			StringBuilder sb = new StringBuilder(s);
 			if(sb.length() > 3) {
 				sb.insert(sb.length() - 3, ',');
@@ -763,6 +763,7 @@ public class UI {
 		list.add(17);
 		list.add(16);
 		list.add(18);
+		list.add(19);
 
 		resourcesTable = refreshTableX(Data.getResourcesTable(),"Value", Data.isResourcesTableVisible(), list);
 	}

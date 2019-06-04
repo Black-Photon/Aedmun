@@ -1,8 +1,8 @@
-Population:2
+Population:200000000000
 ;
-Era:Cavemen
+Era:Future
 ;
-Capital City:0
+Capital City:2000
 City:0
 Town:0
 Village:0
@@ -11,7 +11,7 @@ House:0
 Shack:0
 Cave:0
 ;
-Hydroponics:0
+Hydroponics:2000
 Industrial Farm:0
 Large Farm:0
 Barn:0
@@ -20,25 +20,26 @@ Farm:0
 Small Farm:0
 Hunt Food:0
 ;
-Quarry Stone:0
-Mine Stone:55
-Woodmill:0
-Gather Wood:0
-Cast Bronze:0
-Smelt Bronze:0
-Forge Iron:0
-Mine Iron:0
-Mould Clay:0
-Collect Clay:0
-Cook Brick:0
-Create Brick:0
-Fire Concrete:0
-Mix Concrete:0
-Refine Steel:0
-Smelt Steel:0
-Compress Gem:0
-Mine Gems:0
-Carbon:0
+Quarry Stone:2000
+Mine Stone:2000
+Woodmill:2000
+Gather Wood:2000
+Cast Bronze:2000
+Smelt Bronze:2000
+Forge Iron:2000
+Mine Iron:1998
+Mould Clay:2000
+Collect Clay:2000
+Cook Brick:2000
+Create Brick:2000
+Fire Concrete:2000
+Mix Concrete:2000
+Refine Steel:2000
+Smelt Steel:3502
+Compress Gem:2000
+Mine Gems:1200
+Assemble Carbon:617
+Extract Diamonds:617
 ;
 Stonehenge:0
 Pyramids:0
@@ -48,5 +49,5 @@ Leaning Tower:0
 Taj Mahal:0
 Eiffel Tower:0
 Statue of Liberty:0
-Space Island:0
+Space Island:747
 ;

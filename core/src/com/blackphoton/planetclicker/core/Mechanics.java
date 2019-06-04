@@ -241,43 +241,43 @@ public class Mechanics {
 		TableInfo buildingInfo = new TableInfo(ResourceType.BUILDINGS);
 
 		ArrayList<RequiredResource> capitalArray = new ArrayList<RequiredResource>();
-		bundleResources(capitalArray, 0, 0, 0, 0, 0, 25000, 25000, 30000, 5);
-		BuildingEntry capital = (BuildingEntry) buildingInfo.addEntry("Capital City", 10000000, "capital.png", Data.getEraList().get(7), null, capitalArray, null, null);
+		bundleResources(capitalArray, 0, 0, 0, 0, 0, 250, 250, 30, 3);
+		BuildingEntry capital = (BuildingEntry) buildingInfo.addEntry("Capital City", 100000000, "capital.png", Data.getEraList().get(7), null, capitalArray, null, null);
 
 		ArrayList<RequiredResource> cityArray = new ArrayList<RequiredResource>();
-		bundleResources(cityArray, 0, 0, 0, 12000, 0, 10000, 10000, 10);
+		bundleResources(cityArray, 0, 0, 0, 500, 0, 150, 100, 2);
 		ArrayList<RequiredResource> toCapitalArray = new ArrayList<RequiredResource>();
-		bundleResources(toCapitalArray, 0, 0, 0, 0, 0, 15000, 15000, 20000, 50);
+		bundleResources(toCapitalArray, 0, 0, 0, 0, 0, 100, 100, 25, 3);
 		BuildingEntry city = (BuildingEntry) buildingInfo.addEntry("City", 5000000, "city.png", Data.getEraList().get(6), capital, cityArray, toCapitalArray, null);
 
 		ArrayList<RequiredResource> townArray = new ArrayList<RequiredResource>();
-		bundleResources(townArray, 0, 4000, 0, 1000, 0, 1000, 10);
+		bundleResources(townArray, 0, 250, 0, 250, 0, 10, 8);
 		ArrayList<RequiredResource> toCityArray = new ArrayList<RequiredResource>();
-		bundleResources(toCityArray, 0, 0, 0, 10000, 0, 10000, 10000, 10000);
-		BuildingEntry town = (BuildingEntry) buildingInfo.addEntry("Town", 250000, "town.png", Data.getEraList().get(5), city, townArray, toCityArray, null);
+		bundleResources(toCityArray, 0, 0, 0, 250, 0, 100, 100, 2);
+		BuildingEntry town = (BuildingEntry) buildingInfo.addEntry("Town", 500000, "town.png", Data.getEraList().get(5), city, townArray, toCityArray, null);
 
 		ArrayList<RequiredResource> villageArray = new ArrayList<RequiredResource>();
-		bundleResources(villageArray, 1000, 1000, 0, 400, 0, 10);
+		bundleResources(villageArray, 100, 50, 0, 40, 0, 3);
 		ArrayList<RequiredResource> toTownArray = new ArrayList<RequiredResource>();
-		bundleResources(toTownArray, 0, 3000, 0, 250, 0, 500, 1000);
+		bundleResources(toTownArray, 0, 200, 0, 200, 0, 7, 8);
 		BuildingEntry village = (BuildingEntry) buildingInfo.addEntry("Village", 20000, "village.png", Data.getEraList().get(4), town, villageArray, toTownArray, null);
 
 		ArrayList<RequiredResource> hamletArray = new ArrayList<RequiredResource>();
 		bundleResources(hamletArray, 25, 100, 10, 0, 2);
 		ArrayList<RequiredResource> toVillageArray = new ArrayList<RequiredResource>();
-		bundleResources(toVillageArray, 500, 750, 0, 20, 0, 500);
+		bundleResources(toVillageArray, 75, 0, 10, 30, 0, 2);
 		BuildingEntry hamlet = (BuildingEntry) buildingInfo.addEntry("Hamlet", 2000, "hamlet.png", Data.getEraList().get(3), village, hamletArray, toVillageArray, null);
 
 		ArrayList<RequiredResource> houseArray = new ArrayList<RequiredResource>();
 		bundleResources(houseArray, 5, 15, 3, 1);
 		ArrayList<RequiredResource> toHamletArray = new ArrayList<RequiredResource>();
-		bundleResources(toHamletArray, 300, 200, 15, 0, 50);
+		bundleResources(toHamletArray, 20, 85, 7, 0, 2);
 		BuildingEntry house = (BuildingEntry) buildingInfo.addEntry("House", 50, "house.png", Data.getEraList().get(2), hamlet, houseArray, toHamletArray, null);
 
 		ArrayList<RequiredResource> shackArray = new ArrayList<RequiredResource>();
 		bundleResources(shackArray, 2, 10, 1);
 		ArrayList<RequiredResource> toHouseArray = new ArrayList<RequiredResource>();
-		bundleResources(toHouseArray, 10, 25,  5, 15);
+		bundleResources(toHouseArray, 3, 5,  2, 1);
 		buildingInfo.addEntry("Shack", 25, "shack.png", Data.getEraList().get(1), house, shackArray, toHouseArray, null);
 
 		ArrayList<RequiredResource> caveArray = new ArrayList<RequiredResource>();
@@ -290,21 +290,21 @@ public class Mechanics {
 		TableInfo foodInfo = new TableInfo(ResourceType.FOOD);
 
 		ArrayList<RequiredResource> hydroArray = new ArrayList<RequiredResource>();
-		bundleResources(hydroArray, 0, 0, 0, 0, 0, 1000, 1000, 10000, 10);
+		bundleResources(hydroArray, 0, 0, 0, 0, 0, 100, 75, 200, 1);
 		foodInfo.addEntry("Hydroponics", 100000000, "hydroponics.png", Data.getEraList().get(7), null, hydroArray, null, null);
 
 		ArrayList<RequiredResource> iFarmArray = new ArrayList<RequiredResource>();
-		bundleResources(iFarmArray, 0, 1000, 100, 100, 0, 0, 4);
+		bundleResources(iFarmArray, 0, 500, 100, 100, 0, 0, 4);
 		FoodEntry iFarm = (FoodEntry) foodInfo.addEntry("Industrial Farm", 25000000, "industrial_farm.png", Data.getEraList().get(6), null, iFarmArray, null, null);
 
 		ArrayList<RequiredResource> lFarmArray = new ArrayList<RequiredResource>();
-		bundleResources(lFarmArray, 1000, 500, 0, 0, 250, 15);
+		bundleResources(lFarmArray, 350, 150, 0, 0, 25, 5);
 		ArrayList<RequiredResource> toIFarmArray = new ArrayList<RequiredResource>();
 		bundleResources(toIFarmArray, 0, 500, 75, 75, 0, 0, 40);
 		FoodEntry lFarm = (FoodEntry) foodInfo.addEntry("Large Farm", 1000000, "large_farm.png", Data.getEraList().get(5), iFarm, lFarmArray, toIFarmArray, null);
 
 		ArrayList<RequiredResource> barnArray = new ArrayList<RequiredResource>();
-		bundleResources(barnArray, 250, 50, 10, 0, 5);
+		bundleResources(barnArray, 150, 50, 10, 0, 5);
 		foodInfo.addEntry("Barn", 10000, "barn.png", Data.getEraList().get(4), null, barnArray, null, null);
 
 		ArrayList<RequiredResource> fishingArray = new ArrayList<RequiredResource>();
@@ -312,7 +312,7 @@ public class Mechanics {
 		foodInfo.addEntry("Fishing", 2500, "fishing.png", Data.getEraList().get(3), null, fishingArray, null, null);
 
 		ArrayList<RequiredResource> fieldArray = new ArrayList<RequiredResource>();
-		bundleResources(fieldArray, 10, 5);
+		bundleResources(fieldArray, 15, 5);
 		ArrayList<RequiredResource> toLFarmArray = new ArrayList<RequiredResource>();
 		bundleResources(toLFarmArray, 950, 500, 0, 0, 240, 15);
 		FoodEntry field = (FoodEntry) foodInfo.addEntry("Farm", 100, "farm.png", Data.getEraList().get(2), lFarm, fieldArray, toLFarmArray, null);
@@ -357,7 +357,7 @@ public class Mechanics {
 		bundleResources(forge_l, 25, 150, 75, 100);
 
 		ArrayList<RequiredResource> mould_l = new ArrayList<RequiredResource>();
-		bundleResources(mould_l, 0, 200, 100, 0, 100, 25);
+		bundleResources(mould_l, 0, 200, 100, 0, 75, 25);
 
 		ArrayList<RequiredResource> oven_l = new ArrayList<RequiredResource>();
 		bundleResources(oven_l, 0, 500, 0, 150, 0, 125, 50);
@@ -376,6 +376,9 @@ public class Mechanics {
 
 		ArrayList<RequiredResource> ironNeeded = new ArrayList<RequiredResource>();
 		ironNeeded.add(new RequiredResource(Data.main.IRON, 1));
+
+		ArrayList<RequiredResource> gemsNeeded = new ArrayList<RequiredResource>();
+		gemsNeeded.add(new RequiredResource(Data.main.GEMS, 5));
 
 		final TableEntry quarry = resourcesInfo.addEntry(new Multiplier("Quarry Stone", 1, "quarry.png", Data.getEraList().get(1), quarry_l, null, quarry_r));
 		ResourceBundle stone = new Resource_ResourceBundle(Data.main.STONE, quarry);
@@ -414,7 +417,9 @@ public class Mechanics {
 		resourcesInfo.addEntry(new Gems("Mine Gems", 1, Data.main.GEMS, Data.getEraList().get(7), null, null, gems));
 
 		ResourceBundle carbon = new Resource_ResourceBundle(Data.main.CARBON, empty);
-		resourcesInfo.addEntry(new Absolute("Carbon", 1, Data.main.CARBON, Data.getEraList().get(8), null, null, carbon));
+		resourcesInfo.addEntry(new Absolute("Assemble Carbon", 1, Data.main.CARBON, Data.getEraList().get(8), null, null, carbon));
+		ResourceBundle aCarbon = new Resource_ResourceBundle(Data.main.CARBON, empty);
+		resourcesInfo.addEntry(new Absolute("Extract Diamonds", 25, Data.main.CARBON, Data.getEraList().get(8), gemsNeeded, null, aCarbon));
 
 		new Absolute("Population", 1, Data.main.WOOD, Data.getEraList().get(0), null, null, null);
 
@@ -440,15 +445,15 @@ public class Mechanics {
 		specialInfo.addEntry("Colosseum", 100, "colosseum.png", Data.getEraList().get(3), null, colosseum, null, new Special_ResourceBundle(4));
 
 		ArrayList<RequiredResource> pisa = new ArrayList<RequiredResource>();
-		bundleResources(pisa, 0, 200, 0, 1000, 0, 1500, 0, 0, 0, 0);
+		bundleResources(pisa, 0, 500, 0, 1500, 0, 250, 0, 0, 0, 0);
 		specialInfo.addEntry("Leaning Tower", 150, "tower_of_pisa.png", Data.getEraList().get(4), null, pisa, null, new Special_ResourceBundle(5));
 
 		ArrayList<RequiredResource> taj = new ArrayList<RequiredResource>();
-		bundleResources(taj, 0, 500, 500, 0, 0, 0, 1500, 0, 0, 0);
+		bundleResources(taj, 0, 4000, 4000, 0, 0, 0, 500, 0, 0, 0);
 		specialInfo.addEntry("Taj Mahal", 250, "taj_mahal.png", Data.getEraList().get(5), null, taj, null, new Special_ResourceBundle(6));
 
 		ArrayList<RequiredResource> eiffel = new ArrayList<RequiredResource>();
-		bundleResources(eiffel, 0, 0, 150, 1000, 0, 0, 0, 2500, 0, 0);
+		bundleResources(eiffel, 0, 0, 1500, 7500, 0, 0, 0, 900, 0, 0);
 		specialInfo.addEntry("Eiffel Tower", 400, "eiffel_tower.png", Data.getEraList().get(6), null, eiffel, null, new Special_ResourceBundle(7));
 
 		ArrayList<RequiredResource> liberty = new ArrayList<RequiredResource>();
@@ -456,7 +461,7 @@ public class Mechanics {
 		specialInfo.addEntry("Statue of Liberty", 500, "statue_liberty.png", Data.getEraList().get(7), null, liberty, null, new Special_ResourceBundle(8));
 
 		ArrayList<RequiredResource> space = new ArrayList<RequiredResource>();
-		bundleResources(space, 0, 0, 0, 0, 0, 0, 0, 2500, 500, 5000);
+		bundleResources(space, 0, 0, 0, 0, 0, 0, 0, 2500, 500, 1000);
 		specialInfo.addEntry("Space Island", 750, "space_island.png", Data.getEraList().get(8), null, space, null, new Special_ResourceBundle(9));
 
 		return specialInfo;

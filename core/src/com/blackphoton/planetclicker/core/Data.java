@@ -152,6 +152,7 @@ public class Data {
 		Era modern = new Era("Modern",7000000000L, "modern.png");
 		Era future = new Era("Future", 25000000000L, "future.png");
 		Era endgame = new Era("Future", 50000000000L, "future.png");
+		Era infinite = new Era("Future", Long.MAX_VALUE, "future.png");
 		eraList.add(cavemen);
 		eraList.add(bronze);
 		eraList.add(iron);
@@ -162,6 +163,7 @@ public class Data {
 		eraList.add(modern);
 		eraList.add(future);
 		eraList.add(endgame);
+		eraList.add(infinite);
 
 		buildingCount = 0;
 		foodCount = 0;

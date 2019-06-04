@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Scaling;
 import com.blackphoton.planetclicker.core.Data;
+import com.blackphoton.planetclicker.core.PlanetClicker;
 
 /**
  * Holds info about a resource that may be needed to purchase something, as well as basic UI elements pertaining to it
@@ -32,30 +33,6 @@ public class RequiredResource {
 			resource.setHeight(64);
 		}
 		resourceNumber = new Label(Long.toString(numberOf)+"/"+Long.toString(numberRequired), Data.ui.getSkin());
-	}
-
-	/**
-	 * Converts a long into a simple string form:<br/>
-	 * Eg. 10->"10", 1000->"1.0k", 100000->"100.0k", 1000000000->"1.0b"
-	 * @param i Long to simplify
-	 * @return the string under the above algorithm
-	 */
-	private String simplify(long i){
-		StringBuilder numberOfS = new StringBuilder("");
-		if(i>=1000000000){
-			numberOfS.append((double)Math.round((double) i/100000000d)/10d);
-			numberOfS.append("b");
-		}else
-		if(i>=1000000){
-			numberOfS.append((double)Math.round((double) i/100000d)/10d);
-			numberOfS.append("m");
-		}else
-		if(i>=1000){
-			numberOfS.append((double)Math.round((double) i/100d)/10d);
-			numberOfS.append("k");
-		}
-		else numberOfS.append(i);
-		return numberOfS.toString();
 	}
 
 	//Getters and Setters
@@ -85,7 +62,7 @@ public class RequiredResource {
 	 */ public void setResourceNumberText() {
 		long numberOf = material.getCount();
 
-		resourceNumber.setText(simplify(numberOf)+"/"+simplify(numberRequired));
+		resourceNumber.setText(PlanetClicker.simplify(numberOf)+"/"+PlanetClicker.simplify(numberRequired));
 		if(numberOf<numberRequired) resourceNumber.setColor(Color.RED);
 		else resourceNumber.setColor(Color.GREEN);
 	}
