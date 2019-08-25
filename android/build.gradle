@@ -1,6 +1,6 @@
 android {
-    buildToolsVersion '27.0.3'
-    compileSdkVersion 27
+    buildToolsVersion '28.0.2'
+    compileSdkVersion 28
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -20,7 +20,7 @@ android {
     defaultConfig {
         applicationId "com.blackphoton.planetclicker"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "0.4.0"
     }
